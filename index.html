@@ -1,39 +1,63 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TRBKWSK — сайт-визитка</title>
+  <title>TORB — Street Artist</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@300;400;700&display=swap');
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      padding: 40px 20px;
       background: #0d0d0d;
       color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: 'Roboto', sans-serif;
       text-align: center;
     }
+
     h1 {
-      font-size: 3rem;
-      margin: 0 0 20px 0;
+      font-family: 'Russo One', sans-serif;
+      font-size: 4rem;
+      text-transform: uppercase;
+      color: #fff;
+      margin: 0 0 15px 0;
     }
+
+    h2 {
+      font-size: 1.4rem;
+      margin: 0 0 25px 0;
+      font-weight: 400;
+      color: #aaa;
+    }
+
     p {
-      font-size: 1.2rem;
-      max-width: 600px;
+      font-size: 1.1rem;
+      color: #ccc;
+      max-width: 700px;
+      margin: 10px auto;
+      line-height: 1.6;
     }
+
+    .links {
+      margin-top: 35px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
     a {
-      margin-top: 20px;
       display: inline-block;
-      padding: 10px 20px;
+      padding: 12px 25px;
       border: 2px solid #fff;
+      border-radius: 4px;
       color: #fff;
       text-decoration: none;
+      font-size: 1rem;
       transition: 0.3s;
     }
+
     a:hover {
       background: #fff;
       color: #000;
@@ -41,9 +65,16 @@
   </style>
 </head>
 <body>
-  <h1>TRBKWSK</h1>
-  <p>Добро пожаловать на мой сайт-визитку.  
-     Здесь скоро появится больше информации о моём творчестве.</p>
-  <a href="https://instagram.com" target="_blank">Instagram</a>
+  <h1>TORB</h1>
+  <h2>Street Artist / Graffiti Writer</h2>
+  <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
+  <p>Organizer of festivals, jams, and cultural events.</p>
+  <p>Painting walls, building art spaces, and taking part in international projects.</p>
+
+  <div class="links">
+    <a href="https://instagram.com" target="_blank">Instagram</a>
+    <a href="https://t.me" target="_blank">Telegram</a>
+    <a href="https://github.com/trbkwsk" target="_blank">GitHub</a>
+  </div>
 </body>
 </html>
