@@ -115,10 +115,46 @@
   </div>
 </body>
 </html>
-<!-- отдельный блок для email -->
+<!-- Кнопка Email отдельно ниже -->
 <div class="links" style="margin-top:40px;">
   <a href="mailto:trbkwsk@gmail.com" 
-     style="background:#e74c3c; color:#fff; border-color:#e74c3c; padding:12px 22px; border-radius:4px; text-decoration:none; font-size:1rem; transition:0.3s;">
+     style="
+       background:#e74c3c;
+       color:#fff;
+       border:2px solid #e74c3c;
+       padding:12px 22px;
+       border-radius:4px;
+       text-decoration:none;
+       font-size:1rem;
+       position:relative;
+       overflow:hidden;
+       transition:0.3s;
+     ">
     Email
+    <span style="
+       content:'';
+       position:absolute;
+       left:0; top:0;
+       width:100%; height:100%;
+       background:#fff;
+       transform:scaleX(0);
+       transform-origin:right;
+       transition:transform 0.3s ease;
+       z-index:-1;
+    "></span>
   </a>
 </div>
+<!-- CSS hover эффект через встроенный стиль -->
+<script>
+  const emailBtn = document.querySelector('a[href^="mailto:"]');
+  emailBtn.addEventListener('mouseenter', () => {
+    emailBtn.style.color = '#000';
+    emailBtn.children[0].style.transform = 'scaleX(1)';
+    emailBtn.children[0].style.transformOrigin = 'left';
+  });
+  emailBtn.addEventListener('mouseleave', () => {
+    emailBtn.style.color = '#fff';
+    emailBtn.children[0].style.transform = 'scaleX(0)';
+    emailBtn.children[0].style.transformOrigin = 'right';
+  });
+</script>
