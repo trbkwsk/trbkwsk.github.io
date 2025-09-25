@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TORB — Graffiti Artist</title>
+<title>TORB — Street Artist</title>
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="favicon.png">
 <meta name="theme-color" content="#000000">
@@ -99,10 +99,12 @@ header {
   position: relative;
   color: #fff;
   font-family: 'Russo One', sans-serif;
-  font-size: 2rem;
+  font-size: 4vw; /* масштабируемый текст по ширине */
   text-align: center;
-  padding: 10px 20px;
-  text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+  padding: 20px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  max-width: 90%;
+  line-height: 1.2;
 }
 
 /* ===== INFO + CONTACT FULL WIDTH ===== */
@@ -185,7 +187,7 @@ header {
 }
 
 @media (max-width: 768px) {
-  .slide-text { font-size: 1.5rem; padding: 10px 15px; }
+  .slide-text { font-size: 6vw; padding: 10px 15px; }
   .info-contact-fullwidth {
     flex-direction: column;
   }
@@ -220,37 +222,37 @@ header {
 
   <!-- SLIDER -->
   <div class="slider-container">
-    <!-- Masterclasses -->
+    <!-- Мастер-классы -->
     <div class="slide active" style="background-image: url('masterclass1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
-    <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Sharing Style & Technique</div></div>
-    <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Learning by Doing</div></div>
-    <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Workshops for All Ages</div></div>
+    <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Learning Style and Technique</div></div>
+    <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Hands-on Practice</div></div>
+    <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Masterclasses for Everyone</div></div>
 
     <!-- Festivals -->
     <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Graffiti Festival</div></div>
-    <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Urban Art Celebration</div></div>
-    <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Large-Scale Murals</div></div>
+    <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Street Art Celebration</div></div>
+    <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Large Murals</div></div>
     <div class="slide" style="background-image: url('festival4.png');"><div class="slide-text">International Community</div></div>
 
     <!-- Battles -->
     <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Graffiti Battle</div></div>
-    <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Style vs. Style</div></div>
-    <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Energy of the Streets</div></div>
+    <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Style vs Style</div></div>
+    <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Street Energy</div></div>
     <div class="slide" style="background-image: url('battle4.png');"><div class="slide-text">Live Competition</div></div>
     <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Creating Culture Together</div></div>
   </div>
 
   <!-- INFO + CONTACT FULL WIDTH -->
   <div class="info-contact-fullwidth">
-    <!-- DESCRIPTION LEFT -->
+    <!-- About Left -->
     <div class="description-block-full">
       <h2>Graffiti Artist & Event Organizer</h2>
       <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
-      <p>Organizer of festivals, jams, and cultural events.</p>
-      <p>Painting walls, building art spaces, and taking part in international projects.</p>
+      <p>Organizing festivals, jams, and cultural events.</p>
+      <p>Painting walls, building art spaces, and participating in international projects.</p>
     </div>
 
-    <!-- CONTACT FORM RIGHT -->
+    <!-- Contact Right -->
     <div class="contact-block">
       <h2>Send a Message</h2>
       <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
@@ -269,7 +271,7 @@ header {
       slides.forEach(slide => slide.classList.remove('active'));
       index = (index + 1) % slides.length;
       slides[index].classList.add('active');
-    }, 5000);
+    }, 3000); // теперь каждый слайд 3 секунды
   </script>
 </body>
 </html>
