@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TORB — Street Artist</title>
+  <title>TORB — Graffiti Artist</title>
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="favicon.png">
   <meta name="theme-color" content="#000000">
@@ -13,83 +13,78 @@
     body {
       margin: 0;
       padding: 0;
+      font-family: 'Inter', sans-serif;
       background: #0d0d0d;
       color: #fff;
-      font-family: 'Inter', sans-serif;
     }
 
+    /* ===== HEADER ===== */
     header {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 20px 40px;
+      width: 100%;
       background: #0d0d0d;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      padding: 15px 40px;
+      box-sizing: border-box;
     }
 
-    .header-right {
+    .header-container {
       display: flex;
       align-items: center;
-      gap: 25px;
+      width: 100%;
     }
 
-    header .logo {
+    .logo {
       font-family: 'Russo One', sans-serif;
       font-size: 2rem;
-      margin: 0;
+      margin-right: 40px;
     }
 
-    header .social-links {
+    .social-links {
       display: flex;
       gap: 15px;
+      flex: 1;
+      justify-content: center;
     }
 
-    header .social-links a,
-    header .lang-switch a {
+    .social-links a,
+    .lang-switch a {
       color: #fff;
       text-decoration: none;
       font-size: 1rem;
       transition: color 0.3s;
     }
 
-    header .social-links a:hover,
-    header .lang-switch a:hover {
+    .social-links a:hover,
+    .lang-switch a:hover {
       color: #ffcc00;
     }
 
+    .lang-switch {
+      margin-left: 20px;
+    }
+
+    /* ===== DESCRIPTION ===== */
     .description {
       font-size: 1.2rem;
       color: #ccc;
       line-height: 1.6;
-      margin: 40px auto;
+      margin: 40px 0;
       padding: 0 40px;
       text-align: center;
     }
 
+    /* ===== SLIDER ===== */
     .slider-container {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      padding: 40px;
-      flex-wrap: wrap;
-    }
-
-    .slider {
       position: relative;
-      width: 300px;
-      height: 200px;
+      width: 100%;
+      max-height: 80vh;
       overflow: hidden;
-      border-radius: 10px;
     }
 
     .slide {
       position: absolute;
-      top: 0;
-      left: 100%;
+      top: 0; left: 100%;
       width: 100%;
-      height: 100%;
+      height: 80vh;
       opacity: 0;
       transition: all 1s ease;
       background-size: cover;
@@ -114,16 +109,37 @@
 
     .slide-text {
       position: relative;
-      padding: 10px 15px;
-      font-size: 1.1rem;
+      padding: 15px 20px;
+      font-size: 1.4rem;
       font-weight: 600;
       z-index: 2;
+      color: #fff;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+    }
+
+    @media (max-width: 768px) {
+      .slide-text {
+        font-size: 1.1rem;
+        padding: 10px 15px;
+      }
+      .description {
+        font-size: 1rem;
+        padding: 0 20px;
+      }
+      .logo {
+        font-size: 1.5rem;
+        margin-right: 20px;
+      }
+      .social-links {
+        gap: 10px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- HEADER -->
   <header>
-    <div class="header-right">
+    <div class="header-container">
       <h1 class="logo">TORB</h1>
       <nav class="social-links">
         <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
@@ -139,76 +155,43 @@
     </div>
   </header>
 
+  <!-- DESCRIPTION -->
   <div class="description">
     Creating graffiti focused on style, lettering, and visual storytelling. 
     Organizer of festivals, jams, and cultural events. 
     Painting walls, building art spaces, and taking part in international projects.
   </div>
 
+  <!-- FULLSCREEN SLIDER -->
   <div class="slider-container">
     <!-- Masterclasses -->
-    <div class="slider" id="slider1">
-      <div class="slide active" style="background-image: url('master1.png');">
-        <div class="slide-text">Masterclasses</div>
-      </div>
-      <div class="slide" style="background-image: url('master2.png');">
-        <div class="slide-text">Masterclasses</div>
-      </div>
-      <div class="slide" style="background-image: url('master3.png');">
-        <div class="slide-text">Masterclasses</div>
-      </div>
-    </div>
+    <div class="slide active" style="background-image: url('master1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
+    <div class="slide" style="background-image: url('master2.png');"><div class="slide-text">Sharing Style & Technique</div></div>
+    <div class="slide" style="background-image: url('master3.png');"><div class="slide-text">Learning by Doing</div></div>
+    <div class="slide" style="background-image: url('master4.png');"><div class="slide-text">Workshops for All Ages</div></div>
 
     <!-- Festivals -->
-    <div class="slider" id="slider2">
-      <div class="slide active" style="background-image: url('fest1.png');">
-        <div class="slide-text">Festivals</div>
-      </div>
-      <div class="slide" style="background-image: url('fest2.png');">
-        <div class="slide-text">Festivals</div>
-      </div>
-      <div class="slide" style="background-image: url('fest3.png');">
-        <div class="slide-text">Festivals</div>
-      </div>
-      <div class="slide" style="background-image: url('fest4.png');">
-        <div class="slide-text">Festivals</div>
-      </div>
-    </div>
+    <div class="slide" style="background-image: url('fest1.png');"><div class="slide-text">Graffiti Festival</div></div>
+    <div class="slide" style="background-image: url('fest2.png');"><div class="slide-text">Urban Art Celebration</div></div>
+    <div class="slide" style="background-image: url('fest3.png');"><div class="slide-text">Large-Scale Murals</div></div>
+    <div class="slide" style="background-image: url('fest4.png');"><div class="slide-text">International Community</div></div>
 
     <!-- Battles -->
-    <div class="slider" id="slider3">
-      <div class="slide active" style="background-image: url('battle1.png');">
-        <div class="slide-text">Graffiti Battles</div>
-      </div>
-      <div class="slide" style="background-image: url('battle2.png');">
-        <div class="slide-text">Graffiti Battles</div>
-      </div>
-      <div class="slide" style="background-image: url('battle3.png');">
-        <div class="slide-text">Graffiti Battles</div>
-      </div>
-      <div class="slide" style="background-image: url('battle4.png');">
-        <div class="slide-text">Graffiti Battles</div>
-      </div>
-      <div class="slide" style="background-image: url('battle5.png');">
-        <div class="slide-text">Graffiti Battles</div>
-      </div>
-    </div>
+    <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Graffiti Battle</div></div>
+    <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Style vs. Style</div></div>
+    <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Energy of the Streets</div></div>
+    <div class="slide" style="background-image: url('battle4.png');"><div class="slide-text">Live Competition</div></div>
+    <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Creating Culture Together</div></div>
   </div>
 
   <script>
-    function startSlider(sliderId) {
-      const slides = document.querySelectorAll(`#${sliderId} .slide`);
-      let index = 0;
-      setInterval(() => {
-        slides[index].classList.remove("active");
-        index = (index + 1) % slides.length;
-        slides[index].classList.add("active");
-      }, 4000);
-    }
-
-    startSlider("slider1");
-    startSlider("slider2");
-    startSlider("slider3");
+    const slides = document.querySelectorAll('.slide');
+    let index = 0;
+    setInterval(() => {
+      slides[index].classList.remove('active');
+      index = (index + 1) % slides.length;
+      slides[index].classList.add('active');
+    }, 5000); // каждые 5 секунд
   </script>
 </body>
 </html>
