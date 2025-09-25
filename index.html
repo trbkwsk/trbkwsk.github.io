@@ -92,7 +92,7 @@ header {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.3); /* затемнение */
+  background: rgba(0,0,0,0.3);
 }
 
 .slide-text {
@@ -105,17 +105,15 @@ header {
   text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
 }
 
-/* ===== INFO + CONTACT FLEX ===== */
-.info-contact-container {
+/* ===== INFO + CONTACT FULL WIDTH ===== */
+.info-contact-fullwidth {
   display: flex;
   gap: 40px;
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 0 20px;
+  width: 100%;
+  padding: 40px 20px;
   box-sizing: border-box;
 }
 
-/* DESCRIPTION LEFT */
 .description-block-full {
   flex: 2;
   background: rgba(0,0,0,0.5);
@@ -137,7 +135,6 @@ header {
   margin: 8px 0;
 }
 
-/* CONTACT FORM RIGHT */
 .contact-block {
   flex: 1;
   background: rgba(0,0,0,0.5);
@@ -189,7 +186,7 @@ header {
 
 @media (max-width: 768px) {
   .slide-text { font-size: 1.5rem; padding: 10px 15px; }
-  .info-contact-container {
+  .info-contact-fullwidth {
     flex-direction: column;
   }
   .description-block-full,
@@ -243,8 +240,8 @@ header {
     <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Creating Culture Together</div></div>
   </div>
 
-  <!-- INFO + CONTACT FLEX -->
-  <div class="info-contact-container">
+  <!-- INFO + CONTACT FULL WIDTH -->
+  <div class="info-contact-fullwidth">
     <!-- DESCRIPTION LEFT -->
     <div class="description-block-full">
       <h2>Graffiti Artist & Event Organizer</h2>
