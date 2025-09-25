@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <link rel="icon" href="favicon.png" type="image/png">
-<link rel="apple-touch-icon" href="favicon.png">
-<meta name="theme-color" content="#000000">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <meta name="theme-color" content="#000000">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TORB — Street Artist</title>
@@ -86,6 +86,25 @@
       color: #000;
     }
 
+    /* Блок мероприятий */
+    .event-card:hover {
+      transform: translateY(-10px);
+    }
+
+    @media (max-width: 900px) {
+      #events div {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .event-card {
+        max-width:90%;
+        margin-bottom:30px;
+      }
+    }
+
     @media (max-width: 600px) {
       h1 {
         font-size: 3rem;
@@ -107,52 +126,34 @@
   <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
   <p>Organizer of festivals, jams, and cultural events.</p>
   <p>Painting walls, building art spaces, and taking part in international projects.</p>
-<!-- Блок мероприятий без заголовка -->
-<section id="events" style="margin:60px 0; text-align:center;">
-  <div style="display:flex; flex-wrap:wrap; gap:40px; justify-content:center;">
 
-    <!-- Мастер-классы -->
-    <div class="event-card" style="max-width:300px; text-align:center; transition: transform 0.3s;">
-      <h3 style="font-family: 'Russo One', sans-serif;">Мастер-классы</h3>
-      <p style="color:#ccc;">Провожу индивидуальные и групповые занятия по граффити, обучаю стилям шрифтов, композиции и техникам спрея.</p>
-      <img src="masterclass1.jpg" alt="Мастер-класс" style="width:100%; border-radius:8px; margin-top:10px;">
+  <!-- Блок мероприятий без заголовка -->
+  <section id="events" style="margin:60px 0; text-align:center;">
+    <div style="display:flex; flex-wrap:wrap; gap:40px; justify-content:center;">
+
+      <!-- Мастер-классы -->
+      <div class="event-card" style="max-width:300px; text-align:center; transition: transform 0.3s;">
+        <h3 style="font-family: 'Russo One', sans-serif;">Мастер-классы</h3>
+        <p style="color:#ccc;">Провожу индивидуальные и групповые занятия по граффити, обучаю стилям шрифтов, композиции и техникам спрея.</p>
+        <img src="masterclass1.jpg" alt="Мастер-класс" style="width:100%; border-radius:8px; margin-top:10px;">
+      </div>
+
+      <!-- Фестивали и выставки -->
+      <div class="event-card" style="max-width:300px; text-align:center; transition: transform 0.3s;">
+        <h3 style="font-family: 'Russo One', sans-serif;">Фестивали и выставки</h3>
+        <p style="color:#ccc;">Участвую в городских и международных арт-фестивалях, выставках уличного искусства и совместных проектах с художниками.</p>
+        <img src="festival1.jpg" alt="Фестиваль" style="width:100%; border-radius:8px; margin-top:10px;">
+      </div>
+
+      <!-- Джемы и граффити-баттлы -->
+      <div class="event-card" style="max-width:300px; text-align:center; transition: transform 0.3s;">
+        <h3 style="font-family: 'Russo One', sans-serif;">Джемы и граффити-баттлы</h3>
+        <p style="color:#ccc;">Участвую в джемах и баттлах, создаю живые работы и развиваю уличное сообщество.</p>
+        <img src="jam1.jpg" alt="Джем" style="width:100%; border-radius:8px; margin-top:10px;">
+      </div>
+
     </div>
-
-    <!-- Фестивали и выставки -->
-    <div class="event-card" style="max-width:300px; text-align:center; transition: transform 0.3s;">
-      <h3 style="font-family: 'Russo One', sans-serif;">Фестивали и выставки</h3>
-      <p style="color:#ccc;">Участвую в городских и международных арт-фестивалях, выставках уличного искусства и совместных проектах с художниками.</p>
-      <img src="festival1.jpg" alt="Фестиваль" style="width:100%; border-radius:8px; margin-top:10px;">
-    </div>
-
-    <!-- Джемы и граффити-баттлы -->
-    <div class="event-card" style="max-width:300px; text-align:center; transition: transform 0.3s;">
-      <h3 style="font-family: 'Russo One', sans-serif;">Джемы и граффити-баттлы</h3>
-      <p style="color:#ccc;">Участвую в джемах и баттлах, создаю живые работы и развиваю уличное сообщество.</p>
-      <img src="jam1.jpg" alt="Джем" style="width:100%; border-radius:8px; margin-top:10px;">
-    </div>
-
-  </div>
-</section>
-
-<style>
-  /* Hover эффект для карточек */
-  .event-card:hover {
-    transform: translateY(-10px);
-  }
-
-  /* Адаптивность */
-  @media (max-width: 900px) {
-    #events div {
-      flex-direction: column;
-      align-items: center;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .event-card {
-      max-width
-
+  </section>
 
   <div class="links">
     <a href="https://www.instagram.com/trbkwsk/?igsh=a2swN29pc2h0dHlz&utm_source=qr" target="_blank">Instagram</a>
@@ -162,48 +163,49 @@
     <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
     <a href="https://streeet.art/@trbkwsk" target="_blank" style="background: #ffcc00; color: #000; border-color: #ffcc00;">STREEET.ART</a>
   </div>
+
+  <!-- Кнопка Email -->
+  <div class="links" style="margin-top:40px;">
+    <a href="mailto:trbkwsk@gmail.com" 
+       style="
+         background:#e74c3c;
+         color:#fff;
+         border:2px solid #e74c3c;
+         padding:12px 22px;
+         border-radius:4px;
+         text-decoration:none;
+         font-size:1rem;
+         position:relative;
+         overflow:hidden;
+         transition:0.3s;
+       ">
+      Email
+      <span style="
+         content:'';
+         position:absolute;
+         left:0; top:0;
+         width:100%; height:100%;
+         background:#fff;
+         transform:scaleX(0);
+         transform-origin:right;
+         transition:transform 0.3s ease;
+         z-index:-1;
+      "></span>
+    </a>
+  </div>
+
+  <script>
+    const emailBtn = document.querySelector('a[href^="mailto:"]');
+    emailBtn.addEventListener('mouseenter', () => {
+      emailBtn.style.color = '#000';
+      emailBtn.children[0].style.transform = 'scaleX(1)';
+      emailBtn.children[0].style.transformOrigin = 'left';
+    });
+    emailBtn.addEventListener('mouseleave', () => {
+      emailBtn.style.color = '#fff';
+      emailBtn.children[0].style.transform = 'scaleX(0)';
+      emailBtn.children[0].style.transformOrigin = 'right';
+    });
+  </script>
 </body>
 </html>
-<!-- Кнопка Email отдельно ниже -->
-<div class="links" style="margin-top:40px;">
-  <a href="mailto:trbkwsk@gmail.com" 
-     style="
-       background:#e74c3c;
-       color:#fff;
-       border:2px solid #e74c3c;
-       padding:12px 22px;
-       border-radius:4px;
-       text-decoration:none;
-       font-size:1rem;
-       position:relative;
-       overflow:hidden;
-       transition:0.3s;
-     ">
-    Email
-    <span style="
-       content:'';
-       position:absolute;
-       left:0; top:0;
-       width:100%; height:100%;
-       background:#fff;
-       transform:scaleX(0);
-       transform-origin:right;
-       transition:transform 0.3s ease;
-       z-index:-1;
-    "></span>
-  </a>
-</div>
-<!-- CSS hover эффект через встроенный стиль -->
-<script>
-  const emailBtn = document.querySelector('a[href^="mailto:"]');
-  emailBtn.addEventListener('mouseenter', () => {
-    emailBtn.style.color = '#000';
-    emailBtn.children[0].style.transform = 'scaleX(1)';
-    emailBtn.children[0].style.transformOrigin = 'left';
-  });
-  emailBtn.addEventListener('mouseleave', () => {
-    emailBtn.style.color = '#fff';
-    emailBtn.children[0].style.transform = 'scaleX(0)';
-    emailBtn.children[0].style.transformOrigin = 'right';
-  });
-</script>
