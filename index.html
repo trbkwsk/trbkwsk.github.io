@@ -49,4 +49,194 @@
 
     .links {
       margin-top: 35px;
-      display
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: flex-start; /* ссылки слева */
+    }
+
+    a {
+      display: inline-block;
+      padding: 12px 22px;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+
+    a:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    a:hover {
+      color: #000;
+    }
+
+    /* Блок мероприятий */
+    #events {
+      margin: 60px 0;
+    }
+
+    #events .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: flex-start;
+    }
+
+    .event-card {
+      flex: 1 1 300px;
+      text-align: left;
+      transition: transform 0.3s;
+    }
+
+    .event-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .event-card:hover {
+      transform: translateY(-10px);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 900px) {
+      #events .cards {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 3rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+
+      .event-card {
+        flex: 1 1 90%;
+      }
+
+      .links {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TORB</h1>
+    <h2>Street Artist / Graffiti Writer</h2>
+    <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
+    <p>Organizer of festivals, jams, and cultural events.</p>
+    <p>Painting walls, building art spaces, and taking part in international projects.</p>
+
+    <!-- Блок мероприятий без заголовка -->
+    <section id="events">
+      <div class="cards">
+
+        <!-- Мастер-классы -->
+        <div class="event-card">
+          <h3 style="font-family: 'Russo One', sans-serif;">Мастер-классы</h3>
+          <p style="color:#ccc;">Провожу индивидуальные и групповые занятия по граффити, обучаю стилям шрифтов, композиции и техникам спрея.</p>
+          <img src="masterclass1.jpg" alt="Мастер-класс">
+        </div>
+
+        <!-- Фестивали и выставки -->
+        <div class="event-card">
+          <h3 style="font-family: 'Russo One', sans-serif;">Фестивали и выставки</h3>
+          <p style="color:#ccc;">Участвую в городских и международных арт-фестивалях, выставках уличного искусства и совместных проектах с художниками.</p>
+          <img src="festival1.jpg" alt="Фестиваль">
+        </div>
+
+        <!-- Джемы и граффити-баттлы -->
+        <div class="event-card">
+          <h3 style="font-family: 'Russo One', sans-serif;">Джемы и граффити-баттлы</h3>
+          <p style="color:#ccc;">Участвую в джемах и баттлах, создаю живые работы и развиваю уличное сообщество.</p>
+          <img src="jam1.jpg" alt="Джем">
+        </div>
+
+      </div>
+    </section>
+
+    <div class="links">
+      <a href="https://www.instagram.com/trbkwsk/?igsh=a2swN29pc2h0dHlz&utm_source=qr" target="_blank">Instagram</a>
+      <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+      <a href="https://x.com/trbkwsk?s=21" target="_blank">X (Twitter)</a>
+      <a href="https://youtube.com/@trbkwsk?si=Wngg7RPc3PB0yVcn" target="_blank">YouTube</a>
+      <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+      <a href="https://streeet.art/@trbkwsk" target="_blank" style="background: #ffcc00; color: #000; border-color: #ffcc00;">STREEET.ART</a>
+    </div>
+
+    <!-- Кнопка Email -->
+    <div class="links" style="margin-top:40px;">
+      <a href="mailto:trbkwsk@gmail.com" 
+         style="
+           background:#e74c3c;
+           color:#fff;
+           border:2px solid #e74c3c;
+           padding:12px 22px;
+           border-radius:4px;
+           text-decoration:none;
+           font-size:1rem;
+           position:relative;
+           overflow:hidden;
+           transition:0.3s;
+         ">
+        Email
+        <span style="
+           content:'';
+           position:absolute;
+           left:0; top:0;
+           width:100%; height:100%;
+           background:#fff;
+           transform:scaleX(0);
+           transform-origin:right;
+           transition:transform 0.3s ease;
+           z-index:-1;
+        "></span>
+      </a>
+    </div>
+
+    <script>
+      const emailBtn = document.querySelector('a[href^="mailto:"]');
+      emailBtn.addEventListener('mouseenter', () => {
+        emailBtn.style.color = '#000';
+        emailBtn.children[0].style.transform = 'scaleX(1)';
+        emailBtn.children[0].style.transformOrigin = 'left';
+      });
+      emailBtn.addEventListener('mouseleave', () => {
+        emailBtn.style.color = '#fff';
+        emailBtn.children[0].style.transform = 'scaleX(0)';
+        emailBtn.children[0].style.transformOrigin = 'right';
+      });
+    </script>
+  </div>
+</body>
+</html>
