@@ -20,8 +20,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 10px 20px;
-  background: #0d0d0d;
   flex-wrap: wrap;
 }
 
@@ -33,7 +34,6 @@ body {
 .social-links {
   display: flex;
   gap: 12px;
-  flex-wrap: wrap;
 }
 
 .social-links a {
@@ -59,6 +59,9 @@ body {
   width: 100%;
   height: 80vh;
   overflow: hidden;
+  max-width: 1200px;
+  margin: 20px auto;
+  border-radius: 10px;
 }
 
 .slide {
@@ -101,20 +104,22 @@ body {
   display: flex;
   flex-direction: row;
   gap: 30px;
-  width: 100%;
-  padding: 30px 20px;
-  box-sizing: border-box;
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
   flex-wrap: wrap;
 }
 
-.description-block-full {
+.description-block-full,
+.contact-block {
   flex: 1 1 400px;
   background: rgba(0,0,0,0.5);
   padding: 25px;
   border-radius: 10px;
 }
 
-.description-block-full h2 {
+.description-block-full h2,
+.contact-block h2 {
   font-family: 'Russo One', sans-serif;
   font-size: 2rem;
   margin-bottom: 15px;
@@ -124,19 +129,6 @@ body {
   font-size: 1.1rem;
   line-height: 1.6;
   margin: 8px 0;
-}
-
-.contact-block {
-  flex: 1 1 300px;
-  background: rgba(0,0,0,0.5);
-  padding: 25px;
-  border-radius: 10px;
-}
-
-.contact-block h2 {
-  font-family: 'Russo One', sans-serif;
-  font-size: 1.8rem;
-  margin-bottom: 15px;
 }
 
 .contact-block form {
@@ -198,7 +190,7 @@ body {
   .social-links { display: none; }
   .mobile-social-links { display: flex; }
 
-  .slider-container { height: 100vw; }
+  .slider-container { height: 100vw; border-radius: 0; }
   .slide-text { font-size: 6vw; padding: 15px; }
 
   .info-contact-fullwidth { flex-direction: column; gap: 20px; }
