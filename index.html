@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TORB</title>
 <link rel="icon" href="favicon.png" type="image/png">
-<link rel="apple-touch-icon" href="favicon.png">
-<meta name="theme-color" content="#000000">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;600&display=swap');
 
@@ -18,55 +16,37 @@ body {
   color: #fff;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 header {
   width: 100%;
   background: #0d0d0d;
-  padding: 15px 40px;
+  padding: 15px 20px;
   box-sizing: border-box;
 }
 
 .header-container {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  flex-wrap: wrap;
-  gap: 10px;
 }
 
 .logo {
   font-family: 'Russo One', sans-serif;
   font-size: 2rem;
-  margin-right: 20px;
 }
 
-.social-links {
-  display: flex;
-  gap: 15px;
-  flex: 1;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.social-links a,
 .lang-switch a {
   color: #fff;
   text-decoration: none;
   font-size: 1rem;
-  transition: color 0.3s;
-  white-space: nowrap;
+  margin-left: 10px;
 }
 
-.social-links a:hover,
 .lang-switch a:hover {
   color: #ffcc00;
 }
 
-.lang-switch {
-  margin-left: 20px;
-}
-
-/* ===== SLIDER ===== */
+/* SLIDER */
 .slider-container {
   position: relative;
   width: 100%;
@@ -111,26 +91,19 @@ header {
   line-height: 1.2;
 }
 
-@media (max-width: 768px) {
-  .slide-text {
-    font-size: 5vw;
-    padding: 10px 15px;
-  }
-}
-
-/* ===== INFO + CONTACT FULL WIDTH ===== */
+/* INFO + CONTACT */
 .info-contact-fullwidth {
   display: flex;
-  gap: 40px;
+  flex-direction: column;
+  gap: 30px;
   width: 100%;
-  padding: 40px 20px;
+  padding: 30px 20px;
   box-sizing: border-box;
 }
 
 .description-block-full {
-  flex: 2;
   background: rgba(0,0,0,0.5);
-  padding: 30px;
+  padding: 25px;
   border-radius: 10px;
   color: #fff;
   text-align: left;
@@ -138,20 +111,19 @@ header {
 
 .description-block-full h2 {
   font-family: 'Russo One', sans-serif;
-  font-size: 2.5rem;
-  margin-bottom: 20px;
+  font-size: 2rem;
+  margin-bottom: 15px;
 }
 
 .description-block-full p {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   line-height: 1.6;
   margin: 8px 0;
 }
 
 .contact-block {
-  flex: 1;
   background: rgba(0,0,0,0.5);
-  padding: 30px;
+  padding: 25px;
   border-radius: 10px;
   color: #fff;
   text-align: center;
@@ -159,19 +131,19 @@ header {
 
 .contact-block h2 {
   font-family: 'Russo One', sans-serif;
-  font-size: 2rem;
-  margin-bottom: 20px;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
 }
 
 .contact-block form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 .contact-block input,
 .contact-block textarea {
-  padding: 12px;
+  padding: 10px;
   border-radius: 6px;
   border: none;
   font-size: 1rem;
@@ -197,94 +169,101 @@ header {
   background: #e6b800;
 }
 
+/* SOCIAL LINKS MOBILE */
+.social-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.social-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.social-links a:hover {
+  color: #ffcc00;
+}
+
+/* MOBILE ADAPTATION */
 @media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .logo {
-    font-size: 2rem;
-    margin: 0;
-  }
-
-  .social-links {
-    width: 100%;
-    justify-content: flex-start;
-    gap: 10px;
-    overflow-x: auto;
-  }
-
-  .lang-switch {
-    margin-left: 0;
-    margin-top: 5px;
-  }
-
-  .info-contact-fullwidth {
-    flex-direction: column;
-  }
-  .description-block-full,
-  .contact-block {
-    width: 100%;
-    padding: 20px;
-  }
-  .description-block-full h2 { font-size: 2rem; }
+  .slide-text { font-size: 5vw; padding: 10px 15px; }
+  .description-block-full, .contact-block { padding: 20px; }
+  .description-block-full h2 { font-size: 1.8rem; }
   .description-block-full p { font-size: 1rem; }
 }
 </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header>
-    <div class="header-container">
-      <h1 class="logo">TORB</h1>
-      <nav class="social-links">
-        <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
-        <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
-        <a href="https://x.com/trbkwsk" target="_blank">X</a>
-        <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
-        <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
-        <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
-      </nav>
-      <div class="lang-switch">
-        <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
-      </div>
+<header>
+  <div class="header-container">
+    <h1 class="logo">TORB</h1>
+    <div class="lang-switch">
+      <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
     </div>
-  </header>
+  </div>
+</header>
 
-  <!-- SLIDER -->
-  <div class="slider-container">
-    <!-- Example slides -->
-    <div class="slide active" style="background-image: url('masterclass1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
-    <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Learning Style and Technique</div></div>
-    <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Hands-on Practice</div></div>
-    <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Masterclasses for Everyone</div></div>
+<!-- SLIDER -->
+<div class="slider-container">
+  <div class="slide active" style="background-image: url('masterclass1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
+  <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Learning Style and Technique</div></div>
+  <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Hands-on Practice</div></div>
+  <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Masterclasses for Everyone</div></div>
 
-    <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Graffiti Festival</div></div>
-    <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Street Art Celebration</div></div>
-    <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Large Murals</div></div>
-    <div class="slide" style="background-image: url('festival4.png');"><div class="slide-text">International Community</div></div>
+  <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Graffiti Festival</div></div>
+  <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Street Art Celebration</div></div>
+  <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Large Murals</div></div>
+  <div class="slide" style="background-image: url('festival4.png');"><div class="slide-text">International Community</div></div>
 
-    <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Graffiti Battle</div></div>
-    <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Style vs Style</div></div>
-    <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Street Energy</div></div>
-    <div class="slide" style="background-image: url('battle4.png');"><div class="slide-text">Live Competition</div></div>
-    <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Creating Culture Together</div></div>
+  <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Graffiti Battle</div></div>
+  <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Style vs Style</div></div>
+  <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Street Energy</div></div>
+  <div class="slide" style="background-image: url('battle4.png');"><div class="slide-text">Live Competition</div></div>
+  <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Creating Culture Together</div></div>
+</div>
+
+<!-- INFO + CONTACT -->
+<div class="info-contact-fullwidth">
+  <div class="description-block-full">
+    <h2>Graffiti Artist & Event Organizer</h2>
+    <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
+    <p>Organizer of festivals, jams, and cultural events.</p>
+    <p>Painting walls, building art spaces, and taking part in international projects.</p>
   </div>
 
-  <!-- INFO + CONTACT FULL WIDTH -->
-  <div class="info-contact-fullwidth">
-    <div class="description-block-full">
-      <h2>Graffiti Artist & Event Organizer</h2>
-      <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
-      <p>Organizer of festivals, jams, and cultural events.</p>
-      <p>Painting walls, building art spaces, and taking part in international projects.</p>
-    </div>
+  <div class="contact-block">
+    <h2>Send a Message</h2>
+    <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
+      <input type="text" name="Name" placeholder="Your Name" required>
+      <input type="email" name="Email" placeholder="Your Email" required>
+      <textarea name="Message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
 
-    <div class="contact-block">
-      <h2>Send a Message</h2>
-      <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
-        <input type="text" name="Name" placeholder="Your Name" required>
-        <input type="email" name="Email" placeholder="Your Email" required>
-       
+<!-- SOCIAL LINKS -->
+<div class="social-links">
+  <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
+  <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+  <a href="https://x.com/trbkwsk" target="_blank">X</a>
+  <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
+  <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+  <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let index = 0;
+setInterval(() => {
+  slides.forEach(slide => slide.classList.remove('active'));
+  index = (index + 1) % slides.length;
+  slides[index].classList.add('active');
+}, 2000);
+</script>
+</body>
+</html>
