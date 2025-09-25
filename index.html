@@ -10,61 +10,50 @@
 
 body {
   margin: 0;
-  padding: 0;
   font-family: 'Inter', sans-serif;
   background: #0d0d0d;
   color: #fff;
 }
 
-/* HEADER */
-header {
-  width: 100%;
-  background: #0d0d0d;
-  padding: 15px 20px;
-  box-sizing: border-box;
-}
-
+/* Header */
 .header-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* logo left, socials center, lang right */
   align-items: center;
+  padding: 8px 20px;
   flex-wrap: wrap;
+  background: #0d0d0d;
 }
 
 .logo {
   font-family: 'Russo One', sans-serif;
-  font-size: 2rem;
+  font-size: 1.8rem;
+  margin: 0;
 }
 
-/* DESKTOP SOCIALS */
 .social-links {
   display: flex;
-  gap: 15px;
+  gap: 12px;
 }
 
 .social-links a {
   color: #fff;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
-.social-links a:hover {
-  color: #ffcc00;
-}
+.social-links a:hover { color: #ffcc00; }
 
-/* LANGUAGE SWITCH */
 .lang-switch a {
   color: #fff;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 0.95rem;
   margin-left: 10px;
 }
 
-.lang-switch a:hover {
-  color: #ffcc00;
-}
+.lang-switch a:hover { color: #ffcc00; }
 
-/* SLIDER */
+/* Slider */
 .slider-container {
   position: relative;
   width: 100%;
@@ -85,15 +74,13 @@ header {
   justify-content: center;
 }
 
-.slide.active {
-  opacity: 1;
-}
+.slide.active { opacity: 1; }
 
 .slide::before {
   content: "";
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top:0; left:0;
+  width:100%; height:100%;
   background: rgba(0,0,0,0.3);
 }
 
@@ -109,22 +96,22 @@ header {
   line-height: 1.2;
 }
 
-/* INFO + CONTACT */
+/* Description + Contact */
 .info-contact-fullwidth {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 30px;
   width: 100%;
   padding: 30px 20px;
   box-sizing: border-box;
+  flex-wrap: wrap;
 }
 
 .description-block-full {
+  flex: 1 1 400px;
   background: rgba(0,0,0,0.5);
   padding: 25px;
   border-radius: 10px;
-  color: #fff;
-  text-align: left;
 }
 
 .description-block-full h2 {
@@ -140,11 +127,10 @@ header {
 }
 
 .contact-block {
+  flex: 1 1 300px;
   background: rgba(0,0,0,0.5);
   padding: 25px;
   border-radius: 10px;
-  color: #fff;
-  text-align: center;
 }
 
 .contact-block h2 {
@@ -183,11 +169,9 @@ header {
   transition: background 0.3s;
 }
 
-.contact-block button:hover {
-  background: #e6b800;
-}
+.contact-block button:hover { background: #e6b800; }
 
-/* MOBILE SOCIALS */
+/* Mobile Socials */
 .mobile-social-links {
   display: none;
   gap: 10px;
@@ -202,29 +186,23 @@ header {
   text-decoration: none;
 }
 
-.mobile-social-links a:hover {
-  color: #ffcc00;
-}
+.mobile-social-links a:hover { color: #ffcc00; }
 
-/* MOBILE ADAPTATION */
+/* Mobile adaptation */
 @media (max-width: 768px) {
-  .social-links { display: none; } /* скрываем десктоп соцсети */
+  .header-container { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .social-links { display: none; }
   .mobile-social-links { display: flex; }
-
-  .slide-text { font-size: 5vw; padding: 10px 15px; }
-  .description-block-full, .contact-block { padding: 20px; }
-  .description-block-full h2 { font-size: 1.8rem; }
-  .description-block-full p { font-size: 1rem; }
+  .info-contact-fullwidth { flex-direction: column; gap: 20px; }
 }
 </style>
 </head>
 <body>
+
 <header>
   <div class="header-container">
     <h1 class="logo">TORB</h1>
-    <div class="lang-switch">
-      <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
-    </div>
+
     <nav class="social-links">
       <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
       <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
@@ -233,32 +211,25 @@ header {
       <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
       <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
     </nav>
+
+    <div class="lang-switch">
+      <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
+    </div>
   </div>
 </header>
 
 <!-- SLIDER -->
 <div class="slider-container">
   <div class="slide active" style="background-image: url('masterclass1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
-  <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Learning Style and Technique</div></div>
-  <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Hands-on Practice</div></div>
-  <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Masterclasses for Everyone</div></div>
-
-  <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Graffiti Festival</div></div>
-  <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Street Art Celebration</div></div>
-  <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Large Murals</div></div>
-  <div class="slide" style="background-image: url('festival4.png');"><div class="slide-text">International Community</div></div>
-
-  <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Graffiti Battle</div></div>
-  <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Style vs Style</div></div>
-  <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Street Energy</div></div>
-  <div class="slide" style="background-image: url('battle4.png');"><div class="slide-text">Live Competition</div></div>
-  <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Creating Culture Together</div></div>
+  <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Learning Style & Technique</div></div>
+  <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Festivals & Exhibitions</div></div>
+  <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Graffiti Battles & Jams</div></div>
 </div>
 
 <!-- INFO + CONTACT -->
 <div class="info-contact-fullwidth">
   <div class="description-block-full">
-    <h2>Graffiti Artist & Event Organizer</h2>
+    <h2>About Me</h2>
     <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
     <p>Organizer of festivals, jams, and cultural events.</p>
     <p>Painting walls, building art spaces, and taking part in international projects.</p>
@@ -267,22 +238,22 @@ header {
   <div class="contact-block">
     <h2>Send a Message</h2>
     <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
-      <input type="text" name="Name" placeholder="Your Name" required>
-      <input type="email" name="Email" placeholder="Your Email" required>
-      <textarea name="Message" placeholder="Your Message" required></textarea>
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" required></textarea>
       <button type="submit">Send</button>
     </form>
   </div>
+</div>
 
-  <!-- MOBILE SOCIALS -->
-  <div class="mobile-social-links">
-      <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
-      <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
-      <a href="https://x.com/trbkwsk" target="_blank">X</a>
-      <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
-      <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
-      <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
-  </div>
+<!-- MOBILE SOCIALS -->
+<div class="mobile-social-links">
+  <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
+  <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+  <a href="https://x.com/trbkwsk" target="_blank">X</a>
+  <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
+  <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+  <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
 </div>
 
 <script>
@@ -292,7 +263,7 @@ setInterval(() => {
   slides.forEach(slide => slide.classList.remove('active'));
   index = (index + 1) % slides.length;
   slides[index].classList.add('active');
-}, 2000);
+}, 2000); // auto-slide every 2 seconds
 </script>
 </body>
 </html>
