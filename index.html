@@ -1,184 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TORB — Street Artist</title>
-<link rel="icon" href="favicon.png" type="image/png">
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-body {
-  margin: 0;
-  padding: 20px 10px;
-  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TORB — Street Artist</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <meta name="theme-color" content="#000000">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;600&display=swap');
 
-h1 {
-  font-family: 'Russo One', sans-serif;
-  font-size: 3.5rem;
-  text-transform: uppercase;
-  margin: 0 0 20px 0;
-  text-align: center;
-}
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0d0d0d;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+    }
 
-p {
-  font-size: 1rem;
-  color: #ccc;
-  line-height: 1.5;
-  max-width: 700px;
-  margin: 0 auto 40px auto;
-  text-align: center;
-}
+    header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px 40px;
+      background: #0d0d0d;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-/* --- Three blocks in a row --- */
-.events-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
 
-.event-card {
-  flex: 1 1 30%;
-  max-width: 32%;
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-}
+    header .logo {
+      font-family: 'Russo One', sans-serif;
+      font-size: 2rem;
+      margin: 0;
+    }
 
-.event-card img {
-  width: 100%;
-  display: block;
-  filter: brightness(60%);
-  transition: transform 0.5s ease;
-}
+    header .social-links {
+      display: flex;
+      gap: 15px;
+    }
 
-.event-card img:hover {
-  transform: scale(1.05);
-}
+    header .social-links a,
+    header .lang-switch a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
 
-.overlay-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  text-align: center;
-  padding: 10px 15px;
-}
+    header .social-links a:hover,
+    header .lang-switch a:hover {
+      color: #ffcc00;
+    }
 
-.overlay-text h3 {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.5rem;
-  margin-bottom: 8px;
-  color: #ffcc00;
-  font-weight: 600;
-}
+    .description {
+      font-size: 1.2rem;
+      color: #ccc;
+      line-height: 1.6;
+      margin: 40px auto;
+      padding: 0 40px;
+      text-align: center;
+    }
 
-.overlay-text p {
-  font-size: 1rem;
-  line-height: 1.4;
-}
+    .slider-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 40px;
+      flex-wrap: wrap;
+    }
 
-@media (max-width: 900px) {
-  .event-card { max-width: 48%; flex: 1 1 48%; }
-}
+    .slider {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
 
-@media (max-width: 600px) {
-  .events-row { flex-direction: column; }
-  .event-card { max-width: 100%; margin-bottom: 20px; }
-}
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: all 1s ease;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
 
-/* Links styling */
-.links {
-  margin-top: 35px;
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+    .slide.active {
+      left: 0;
+      opacity: 1;
+    }
 
-a {
-  display: inline-block;
-  padding: 12px 22px;
-  border: 2px solid #fff;
-  border-radius: 4px;
-  color: #fff;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: 0.3s;
-}
-a:hover { background: #fff; color: #000; }
-</style>
+    .slide::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+    }
+
+    .slide-text {
+      position: relative;
+      padding: 10px 15px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      z-index: 2;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <div class="header-right">
+      <h1 class="logo">TORB</h1>
+      <nav class="social-links">
+        <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
+        <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+        <a href="https://x.com/trbkwsk" target="_blank">X</a>
+        <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
+        <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+        <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+      </nav>
+      <div class="lang-switch">
+        <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
+      </div>
+    </div>
+  </header>
 
-<h1>TORB</h1>
-<p>Creating graffiti focused on style, lettering, and visual storytelling. Organizer of festivals, jams, and cultural events. Painting walls, building art spaces, and taking part in international projects.</p>
+  <div class="description">
+    Creating graffiti focused on style, lettering, and visual storytelling. 
+    Organizer of festivals, jams, and cultural events. 
+    Painting walls, building art spaces, and taking part in international projects.
+  </div>
 
-<div class="events-row">
-  <!-- Masterclasses -->
-  <div class="event-card">
-    <div class="slider" data-slider="master">
-      <div class="slide"><img src="masterclass1.png"><div class="overlay-text"><h3>Masterclasses</h3><p>Teaching style and spray techniques.</p></div></div>
-      <div class="slide"><img src="masterclass2.png"><div class="overlay-text"><h3>Masterclasses</h3><p>Practical sessions for beginners.</p></div></div>
-      <div class="slide"><img src="masterclass3.png"><div class="overlay-text"><h3>Masterclasses</h3><p>Color and composition work.</p></div></div>
-      <div class="slide"><img src="masterclass4.png"><div class="overlay-text"><h3>Masterclasses</h3><p>Analysis of famous artists' styles.</p></div></div>
+  <div class="slider-container">
+    <!-- Masterclasses -->
+    <div class="slider" id="slider1">
+      <div class="slide active" style="background-image: url('master1.png');">
+        <div class="slide-text">Masterclasses</div>
+      </div>
+      <div class="slide" style="background-image: url('master2.png');">
+        <div class="slide-text">Masterclasses</div>
+      </div>
+      <div class="slide" style="background-image: url('master3.png');">
+        <div class="slide-text">Masterclasses</div>
+      </div>
+    </div>
+
+    <!-- Festivals -->
+    <div class="slider" id="slider2">
+      <div class="slide active" style="background-image: url('fest1.png');">
+        <div class="slide-text">Festivals</div>
+      </div>
+      <div class="slide" style="background-image: url('fest2.png');">
+        <div class="slide-text">Festivals</div>
+      </div>
+      <div class="slide" style="background-image: url('fest3.png');">
+        <div class="slide-text">Festivals</div>
+      </div>
+      <div class="slide" style="background-image: url('fest4.png');">
+        <div class="slide-text">Festivals</div>
+      </div>
+    </div>
+
+    <!-- Battles -->
+    <div class="slider" id="slider3">
+      <div class="slide active" style="background-image: url('battle1.png');">
+        <div class="slide-text">Graffiti Battles</div>
+      </div>
+      <div class="slide" style="background-image: url('battle2.png');">
+        <div class="slide-text">Graffiti Battles</div>
+      </div>
+      <div class="slide" style="background-image: url('battle3.png');">
+        <div class="slide-text">Graffiti Battles</div>
+      </div>
+      <div class="slide" style="background-image: url('battle4.png');">
+        <div class="slide-text">Graffiti Battles</div>
+      </div>
+      <div class="slide" style="background-image: url('battle5.png');">
+        <div class="slide-text">Graffiti Battles</div>
+      </div>
     </div>
   </div>
 
-  <!-- Festivals -->
-  <div class="event-card">
-    <div class="slider" data-slider="festival">
-      <div class="slide"><img src="festival1.png"><div class="overlay-text"><h3>Festivals</h3><p>City and international art festivals.</p></div></div>
-      <div class="slide"><img src="festival2.png"><div class="overlay-text"><h3>Festivals</h3><p>Graffiti and street art exhibitions.</p></div></div>
-      <div class="slide"><img src="festival3.png"><div class="overlay-text"><h3>Festivals</h3><p>Participation in cultural projects.</p></div></div>
-      <div class="slide"><img src="festival4.png"><div class="overlay-text"><h3>Festivals</h3><p>Presentations and workshops.</p></div></div>
-    </div>
-  </div>
+  <script>
+    function startSlider(sliderId) {
+      const slides = document.querySelectorAll(`#${sliderId} .slide`);
+      let index = 0;
+      setInterval(() => {
+        slides[index].classList.remove("active");
+        index = (index + 1) % slides.length;
+        slides[index].classList.add("active");
+      }, 4000);
+    }
 
-  <!-- Battles -->
-  <div class="event-card">
-    <div class="slider" data-slider="battle">
-      <div class="slide"><img src="battle1.png"><div class="overlay-text"><h3>Battles</h3><p>Organizing graffiti battles and jams.</p></div></div>
-      <div class="slide"><img src="battle2.png"><div class="overlay-text"><h3>Battles</h3><p>Street competitions for artists.</p></div></div>
-      <div class="slide"><img src="battle3.png"><div class="overlay-text"><h3>Battles</h3><p>Supporting local teams and projects.</p></div></div>
-      <div class="slide"><img src="battle4.png"><div class="overlay-text"><h3>Battles</h3><p>Live events and art scene.</p></div></div>
-      <div class="slide"><img src="battle5.png"><div class="overlay-text"><h3>Battles</h3><p>Creating spaces for artists.</p></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- Social links -->
-<div class="links">
-  <a href="https://www.instagram.com/trbkwsk" target="_blank">Instagram</a>
-  <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
-  <a href="https://x.com/trbkwsk?s=21" target="_blank">X (Twitter)</a>
-  <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
-  <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
-  <a href="https://streeet.art/@trbkwsk" target="_blank" style="background:#ffcc00;color:#000;border-color:#ffcc00;">STREEET.ART</a>
-</div>
-
-<!-- Email -->
-<div class="links" style="margin-top:40px;">
-  <a href="mailto:trbkwsk@gmail.com" style="background:#e74c3c;color:#fff;border:2px solid #e74c3c;padding:12px 22px;border-radius:4px;text-decoration:none;font-size:1rem;">Email</a>
-</div>
-
-<script>
-// Simple autoplay slider without arrows
-document.querySelectorAll('.slider').forEach(slider => {
-  const slides = slider.querySelectorAll('.slide');
-  let index = 0;
-  function showSlide(i){
-    slides.forEach((s,j)=> s.style.display = (i===j) ? 'block':'none');
-  }
-  showSlide(index);
-  setInterval(()=>{ index = (index+1)%slides.length; showSlide(index); }, 4000);
-});
-</script>
-
+    startSlider("slider1");
+    startSlider("slider2");
+    startSlider("slider3");
+  </script>
 </body>
 </html>
