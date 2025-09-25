@@ -5,274 +5,236 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TORB</title>
 <link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="favicon.png">
+<meta name="theme-color" content="#000000">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;600&display=swap');
-
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #0d0d0d;
-  color: #fff;
-}
-
-/* HEADER */
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 10px 20px;
-  flex-wrap: wrap;
-}
-
-.logo {
-  font-family: 'Russo One', sans-serif;
-  font-size: 1.8rem;
-}
-
-.social-links {
-  display: flex;
-  gap: 12px;
-}
-
-.social-links a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.95rem;
-}
-
-.social-links a:hover { color: #ffcc00; }
-
-.lang-switch a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.95rem;
-  margin-left: 10px;
-}
-
-.lang-switch a:hover { color: #ffcc00; }
-
-/* SLIDER */
-.slider-container {
-  position: relative;
-  width: 100%;
-  height: 80vh;
-  overflow: hidden;
-  max-width: 1200px;
-  margin: 20px auto;
-  border-radius: 10px;
-}
-
-.slide {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 1s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.slide.active { opacity: 1; }
-
-.slide::before {
-  content: "";
-  position: absolute;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.3);
-}
-
-.slide-text {
-  position: relative;
-  color: #fff;
-  font-family: 'Russo One', sans-serif;
-  font-size: 3vw;
-  text-align: center;
-  padding: 20px;
-  text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-  max-width: 90%;
-  line-height: 1.2;
-}
-
-/* INFO + CONTACT */
-.info-contact-fullwidth {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  max-width: 1200px;
-  margin: 30px auto;
-  padding: 20px;
-  flex-wrap: wrap;
-}
-
-.description-block-full,
-.contact-block {
-  flex: 1 1 400px;
-  background: rgba(0,0,0,0.5);
-  padding: 25px;
-  border-radius: 10px;
-}
-
-.description-block-full h2,
-.contact-block h2 {
-  font-family: 'Russo One', sans-serif;
-  font-size: 2rem;
-  margin-bottom: 15px;
-}
-
-.description-block-full p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin: 8px 0;
-}
-
-.contact-block form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.contact-block input,
-.contact-block textarea {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  font-size: 1rem;
-}
-
-.contact-block textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.contact-block button {
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  background: #ffcc00;
-  color: #000;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.contact-block button:hover { background: #e6b800; }
-
-/* MOBILE SOCIALS */
-.mobile-social-links {
-  display: none;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
-
-.mobile-social-links a {
-  font-size: 0.9rem;
-  color: #fff;
-  text-decoration: none;
-}
-
-.mobile-social-links a:hover { color: #ffcc00; }
-
-/* MOBILE ADAPTATION */
-@media (max-width: 768px) {
-  .header-container { 
-    flex-direction: row; 
-    justify-content: space-between; 
-    align-items: center; 
+  body {
+    margin: 0;
+    padding: 0;
+    background: #0d0d0d;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
   }
-  .social-links { display: none; }
-  .mobile-social-links { display: flex; }
 
-  .slider-container { height: 100vw; border-radius: 0; }
-  .slide-text { font-size: 6vw; padding: 15px; }
+  /* Header */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 40px;
+    border-bottom: 1px solid #333;
+    flex-wrap: wrap;
+  }
 
-  .info-contact-fullwidth { flex-direction: column; gap: 20px; }
-}
+  .logo {
+    font-family: 'Russo One', sans-serif;
+    font-size: 2rem;
+  }
+
+  .socials, .language-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .socials a, .language-switch button {
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: 0.3s;
+  }
+
+  .socials a:hover, .language-switch button:hover {
+    color: #ffcc00;
+  }
+
+  /* Slider */
+  .slider-container {
+    position: relative;
+    width: 100%;
+    max-height: 600px;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    width: 100%;
+    height: 600px;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  .slide.active {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  /* About & Contact */
+  .content-section {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 40px;
+    gap: 40px;
+  }
+
+  .about {
+    flex: 1 1 400px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .contact-form {
+    flex: 1 1 400px;
+  }
+
+  .contact-form input, .contact-form textarea {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .contact-form button {
+    padding: 12px 20px;
+    background: #ffcc00;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .contact-form button:hover {
+    background: #e6b800;
+  }
+
+  /* Footer social links for mobile */
+  .mobile-socials {
+    display: none;
+    justify-content: center;
+    padding: 20px;
+    gap: 10px;
+  }
+
+  .mobile-socials a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 900px) {
+    .slider-container {
+      max-height: 400px;
+    }
+    .content-section {
+      flex-direction: column;
+    }
+    .mobile-socials {
+      display: flex;
+    }
+    .socials {
+      display: none;
+    }
+    .language-switch {
+      order: 2;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .slider-container {
+      max-height: 300px;
+    }
+  }
+
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-container">
-    <h1 class="logo">TORB</h1>
-    <nav class="social-links">
-      <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
-      <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
-      <a href="https://x.com/trbkwsk" target="_blank">X</a>
-      <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
-      <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
-      <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
-    </nav>
-    <div class="lang-switch">
-      <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
-    </div>
+  <div class="logo">TORB</div>
+  <div class="socials">
+    <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+    <a href="https://x.com/trbkwsk?s=21" target="_blank">X</a>
+    <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
+    <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+    <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+  </div>
+  <div class="language-switch">
+    <button>EN</button>
+    <button>RU</button>
   </div>
 </header>
 
+<!-- Slider -->
 <div class="slider-container">
-  <!-- MASTERCLASS 4 -->
-  <div class="slide active" style="background-image: url('masterclass1.png');"><div class="slide-text">Graffiti Masterclass 1</div></div>
-  <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Graffiti Masterclass 2</div></div>
-  <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Graffiti Masterclass 3</div></div>
-  <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Graffiti Masterclass 4</div></div>
-
-  <!-- FESTIVAL 4 -->
-  <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Festival 1</div></div>
-  <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Festival 2</div></div>
-  <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Festival 3</div></div>
-  <div class="slide" style="background-image: url('festival4.png');"><div class="slide-text">Festival 4</div></div>
-
-  <!-- BATTLES 5 -->
-  <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Battle 1</div></div>
-  <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Battle 2</div></div>
-  <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Battle 3</div></div>
-  <div class="slide" style="background-image: url('battle4.png');"><div class="slide-text">Battle 4</div></div>
-  <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Battle 5</div></div>
+  <!-- Masterclass 4 -->
+  <div class="slide active" style="background-image: url('masterclass1.png');"></div>
+  <div class="slide" style="background-image: url('masterclass2.png');"></div>
+  <div class="slide" style="background-image: url('masterclass3.png');"></div>
+  <div class="slide" style="background-image: url('masterclass4.png');"></div>
+  <!-- Festival 4 -->
+  <div class="slide" style="background-image: url('festival1.png');"></div>
+  <div class="slide" style="background-image: url('festival2.png');"></div>
+  <div class="slide" style="background-image: url('festival3.png');"></div>
+  <div class="slide" style="background-image: url('festival4.png');"></div>
+  <!-- Battle 5 -->
+  <div class="slide" style="background-image: url('battle1.png');"></div>
+  <div class="slide" style="background-image: url('battle2.png');"></div>
+  <div class="slide" style="background-image: url('battle3.png');"></div>
+  <div class="slide" style="background-image: url('battle4.png');"></div>
+  <div class="slide" style="background-image: url('battle5.png');"></div>
 </div>
 
-<div class="info-contact-fullwidth">
-  <div class="description-block-full">
-    <h2>About Me</h2>
+<!-- About & Contact -->
+<div class="content-section">
+  <div class="about">
     <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
     <p>Organizer of festivals, jams, and cultural events.</p>
     <p>Painting walls, building art spaces, and taking part in international projects.</p>
   </div>
 
-  <div class="contact-block">
-    <h2>Send a Message</h2>
-    <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
+  <div class="contact-form">
+    <form action="mailto:trbkwsk@gmail.com" method="POST" enctype="text/plain">
       <input type="text" name="name" placeholder="Your Name" required>
       <input type="email" name="email" placeholder="Your Email" required>
-      <textarea name="message" placeholder="Your Message" required></textarea>
-      <button type="submit">Send</button>
+      <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
     </form>
   </div>
 </div>
 
-<div class="mobile-social-links">
+<!-- Mobile social links -->
+<div class="mobile-socials">
   <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
   <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
-  <a href="https://x.com/trbkwsk" target="_blank">X</a>
+  <a href="https://x.com/trbkwsk?s=21" target="_blank">X</a>
   <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
   <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
   <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
 </div>
 
 <script>
-const slides = document.querySelectorAll('.slide');
-let index = 0;
-setInterval(() => {
-  slides.forEach(slide => slide.classList.remove('active'));
-  index = (index + 1) % slides.length;
-  slides[index].classList.add('active');
-}, 2000);
+  // Slider logic
+  const slides = document.querySelectorAll('.slide');
+  let index = 0;
+  setInterval(() => {
+    slides.forEach(slide => slide.classList.remove('active'));
+    index = (index + 1) % slides.length;
+    slides[index].classList.add('active');
+  }, 2000);
 </script>
 
 </body>
