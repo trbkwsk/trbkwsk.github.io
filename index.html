@@ -168,12 +168,60 @@
           <img src="masterclass1.jpg" alt="Мастер-класс">
         </div>
 
-        <!-- Фестивали и выставки -->
         <div class="event-card">
-          <h3 style="font-family: 'Russo One', sans-serif;">Фестивали и выставки</h3>
-          <p style="color:#ccc;">Участвую в городских и международных арт-фестивалях, выставках уличного искусства и совместных проектах с художниками.</p>
-          <img src="festival1.jpg" alt="Фестиваль">
-        </div>
+  <h3 style="font-family: 'Russo One', sans-serif;">Фестивали и выставки</h3>
+  <p style="color:#ccc;">
+    Участвую в городских и международных арт-фестивалях, выставках уличного искусства и совместных проектах с художниками.
+  </p>
+
+  <!-- Слайдер -->
+  <div class="slider-festivals">
+    <img src="festival1.png" alt="Фестиваль 1">
+    <img src="festival2.png" alt="Фестиваль 2">
+    <img src="festival3.png" alt="Фестиваль 3">
+    <img src="festival4.png" alt="Фестиваль 4">
+  </div>
+</div>
+
+<style>
+  .slider-festivals {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .slider-festivals img {
+    width: 100%;
+    display: none;
+  }
+
+  .slider-festivals img.active {
+    display: block;
+  }
+</style>
+
+<script>
+  const slidesFestivals = document.querySelectorAll('.slider-festivals img');
+  let currentFestival = 0;
+
+  function showFestivalSlide(index) {
+    slidesFestivals.forEach((img, i) => img.classList.remove('active'));
+    slidesFestivals[index].classList.add('active');
+  }
+
+  function nextFestivalSlide() {
+    currentFestival = (currentFestival + 1) % slidesFestivals.length;
+    showFestivalSlide(currentFestival);
+  }
+
+  // Инициализация
+  showFestivalSlide(currentFestival);
+  setInterval(nextFestivalSlide, 3000); // смена слайдов каждые 3 секунды
+</script>
+
 
     <div class="event-card">
   <h3 style="font-family: 'Russo One', sans-serif;">Граффити баттлы и мероприятия</h3>
