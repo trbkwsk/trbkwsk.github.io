@@ -1,157 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TORB — Graffiti Artist</title>
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="favicon.png">
-  <meta name="theme-color" content="#000000">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;600&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TORB — Graffiti Artist</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="favicon.png">
+<meta name="theme-color" content="#000000">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;600&display=swap');
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      background: #0d0d0d;
-      color: #fff;
-    }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: #0d0d0d;
+  color: #fff;
+}
 
-    /* ===== HEADER ===== */
-    header {
-      width: 100%;
-      background: #0d0d0d;
-      padding: 15px 40px;
-      box-sizing: border-box;
-    }
+/* ===== HEADER ===== */
+header {
+  width: 100%;
+  background: #0d0d0d;
+  padding: 15px 40px;
+  box-sizing: border-box;
+}
 
-    .header-container {
-      display: flex;
-      align-items: center;
-      width: 100%;
-    }
+.header-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
 
-    .logo {
-      font-family: 'Russo One', sans-serif;
-      font-size: 2rem;
-      margin-right: 40px;
-    }
+.logo {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2rem;
+  margin-right: 40px;
+}
 
-    .social-links {
-      display: flex;
-      gap: 15px;
-      flex: 1;
-      justify-content: center;
-    }
+.social-links {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+  justify-content: center;
+}
 
-    .social-links a,
-    .lang-switch a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: color 0.3s;
-    }
+.social-links a,
+.lang-switch a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
 
-    .social-links a:hover,
-    .lang-switch a:hover {
-      color: #ffcc00;
-    }
+.social-links a:hover,
+.lang-switch a:hover {
+  color: #ffcc00;
+}
 
-    .lang-switch {
-      margin-left: 20px;
-    }
+.lang-switch {
+  margin-left: 20px;
+}
 
-    /* ===== SLIDER ===== */
-    .slider-container {
-      position: relative;
-      width: 100%;
-      height: 80vh;
-      overflow: hidden;
-    }
+/* ===== SLIDER ===== */
+.slider-container {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  overflow: hidden;
+}
 
-    .slide {
-      display: none; /* скрываем все слайды */
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-    }
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    .slide.active {
-      display: flex; /* показываем только активный слайд */
-    }
+.slide.active {
+  opacity: 1;
+}
 
-    .slide::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-    }
+.slide::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3); /* затемнение для читаемости текста */
+}
 
-    .slide-text {
-      position: relative;
-      padding: 15px 20px;
-      font-size: 1.4rem;
-      font-weight: 600;
-      z-index: 2;
-      color: #fff;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
-    }
+.slide-text {
+  position: relative;
+  color: #fff;
+  font-family: 'Russo One', sans-serif;
+  font-size: 2rem;
+  text-align: center;
+  padding: 10px 20px;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+}
 
-    /* ===== DESCRIPTION ===== */
-    .description-block {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 30px 40px;
-      background: rgba(0,0,0,0.5); /* затемнённый фон */
-      border-radius: 10px;
-      color: #fff;
-      text-align: center;
-    }
+/* ===== DESCRIPTION ===== */
+.description-block {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px 40px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+}
 
-    .description-block h2 {
-      font-family: 'Russo One', sans-serif;
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-    }
+.description-block h2 {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
 
-    .description-block p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      margin: 10px 0;
-    }
+.description-block p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 10px 0;
+}
 
-    @media (max-width: 768px) {
-      .slide-text {
-        font-size: 1.1rem;
-        padding: 10px 15px;
-      }
-      .description-block {
-        padding: 20px;
-      }
-      .description-block h2 {
-        font-size: 2rem;
-      }
-      .description-block p {
-        font-size: 1rem;
-      }
-      .logo {
-        font-size: 1.5rem;
-        margin-right: 20px;
-      }
-      .social-links {
-        gap: 10px;
-      }
-    }
-  </style>
+@media (max-width: 768px) {
+  .slide-text { font-size: 1.5rem; padding: 10px 15px; }
+  .description-block { padding: 20px; }
+  .description-block h2 { font-size: 2rem; }
+  .description-block p { font-size: 1rem; }
+  .logo { font-size: 1.5rem; margin-right: 20px; }
+  .social-links { gap: 10px; }
+}
+</style>
 </head>
 <body>
   <!-- HEADER -->
@@ -175,7 +160,7 @@
   <!-- FULLSCREEN SLIDER -->
   <div class="slider-container">
     <!-- Masterclasses -->
-    <div class="slide" style="background-image: url('masterclass1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
+    <div class="slide active" style="background-image: url('masterclass1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
     <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Sharing Style & Technique</div></div>
     <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Learning by Doing</div></div>
     <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Workshops for All Ages</div></div>
@@ -205,13 +190,12 @@
   <script>
     const slides = document.querySelectorAll('.slide');
     let index = 0;
-    slides[index].classList.add('active');
 
     setInterval(() => {
-      slides[index].classList.remove('active');
+      slides.forEach(slide => slide.classList.remove('active'));
       index = (index + 1) % slides.length;
       slides[index].classList.add('active');
-    }, 5000); // перелистывание каждые 5 секунд
+    }, 5000);
   </script>
 </body>
 </html>
