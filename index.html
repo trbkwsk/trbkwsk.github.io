@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="favicon.png">
-  <meta name="theme-color" content="#000000">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TORB — Street Artist</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="favicon.png">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@300;400;700&display=swap');
 
@@ -52,7 +50,7 @@
       display: flex;
       gap: 15px;
       flex-wrap: wrap;
-      justify-content: flex-start; /* ссылки слева */
+      justify-content: flex-start;
     }
 
     a {
@@ -91,61 +89,40 @@
       color: #000;
     }
 
-    /* Блок мероприятий */
-    #events {
-      margin: 60px 0;
-    }
-
-    #events .cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      justify-content: flex-start;
-    }
-
     .event-card {
-      flex: 1 1 300px;
       text-align: left;
-      transition: transform 0.3s;
+      margin-bottom: 40px;
     }
 
-    .event-card img {
+    .slider, .slider-festivals, .slider-masterclasses {
+      position: relative;
       width: 100%;
-      border-radius: 8px;
+      max-width: 600px;
       margin-top: 10px;
+      overflow: hidden;
+      border-radius: 8px;
     }
 
-    .event-card:hover {
-      transform: translateY(-10px);
+    .slider img, .slider-festivals img, .slider-masterclasses img {
+      width: 100%;
+      display: none;
     }
 
-    /* Адаптивность */
+    .slider img.active, .slider-festivals img.active, .slider-masterclasses img.active {
+      display: block;
+    }
+
     @media (max-width: 900px) {
-      #events .cards {
-        justify-content: center;
+      .container {
+        padding: 0 10px;
       }
     }
 
     @media (max-width: 600px) {
-      h1 {
-        font-size: 3rem;
-      }
-
-      h2 {
-        font-size: 1.2rem;
-      }
-
-      p {
-        font-size: 1rem;
-      }
-
-      .event-card {
-        flex: 1 1 90%;
-      }
-
-      .links {
-        justify-content: center;
-      }
+      h1 { font-size: 3rem; }
+      h2 { font-size: 1.2rem; }
+      p { font-size: 1rem; }
+      .links { justify-content: center; }
     }
   </style>
 </head>
@@ -157,181 +134,117 @@
     <p>Organizer of festivals, jams, and cultural events.</p>
     <p>Painting walls, building art spaces, and taking part in international projects.</p>
 
-    <!-- Блок мероприятий без заголовка -->
-    <section id="events">
-      <div class="cards">
-
-        <!-- Мастер-классы -->
-        <div class="event-card">
-          <h3 style="font-family: 'Russo One', sans-serif;">Мастер-классы</h3>
-          <p style="color:#ccc;">Провожу индивидуальные и групповые занятия по граффити, обучаю стилям шрифтов, композиции и техникам спрея.</p>
-          <img src="masterclass1.jpg" alt="Мастер-класс">
-        </div>
-
-        <div class="event-card">
-  <h3 style="font-family: 'Russo One', sans-serif;">Фестивали и выставки</h3>
-  <p style="color:#ccc;">
-    Участвую в городских и международных арт-фестивалях, выставках уличного искусства и совместных проектах с художниками.
-  </p>
-
-  <!-- Слайдер -->
-  <div class="slider-festivals">
-    <img src="festival1.png" alt="Фестиваль 1">
-    <img src="festival2.png" alt="Фестиваль 2">
-    <img src="festival3.png" alt="Фестиваль 3">
-    <img src="festival4.png" alt="Фестиваль 4">
-  </div>
-</div>
-
-<style>
-  .slider-festivals {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    margin-top: 10px;
-    overflow: hidden;
-    border-radius: 8px;
-  }
-
-  .slider-festivals img {
-    width: 100%;
-    display: none;
-  }
-
-  .slider-festivals img.active {
-    display: block;
-  }
-</style>
-
-<script>
-  const slidesFestivals = document.querySelectorAll('.slider-festivals img');
-  let currentFestival = 0;
-
-  function showFestivalSlide(index) {
-    slidesFestivals.forEach((img, i) => img.classList.remove('active'));
-    slidesFestivals[index].classList.add('active');
-  }
-
-  function nextFestivalSlide() {
-    currentFestival = (currentFestival + 1) % slidesFestivals.length;
-    showFestivalSlide(currentFestival);
-  }
-
-  // Инициализация
-  showFestivalSlide(currentFestival);
-  setInterval(nextFestivalSlide, 3000); // смена слайдов каждые 3 секунды
-</script>
-
-
+    <!-- Мастер-классы -->
     <div class="event-card">
-  <h3 style="font-family: 'Russo One', sans-serif;">Граффити баттлы и мероприятия</h3>
-  <p style="color:#ccc;">
-    Организую джемы, граффити-баттлы и городские мероприятия, создаю площадки для художников и развиваю уличное сообщество.
-  </p>
+      <h3 style="font-family: 'Russo One', sans-serif;">Мастер-классы</h3>
+      <p style="color:#ccc;">Провожу занятия по граффити, обучаю стилю и технике спрея.</p>
+      <div class="slider-masterclasses">
+        <img src="masterclass1.png" alt="Мастер-класс 1">
+        <img src="masterclass2.png" alt="Мастер-класс 2">
+        <img src="masterclass3.png" alt="Мастер-класс 3">
+        <img src="masterclass4.png" alt="Мастер-класс 4">
+      </div>
+    </div>
 
-  <!-- Слайдер -->
-  <div class="slider">
-    <img src="battle1.png" alt="Граффити баттл 1">
-    <img src="battle2.png" alt="Граффити баттл 2">
-    <img src="battle3.png" alt="Граффити баттл 3">
-    <img src="battle4.png" alt="Граффити баттл 4">
-    <img src="battle5.png" alt="Граффити баттл 5">
-  </div>
-</div>
+    <!-- Фестивали и выставки -->
+    <div class="event-card">
+      <h3 style="font-family: 'Russo One', sans-serif;">Фестивали и выставки</h3>
+      <p style="color:#ccc;">Участвую в городских и международных арт-фестивалях.</p>
+      <div class="slider-festivals">
+        <img src="festival1.png" alt="Фестиваль 1">
+        <img src="festival2.png" alt="Фестиваль 2">
+        <img src="festival3.png" alt="Фестиваль 3">
+        <img src="festival4.png" alt="Фестиваль 4">
+      </div>
+    </div>
 
-<style>
-  .slider {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    margin-top: 10px;
-    overflow: hidden;
-    border-radius: 8px;
-  }
+    <!-- Граффити баттлы -->
+    <div class="event-card">
+      <h3 style="font-family: 'Russo One', sans-serif;">Граффити баттлы</h3>
+      <p style="color:#ccc;">Организую джемы и граффити-баттлы для уличных художников.</p>
+      <div class="slider">
+        <img src="battle1.png" alt="Граффити баттл 1">
+        <img src="battle2.png" alt="Граффити баттл 2">
+        <img src="battle3.png" alt="Граффити баттл 3">
+        <img src="battle4.png" alt="Граффити баттл 4">
+        <img src="battle5.png" alt="Граффити баттл 5">
+      </div>
+    </div>
 
-  .slider img {
-    width: 100%;
-    display: none;
-  }
-
-  .slider img.active {
-    display: block;
-  }
-</style>
-
-<script>
-  const slides = document.querySelectorAll('.slider img');
-  let current = 0;
-
-  function showSlide(index) {
-    slides.forEach((img, i) => img.classList.remove('active'));
-    slides[index].classList.add('active');
-  }
-
-  function nextSlide() {
-    current = (current + 1) % slides.length;
-    showSlide(current);
-  }
-
-  // Инициализация
-  showSlide(current);
-  setInterval(nextSlide, 3000); // смена слайдов каждые 3 секунды
-</script>
-
-
-
+    <!-- Социальные ссылки -->
     <div class="links">
-      <a href="https://www.instagram.com/trbkwsk/?igsh=a2swN29pc2h0dHlz&utm_source=qr" target="_blank">Instagram</a>
+      <a href="https://www.instagram.com/trbkwsk" target="_blank">Instagram</a>
       <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
       <a href="https://x.com/trbkwsk?s=21" target="_blank">X (Twitter)</a>
-      <a href="https://youtube.com/@trbkwsk?si=Wngg7RPc3PB0yVcn" target="_blank">YouTube</a>
+      <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
       <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
       <a href="https://streeet.art/@trbkwsk" target="_blank" style="background: #ffcc00; color: #000; border-color: #ffcc00;">STREEET.ART</a>
     </div>
 
-    <!-- Кнопка Email -->
+    <!-- Email кнопка -->
     <div class="links" style="margin-top:40px;">
-      <a href="mailto:trbkwsk@gmail.com" 
-         style="
-           background:#e74c3c;
-           color:#fff;
-           border:2px solid #e74c3c;
-           padding:12px 22px;
-           border-radius:4px;
-           text-decoration:none;
-           font-size:1rem;
-           position:relative;
-           overflow:hidden;
-           transition:0.3s;
-         ">
+      <a href="mailto:trbkwsk@gmail.com" style="background:#e74c3c; color:#fff; border:2px solid #e74c3c; padding:12px 22px; border-radius:4px; text-decoration:none; font-size:1rem; position:relative; overflow:hidden; transition:0.3s;">
         Email
-        <span style="
-           content:'';
-           position:absolute;
-           left:0; top:0;
-           width:100%; height:100%;
-           background:#fff;
-           transform:scaleX(0);
-           transform-origin:right;
-           transition:transform 0.3s ease;
-           z-index:-1;
-        "></span>
+        <span style="position:absolute; left:0; top:0; width:100%; height:100%; background:#fff; transform:scaleX(0); transform-origin:right; transition:transform 0.3s ease; z-index:-1;"></span>
       </a>
     </div>
-
-    <script>
-      const emailBtn = document.querySelector('a[href^="mailto:"]');
-      emailBtn.addEventListener('mouseenter', () => {
-        emailBtn.style.color = '#000';
-        emailBtn.children[0].style.transform = 'scaleX(1)';
-        emailBtn.children[0].style.transformOrigin = 'left';
-      });
-      emailBtn.addEventListener('mouseleave', () => {
-        emailBtn.style.color = '#fff';
-        emailBtn.children[0].style.transform = 'scaleX(0)';
-        emailBtn.children[0].style.transformOrigin = 'right';
-      });
-    </script>
   </div>
+
+  <script>
+    // Слайдер мастер-классы
+    const slidesMaster = document.querySelectorAll('.slider-masterclasses img');
+    let currentMaster = 0;
+    function showMasterSlide(index) {
+      slidesMaster.forEach(img => img.classList.remove('active'));
+      slidesMaster[index].classList.add('active');
+    }
+    function nextMasterSlide() {
+      currentMaster = (currentMaster + 1) % slidesMaster.length;
+      showMasterSlide(currentMaster);
+    }
+    showMasterSlide(currentMaster);
+    setInterval(nextMasterSlide, 3000);
+
+    // Слайдер фестивали
+    const slidesFestivals = document.querySelectorAll('.slider-festivals img');
+    let currentFestival = 0;
+    function showFestivalSlide(index) {
+      slidesFestivals.forEach(img => img.classList.remove('active'));
+      slidesFestivals[index].classList.add('active');
+    }
+    function nextFestivalSlide() {
+      currentFestival = (currentFestival + 1) % slidesFestivals.length;
+      showFestivalSlide(currentFestival);
+    }
+    showFestivalSlide(currentFestival);
+    setInterval(nextFestivalSlide, 3000);
+
+    // Слайдер баттлы
+    const slidesBattle = document.querySelectorAll('.slider img');
+    let currentBattle = 0;
+    function showBattleSlide(index) {
+      slidesBattle.forEach(img => img.classList.remove('active'));
+      slidesBattle[index].classList.add('active');
+    }
+    function nextBattleSlide() {
+      currentBattle = (currentBattle + 1) % slidesBattle.length;
+      showBattleSlide(currentBattle);
+    }
+    showBattleSlide(currentBattle);
+    setInterval(nextBattleSlide, 3000);
+
+    // Email hover
+    const emailBtn = document.querySelector('a[href^="mailto:"]');
+    emailBtn.addEventListener('mouseenter', () => {
+      emailBtn.style.color = '#000';
+      emailBtn.children[0].style.transform = 'scaleX(1)';
+      emailBtn.children[0].style.transformOrigin = 'left';
+    });
+    emailBtn.addEventListener('mouseleave', () => {
+      emailBtn.style.color = '#fff';
+      emailBtn.children[0].style.transform = 'scaleX(0)';
+      emailBtn.children[0].style.transformOrigin = 'right';
+    });
+  </script>
 </body>
 </html>
