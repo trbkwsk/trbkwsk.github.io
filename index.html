@@ -175,19 +175,61 @@
           <img src="festival1.jpg" alt="Фестиваль">
         </div>
 
-        <div class="event-card">
+    <div class="event-card">
   <h3 style="font-family: 'Russo One', sans-serif;">Граффити баттлы и мероприятия</h3>
   <p style="color:#ccc;">
     Организую джемы, граффити-баттлы и городские мероприятия, создаю площадки для художников и развиваю уличное сообщество.
   </p>
-  <div style="display:flex; flex-wrap:wrap; gap:10px;">
-    <img src="battle1.png" alt="Граффити баттл 1" style="width:48%; border-radius:8px;">
-    <img src="battle2.png" alt="Граффити баттл 2" style="width:48%; border-radius:8px;">
-    <img src="battle3.png" alt="Граффити баттл 3" style="width:48%; border-radius:8px;">
-    <img src="battle4.png" alt="Граффити баттл 4" style="width:48%; border-radius:8px;">
-    <img src="battle5.png" alt="Граффити баттл 5" style="width:48%; border-radius:8px;">
+
+  <!-- Слайдер -->
+  <div class="slider">
+    <img src="battle1.png" alt="Граффити баттл 1">
+    <img src="battle2.png" alt="Граффити баттл 2">
+    <img src="battle3.png" alt="Граффити баттл 3">
+    <img src="battle4.png" alt="Граффити баттл 4">
+    <img src="battle5.png" alt="Граффити баттл 5">
   </div>
 </div>
+
+<style>
+  .slider {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 10px;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .slider img {
+    width: 100%;
+    display: none;
+  }
+
+  .slider img.active {
+    display: block;
+  }
+</style>
+
+<script>
+  const slides = document.querySelectorAll('.slider img');
+  let current = 0;
+
+  function showSlide(index) {
+    slides.forEach((img, i) => img.classList.remove('active'));
+    slides[index].classList.add('active');
+  }
+
+  function nextSlide() {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  }
+
+  // Инициализация
+  showSlide(current);
+  setInterval(nextSlide, 3000); // смена слайдов каждые 3 секунды
+</script>
+
 
 
     <div class="links">
