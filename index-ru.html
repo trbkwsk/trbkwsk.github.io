@@ -251,4 +251,25 @@ header {
     </div>
 
     <!-- Форма справа -->
-    <div class="contact-block
+    <div class="contact-block">
+      <h2>Отправить сообщение</h2>
+      <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
+        <input type="text" name="Имя" placeholder="Ваше имя" required>
+        <input type="email" name="Email" placeholder="Ваш email" required>
+        <textarea name="Сообщение" placeholder="Ваше сообщение" required></textarea>
+        <button type="submit">Отправить</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let index = 0;
+    setInterval(() => {
+      slides.forEach(slide => slide.classList.remove('active'));
+      index = (index + 1) % slides.length;
+      slides[index].classList.add('active');
+    }, 5000);
+  </script>
+</body>
+</html>
