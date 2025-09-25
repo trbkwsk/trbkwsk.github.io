@@ -5,154 +5,154 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TORB</title>
 <link rel="icon" href="favicon.png" type="image/png">
-<link rel="apple-touch-icon" href="favicon.png">
 <meta name="theme-color" content="#000000">
 
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    background: #0d0d0d;
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  background: #0d0d0d;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
 
-  /* Header */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px 40px;
-    border-bottom: 1px solid #333;
-    flex-wrap: wrap;
-  }
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 40px;
+  border-bottom: 1px solid #333;
+  flex-wrap: wrap;
+}
 
-  .logo {
-    font-family: 'Russo One', sans-serif;
-    font-size: 2rem;
-  }
+.logo {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2rem;
+}
 
-  .socials, .language-switch {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+.socials, .language-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  .socials a, .language-switch button {
-    color: #fff;
-    text-decoration: none;
-    border: none;
-    background: none;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 5px 10px;
-    transition: 0.3s;
-  }
+.socials a, .language-switch button {
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  background: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: 0.3s;
+}
 
-  .socials a:hover, .language-switch button:hover {
-    color: #ffcc00;
-  }
+.socials a:hover, .language-switch button:hover {
+  color: #ffcc00;
+}
 
-  /* Slider */
+/* Slider */
+.slider-container {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+/* About & Contact */
+.content-section {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 40px;
+  gap: 40px;
+}
+
+.about {
+  flex: 1 1 400px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.contact-form {
+  flex: 1 1 400px;
+}
+
+.contact-form input, .contact-form textarea {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.contact-form button {
+  padding: 12px 20px;
+  background: #ffcc00;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.contact-form button:hover {
+  background: #e6b800;
+}
+
+/* Mobile social links */
+.mobile-socials {
+  display: none;
+  justify-content: center;
+  padding: 20px;
+  gap: 10px;
+}
+
+.mobile-socials a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 900px) {
   .slider-container {
-    display: flex;
-    overflow: hidden;
-    width: 100%;
-    max-height: 600px;
-    position: relative;
-    margin: 0 auto;
+    height: 400px;
   }
-
-  .slide {
-    min-width: 100%;
-    transition: transform 0.8s ease;
-    background-size: cover;
-    background-position: center;
-    height: 600px;
-  }
-
-  /* About & Contact */
   .content-section {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 40px;
-    gap: 40px;
+    flex-direction: column;
   }
-
-  .about {
-    flex: 1 1 400px;
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-
-  .contact-form {
-    flex: 1 1 400px;
-  }
-
-  .contact-form input, .contact-form textarea {
-    width: 100%;
-    margin-bottom: 15px;
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-
-  .contact-form button {
-    padding: 12px 20px;
-    background: #ffcc00;
-    color: #000;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-  }
-
-  .contact-form button:hover {
-    background: #e6b800;
-  }
-
-  /* Mobile social links */
   .mobile-socials {
+    display: flex;
+  }
+  .socials {
     display: none;
-    justify-content: center;
-    padding: 20px;
-    gap: 10px;
   }
+}
 
-  .mobile-socials a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.2rem;
+@media (max-width: 500px) {
+  .slider-container {
+    height: 300px;
   }
-
-  @media (max-width: 900px) {
-    .slider-container {
-      max-height: 400px;
-    }
-    .content-section {
-      flex-direction: column;
-    }
-    .mobile-socials {
-      display: flex;
-    }
-    .socials {
-      display: none;
-    }
-  }
-
-  @media (max-width: 500px) {
-    .slider-container {
-      max-height: 300px;
-    }
-    .slide {
-      height: 300px;
-    }
-  }
-
+}
 </style>
 </head>
 <body>
@@ -174,17 +174,20 @@
 </header>
 
 <!-- Slider -->
-<div class="slider-container" id="slider">
-  <div class="slide" style="background-image: url('masterclass1.png');"></div>
+<div class="slider-container">
+  <!-- Masterclass 4 -->
+  <div class="slide active" style="background-image: url('masterclass1.png');"></div>
   <div class="slide" style="background-image: url('masterclass2.png');"></div>
   <div class="slide" style="background-image: url('masterclass3.png');"></div>
   <div class="slide" style="background-image: url('masterclass4.png');"></div>
 
+  <!-- Festival 4 -->
   <div class="slide" style="background-image: url('festival1.png');"></div>
   <div class="slide" style="background-image: url('festival2.png');"></div>
   <div class="slide" style="background-image: url('festival3.png');"></div>
   <div class="slide" style="background-image: url('festival4.png');"></div>
 
+  <!-- Battle 5 -->
   <div class="slide" style="background-image: url('battle1.png');"></div>
   <div class="slide" style="background-image: url('battle2.png');"></div>
   <div class="slide" style="background-image: url('battle3.png');"></div>
@@ -210,7 +213,6 @@
   </div>
 </div>
 
-<!-- Mobile social links -->
 <div class="mobile-socials">
   <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
   <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
@@ -221,15 +223,13 @@
 </div>
 
 <script>
-  // Slider logic using flex translate
-  const slider = document.getElementById('slider');
-  const slides = document.querySelectorAll('.slide');
-  let currentIndex = 0;
-
-  setInterval(() => {
-    currentIndex = (currentIndex + 1) % slides.length;
-    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-  }, 2000);
+const slides = document.querySelectorAll('.slide');
+let index = 0;
+setInterval(() => {
+  slides.forEach(s => s.classList.remove('active'));
+  index = (index + 1) % slides.length;
+  slides[index].classList.add('active');
+}, 2000);
 </script>
 
 </body>
