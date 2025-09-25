@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TORB — Художник граффити</title>
+<title>TORB</title>
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="favicon.png">
 <meta name="theme-color" content="#000000">
@@ -99,10 +99,12 @@ header {
   position: relative;
   color: #fff;
   font-family: 'Russo One', sans-serif;
-  font-size: 2rem;
+  font-size: 5vw; /* текст крупнее */
   text-align: center;
-  padding: 10px 20px;
-  text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+  padding: 20px;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+  max-width: 95%; /* почти на всю ширину */
+  line-height: 1.1;
 }
 
 /* ===== INFO + CONTACT FULL WIDTH ===== */
@@ -185,7 +187,7 @@ header {
 }
 
 @media (max-width: 768px) {
-  .slide-text { font-size: 1.5rem; padding: 10px 15px; }
+  .slide-text { font-size: 8vw; padding: 10px 15px; }
   .info-contact-fullwidth {
     flex-direction: column;
   }
@@ -222,41 +224,41 @@ header {
   <div class="slider-container">
     <!-- Мастер-классы -->
     <div class="slide active" style="background-image: url('masterclass1.png');"><div class="slide-text">Мастер-класс по граффити</div></div>
-    <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Обучение стилю и технике</div></div>
-    <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Учимся на практике</div></div>
+    <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Изучение стиля и техники</div></div>
+    <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Практика своими руками</div></div>
     <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Мастер-классы для всех</div></div>
 
     <!-- Фестивали -->
     <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Фестиваль граффити</div></div>
     <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Праздник уличного искусства</div></div>
-    <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Крупные муралы</div></div>
+    <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Большие муралы</div></div>
     <div class="slide" style="background-image: url('festival4.png');"><div class="slide-text">Международное сообщество</div></div>
 
     <!-- Баттлы -->
-    <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Граффити-баттл</div></div>
+    <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Граффити баттл</div></div>
     <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Стиль против стиля</div></div>
-    <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Энергия улиц</div></div>
+    <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Энергия улицы</div></div>
     <div class="slide" style="background-image: url('battle4.png');"><div class="slide-text">Живое соревнование</div></div>
-    <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Создаём культуру вместе</div></div>
+    <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Создание культуры вместе</div></div>
   </div>
 
   <!-- INFO + CONTACT FULL WIDTH -->
   <div class="info-contact-fullwidth">
-    <!-- Описание слева -->
+    <!-- About Left -->
     <div class="description-block-full">
       <h2>Художник граффити и организатор мероприятий</h2>
-      <p>Создаю граффити с акцентом на стиль, буквы и визуальные истории.</p>
-      <p>Организую фестивали, джемы и культурные мероприятия.</p>
-      <p>Рисую стены, создаю арт-пространства и участвую в международных проектах.</p>
+      <p>Создаю граффити с упором на стиль, буквы и визуальный сторителлинг.</p>
+      <p>Организую фестивали, джемы и культурные события.</p>
+      <p>Рисую на стенах, создаю арт-пространства и участвую в международных проектах.</p>
     </div>
 
-    <!-- Форма справа -->
+    <!-- Contact Right -->
     <div class="contact-block">
-      <h2>Отправить сообщение</h2>
+      <h2>Написать сообщение</h2>
       <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
-        <input type="text" name="Имя" placeholder="Ваше имя" required>
-        <input type="email" name="Email" placeholder="Ваш email" required>
-        <textarea name="Сообщение" placeholder="Ваше сообщение" required></textarea>
+        <input type="text" name="Name" placeholder="Ваше имя" required>
+        <input type="email" name="Email" placeholder="Ваш Email" required>
+        <textarea name="Message" placeholder="Ваше сообщение" required></textarea>
         <button type="submit">Отправить</button>
       </form>
     </div>
@@ -269,7 +271,7 @@ header {
       slides.forEach(slide => slide.classList.remove('active'));
       index = (index + 1) % slides.length;
       slides[index].classList.add('active');
-    }, 5000);
+    }, 2000); // каждый слайд 2 секунды
   </script>
 </body>
 </html>
