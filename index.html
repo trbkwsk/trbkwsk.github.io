@@ -28,6 +28,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -35,6 +36,23 @@ header {
   font-size: 2rem;
 }
 
+/* DESKTOP SOCIALS */
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.social-links a:hover {
+  color: #ffcc00;
+}
+
+/* LANGUAGE SWITCH */
 .lang-switch a {
   color: #fff;
   text-decoration: none;
@@ -169,27 +187,30 @@ header {
   background: #e6b800;
 }
 
-/* SOCIAL LINKS MOBILE */
-.social-links {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
+/* MOBILE SOCIALS */
+.mobile-social-links {
+  display: none;
+  gap: 10px;
   justify-content: center;
+  flex-wrap: wrap;
   margin-top: 20px;
 }
 
-.social-links a {
+.mobile-social-links a {
+  font-size: 0.9rem;
   color: #fff;
   text-decoration: none;
-  font-size: 1rem;
 }
 
-.social-links a:hover {
+.mobile-social-links a:hover {
   color: #ffcc00;
 }
 
 /* MOBILE ADAPTATION */
 @media (max-width: 768px) {
+  .social-links { display: none; } /* скрываем десктоп соцсети */
+  .mobile-social-links { display: flex; }
+
   .slide-text { font-size: 5vw; padding: 10px 15px; }
   .description-block-full, .contact-block { padding: 20px; }
   .description-block-full h2 { font-size: 1.8rem; }
@@ -204,6 +225,14 @@ header {
     <div class="lang-switch">
       <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
     </div>
+    <nav class="social-links">
+      <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
+      <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+      <a href="https://x.com/trbkwsk" target="_blank">X</a>
+      <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
+      <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+      <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+    </nav>
   </div>
 </header>
 
@@ -244,16 +273,16 @@ header {
       <button type="submit">Send</button>
     </form>
   </div>
-</div>
 
-<!-- SOCIAL LINKS -->
-<div class="social-links">
-  <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
-  <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
-  <a href="https://x.com/trbkwsk" target="_blank">X</a>
-  <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
-  <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
-  <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+  <!-- MOBILE SOCIALS -->
+  <div class="mobile-social-links">
+      <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
+      <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+      <a href="https://x.com/trbkwsk" target="_blank">X</a>
+      <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
+      <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+      <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+  </div>
 </div>
 
 <script>
