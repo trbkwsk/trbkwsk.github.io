@@ -107,6 +107,57 @@
   <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
   <p>Organizer of festivals, jams, and cultural events.</p>
   <p>Painting walls, building art spaces, and taking part in international projects.</p>
+<!-- Блок мероприятий -->
+<section id="events" style="margin:60px 0; text-align:center;">
+  <h2 style="font-family: 'Russo One', sans-serif; font-size:2rem; margin-bottom:40px;">Мои мероприятия</h2>
+  
+  <div style="display:flex; flex-wrap:wrap; gap:40px; justify-content:center;">
+
+    <!-- Мастер-классы -->
+    <div class="event-card" style="max-width:300px; text-align:center; transition: transform 0.3s;">
+      <h3 style="font-family: 'Russo One', sans-serif;">Мастер-классы</h3>
+      <p style="color:#ccc;">Провожу индивидуальные и групповые занятия по граффити, обучаю стилям шрифтов, композиции и техникам спрея.</p>
+      <img src="masterclass1.jpg" alt="Мастер-класс" style="width:100%; border-radius:8px; margin-top:10px;">
+    </div>
+
+    <!-- Фестивали и выставки -->
+    <div class="event-card" style="max-width:300px; text-align:center; transition: transform 0.3s;">
+      <h3 style="font-family: 'Russo One', sans-serif;">Фестивали и выставки</h3>
+      <p style="color:#ccc;">Участвую в городских и международных арт-фестивалях, выставках уличного искусства и совместных проектах с художниками.</p>
+      <img src="festival1.jpg" alt="Фестиваль" style="width:100%; border-radius:8px; margin-top:10px;">
+    </div>
+
+    <!-- Джемы и граффити-баттлы -->
+    <div class="event-card" style="max-width:300px; text-align:center; transition: transform 0.3s;">
+      <h3 style="font-family: 'Russo One', sans-serif;">Джемы и граффити-баттлы</h3>
+      <p style="color:#ccc;">Участвую в джемах и баттлах, создаю живые работы и развиваю уличное сообщество.</p>
+      <img src="jam1.jpg" alt="Джем" style="width:100%; border-radius:8px; margin-top:10px;">
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* Hover эффект для карточек */
+  .event-card:hover {
+    transform: translateY(-10px);
+  }
+
+  /* Адаптивность */
+  @media (max-width: 900px) {
+    #events div {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .event-card {
+      max-width:90%;
+      margin-bottom:30px;
+    }
+  }
+</style>
 
   <div class="links">
     <a href="https://www.instagram.com/trbkwsk/?igsh=a2swN29pc2h0dHlz&utm_source=qr" target="_blank">Instagram</a>
