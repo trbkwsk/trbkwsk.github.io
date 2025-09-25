@@ -1,1 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TORB — Художник граффити</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="favicon.png">
+<meta name="theme-color" content="#000000">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;600&display=swap');
 
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: #0d0d0d;
+  color: #fff;
+}
+
+/* ===== HEADER ===== */
+header {
+  width: 100%;
+  background: #0d0d0d;
+  padding: 15px 40px;
+  box-sizing: border-box;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2rem;
+  margin-right: 40px;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+  justify-content: center;
+}
+
+.social-links a,
+.lang-switch a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.social-links a:hover,
+.lang-switch a:hover {
+  color: #ffcc00;
+}
+
+.lang-switch {
+  margin-left: 20px;
+}
+
+/* ===== SLIDER ===== */
+.slider-container {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+}
+
+.slide-text {
+  position: relative;
+  color: #fff;
+  font-family: 'Russo One', sans-serif;
+  font-size: 2rem;
+  text-align: center;
+  padding: 10px 20px;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+}
+
+/* ===== INFO + CONTACT FULL WIDTH ===== */
+.info-contact-fullwidth {
+  display: flex;
+  gap: 40px;
+  width: 100%;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.description-block-full {
+  flex: 2;
+  background: rgba(0,0,0,0.5);
+  padding: 30px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: left;
+}
+
+.description-block-full h2 {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.description-block-full p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+
+.contact-block {
+  flex: 1;
+  background: rgba(0,0,0,0.5);
+  padding: 30px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+}
+
+.contact-block h2 {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.contact-block form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-block input,
+.contact-block textarea {
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+}
+
+.contact-block textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.contact-block button {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #ffcc00;
+  color: #000;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.contact-block button:hover {
+  background: #e6b800;
+}
+
+@media (max-width: 768px) {
+  .slide-text { font-size: 1.5rem; padding: 10px 15px; }
+  .info-contact-fullwidth {
+    flex-direction: column;
+  }
+  .description-block-full,
+  .contact-block {
+    width: 100%;
+    padding: 20px;
+  }
+  .description-block-full h2 { font-size: 2rem; }
+  .description-block-full p { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <h1 class="logo">TORB</h1>
+      <nav class="social-links">
+        <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
+        <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+        <a href="https://x.com/trbkwsk" target="_blank">X</a>
+        <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
+        <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+        <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+      </nav>
+      <div class="lang-switch">
+        <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- SLIDER -->
+  <div class="slider-container">
+    <!-- Мастер-классы -->
+    <div class="slide active" style="background-image: url('masterclass1.png');"><div class="slide-text">Мастер-класс по граффити</div></div>
+    <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Обучение стилю и технике</div></div>
+    <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Учимся на практике</div></div>
+    <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Мастер-классы для всех</div></div>
+
+    <!-- Фестивали -->
+    <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Фестиваль граффити</div></div>
+    <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Праздник уличного искусства</div></div>
+    <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Крупные муралы</div></div>
+    <div class="slide" style="background-image: url('festival4.png');"><div class="slide-text">Международное сообщество</div></div>
+
+    <!-- Баттлы -->
+    <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Граффити-баттл</div></div>
+    <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Стиль против стиля</div></div>
+    <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Энергия улиц</div></div>
+    <div class="slide" style="background-image: url('battle4.png');"><div class="slide-text">Живое соревнование</div></div>
+    <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Создаём культуру вместе</div></div>
+  </div>
+
+  <!-- INFO + CONTACT FULL WIDTH -->
+  <div class="info-contact-fullwidth">
+    <!-- Описание слева -->
+    <div class="description-block-full">
+      <h2>Художник граффити и организатор мероприятий</h2>
+      <p>Создаю граффити с акцентом на стиль, буквы и визуальные истории.</p>
+      <p>Организую фестивали, джемы и культурные мероприятия.</p>
+      <p>Рисую стены, создаю арт-пространства и участвую в международных проектах.</p>
+    </div>
+
+    <!-- Форма справа -->
+    <div class="contact-block
