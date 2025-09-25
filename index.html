@@ -18,11 +18,11 @@ body {
 /* Header */
 .header-container {
   display: flex;
-  justify-content: space-between; /* logo left, socials center, lang right */
+  justify-content: space-between; 
   align-items: center;
   padding: 8px 20px;
-  flex-wrap: wrap;
   background: #0d0d0d;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -190,7 +190,11 @@ body {
 
 /* Mobile adaptation */
 @media (max-width: 768px) {
-  .header-container { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .header-container { 
+    flex-direction: row; 
+    justify-content: space-between; 
+    align-items: center; 
+  }
   .social-links { display: none; }
   .mobile-social-links { display: flex; }
   .info-contact-fullwidth { flex-direction: column; gap: 20px; }
@@ -202,7 +206,9 @@ body {
 <header>
   <div class="header-container">
     <h1 class="logo">TORB</h1>
-
+    <div class="lang-switch">
+      <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
+    </div>
     <nav class="social-links">
       <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
       <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
@@ -211,10 +217,6 @@ body {
       <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
       <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
     </nav>
-
-    <div class="lang-switch">
-      <a href="index.html">EN</a> | <a href="index-ru.html">RU</a>
-    </div>
   </div>
 </header>
 
@@ -263,7 +265,8 @@ setInterval(() => {
   slides.forEach(slide => slide.classList.remove('active'));
   index = (index + 1) % slides.length;
   slides[index].classList.add('active');
-}, 2000); // auto-slide every 2 seconds
+}, 2000);
 </script>
+
 </body>
 </html>
