@@ -62,31 +62,21 @@
       margin-left: 20px;
     }
 
-    /* ===== DESCRIPTION ===== */
-    .description {
-      font-size: 1.2rem;
-      color: #ccc;
-      line-height: 1.6;
-      margin: 40px 0;
-      padding: 0 40px;
-      text-align: center;
-    }
-
     /* ===== SLIDER ===== */
     .slider-container {
       position: relative;
       width: 100%;
-      max-height: 80vh;
+      height: 80vh;
       overflow: hidden;
     }
 
     .slide {
+      display: none; /* скрываем все слайды */
       position: absolute;
-      top: 0; left: 100%;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 80vh;
-      opacity: 0;
-      transition: all 1s ease;
+      height: 100%;
       background-size: cover;
       background-position: center;
       display: flex;
@@ -95,8 +85,7 @@
     }
 
     .slide.active {
-      left: 0;
-      opacity: 1;
+      display: flex; /* показываем только активный слайд */
     }
 
     .slide::before {
@@ -117,14 +106,42 @@
       text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
     }
 
+    /* ===== DESCRIPTION ===== */
+    .description-block {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px 40px;
+      background: rgba(0,0,0,0.5); /* затемнённый фон */
+      border-radius: 10px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .description-block h2 {
+      font-family: 'Russo One', sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .description-block p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+
     @media (max-width: 768px) {
       .slide-text {
         font-size: 1.1rem;
         padding: 10px 15px;
       }
-      .description {
+      .description-block {
+        padding: 20px;
+      }
+      .description-block h2 {
+        font-size: 2rem;
+      }
+      .description-block p {
         font-size: 1rem;
-        padding: 0 20px;
       }
       .logo {
         font-size: 1.5rem;
@@ -155,26 +172,19 @@
     </div>
   </header>
 
-  <!-- DESCRIPTION -->
-  <div class="description">
-    Creating graffiti focused on style, lettering, and visual storytelling. 
-    Organizer of festivals, jams, and cultural events. 
-    Painting walls, building art spaces, and taking part in international projects.
-  </div>
-
   <!-- FULLSCREEN SLIDER -->
   <div class="slider-container">
     <!-- Masterclasses -->
-    <div class="slide active" style="background-image: url('master1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
-    <div class="slide" style="background-image: url('master2.png');"><div class="slide-text">Sharing Style & Technique</div></div>
-    <div class="slide" style="background-image: url('master3.png');"><div class="slide-text">Learning by Doing</div></div>
-    <div class="slide" style="background-image: url('master4.png');"><div class="slide-text">Workshops for All Ages</div></div>
+    <div class="slide" style="background-image: url('masterclass1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
+    <div class="slide" style="background-image: url('masterclass2.png');"><div class="slide-text">Sharing Style & Technique</div></div>
+    <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Learning by Doing</div></div>
+    <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Workshops for All Ages</div></div>
 
     <!-- Festivals -->
-    <div class="slide" style="background-image: url('fest1.png');"><div class="slide-text">Graffiti Festival</div></div>
-    <div class="slide" style="background-image: url('fest2.png');"><div class="slide-text">Urban Art Celebration</div></div>
-    <div class="slide" style="background-image: url('fest3.png');"><div class="slide-text">Large-Scale Murals</div></div>
-    <div class="slide" style="background-image: url('fest4.png');"><div class="slide-text">International Community</div></div>
+    <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Graffiti Festival</div></div>
+    <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Urban Art Celebration</div></div>
+    <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Large-Scale Murals</div></div>
+    <div class="slide" style="background-image: url('festival4.png');"><div class="slide-text">International Community</div></div>
 
     <!-- Battles -->
     <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Graffiti Battle</div></div>
@@ -184,14 +194,24 @@
     <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Creating Culture Together</div></div>
   </div>
 
+  <!-- DESCRIPTION BELOW SLIDER -->
+  <div class="description-block">
+    <h2>Graffiti Artist & Event Organizer</h2>
+    <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
+    <p>Organizer of festivals, jams, and cultural events.</p>
+    <p>Painting walls, building art spaces, and taking part in international projects.</p>
+  </div>
+
   <script>
     const slides = document.querySelectorAll('.slide');
     let index = 0;
+    slides[index].classList.add('active');
+
     setInterval(() => {
       slides[index].classList.remove('active');
       index = (index + 1) % slides.length;
       slides[index].classList.add('active');
-    }, 5000); // каждые 5 секунд
+    }, 5000); // перелистывание каждые 5 секунд
   </script>
 </body>
 </html>
