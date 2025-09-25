@@ -99,12 +99,20 @@ header {
   position: relative;
   color: #fff;
   font-family: 'Russo One', sans-serif;
-  font-size: 5vw; /* текст крупнее */
+  font-size: 3vw; /* уменьшенный текст */
   text-align: center;
   padding: 20px;
   text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-  max-width: 95%; /* почти на всю ширину */
-  line-height: 1.1;
+  max-width: 90%;
+  line-height: 1.2;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  .slide-text {
+    font-size: 5vw;
+    padding: 10px 15px;
+  }
 }
 
 /* ===== INFO + CONTACT FULL WIDTH ===== */
@@ -187,7 +195,6 @@ header {
 }
 
 @media (max-width: 768px) {
-  .slide-text { font-size: 8vw; padding: 10px 15px; }
   .info-contact-fullwidth {
     flex-direction: column;
   }
@@ -228,13 +235,13 @@ header {
     <div class="slide" style="background-image: url('masterclass3.png');"><div class="slide-text">Hands-on Practice</div></div>
     <div class="slide" style="background-image: url('masterclass4.png');"><div class="slide-text">Masterclasses for Everyone</div></div>
 
-    <!-- Festivals -->
+    <!-- Фестивали -->
     <div class="slide" style="background-image: url('festival1.png');"><div class="slide-text">Graffiti Festival</div></div>
     <div class="slide" style="background-image: url('festival2.png');"><div class="slide-text">Street Art Celebration</div></div>
     <div class="slide" style="background-image: url('festival3.png');"><div class="slide-text">Large Murals</div></div>
     <div class="slide" style="background-image: url('festival4.png');"><div class="slide-text">International Community</div></div>
 
-    <!-- Battles -->
+    <!-- Баттлы -->
     <div class="slide" style="background-image: url('battle1.png');"><div class="slide-text">Graffiti Battle</div></div>
     <div class="slide" style="background-image: url('battle2.png');"><div class="slide-text">Style vs Style</div></div>
     <div class="slide" style="background-image: url('battle3.png');"><div class="slide-text">Street Energy</div></div>
@@ -248,8 +255,8 @@ header {
     <div class="description-block-full">
       <h2>Graffiti Artist & Event Organizer</h2>
       <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
-      <p>Organizing festivals, jams, and cultural events.</p>
-      <p>Painting walls, building art spaces, and participating in international projects.</p>
+      <p>Organizer of festivals, jams, and cultural events.</p>
+      <p>Painting walls, building art spaces, and taking part in international projects.</p>
     </div>
 
     <!-- Contact Right -->
@@ -271,7 +278,7 @@ header {
       slides.forEach(slide => slide.classList.remove('active'));
       index = (index + 1) % slides.length;
       slides[index].classList.add('active');
-    }, 2000); // теперь каждый слайд 2 секунды
+    }, 2000); // каждый слайд 2 секунды
   </script>
 </body>
 </html>
