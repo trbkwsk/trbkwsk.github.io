@@ -92,7 +92,7 @@ header {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.3); /* затемнение для читаемости текста */
+  background: rgba(0,0,0,0.3); /* затемнение */
 }
 
 .slide-text {
@@ -105,34 +105,84 @@ header {
   text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
 }
 
-/* ===== DESCRIPTION ===== */
-.description-block {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 30px 40px;
+/* ===== DESCRIPTION FULL WIDTH ===== */
+.description-block-full {
+  width: 100%;
+  padding: 40px 60px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.description-block-full h2 {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.description-block-full p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+
+/* ===== CONTACT FORM ===== */
+.contact-block {
+  max-width: 600px;
+  margin: 40px auto 60px auto;
+  padding: 30px;
   background: rgba(0,0,0,0.5);
   border-radius: 10px;
   color: #fff;
   text-align: center;
 }
 
-.description-block h2 {
+.contact-block h2 {
   font-family: 'Russo One', sans-serif;
-  font-size: 2.5rem;
-  margin-bottom: 15px;
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
-.description-block p {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  margin: 10px 0;
+.contact-block form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-block input,
+.contact-block textarea {
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+}
+
+.contact-block textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.contact-block button {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #ffcc00;
+  color: #000;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.contact-block button:hover {
+  background: #e6b800;
 }
 
 @media (max-width: 768px) {
   .slide-text { font-size: 1.5rem; padding: 10px 15px; }
-  .description-block { padding: 20px; }
-  .description-block h2 { font-size: 2rem; }
-  .description-block p { font-size: 1rem; }
+  .description-block-full { padding: 20px 30px; text-align: left; }
+  .description-block-full h2 { font-size: 2rem; }
+  .description-block-full p { font-size: 1rem; }
   .logo { font-size: 1.5rem; margin-right: 20px; }
   .social-links { gap: 10px; }
 }
@@ -157,7 +207,7 @@ header {
     </div>
   </header>
 
-  <!-- FULLSCREEN SLIDER -->
+  <!-- SLIDER -->
   <div class="slider-container">
     <!-- Masterclasses -->
     <div class="slide active" style="background-image: url('masterclass1.png');"><div class="slide-text">Graffiti Masterclass</div></div>
@@ -179,18 +229,28 @@ header {
     <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Creating Culture Together</div></div>
   </div>
 
-  <!-- DESCRIPTION BELOW SLIDER -->
-  <div class="description-block">
+  <!-- DESCRIPTION -->
+  <div class="description-block-full">
     <h2>Graffiti Artist & Event Organizer</h2>
     <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
     <p>Organizer of festivals, jams, and cultural events.</p>
     <p>Painting walls, building art spaces, and taking part in international projects.</p>
   </div>
 
+  <!-- CONTACT FORM -->
+  <div class="contact-block">
+    <h2>Send a Message</h2>
+    <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
+      <input type="text" name="Name" placeholder="Your Name" required>
+      <input type="email" name="Email" placeholder="Your Email" required>
+      <textarea name="Message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
   <script>
     const slides = document.querySelectorAll('.slide');
     let index = 0;
-
     setInterval(() => {
       slides.forEach(slide => slide.classList.remove('active'));
       index = (index + 1) % slides.length;
