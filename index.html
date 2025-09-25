@@ -105,14 +105,24 @@ header {
   text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
 }
 
-/* ===== DESCRIPTION FULL WIDTH ===== */
+/* ===== INFO + CONTACT FLEX ===== */
+.info-contact-container {
+  display: flex;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* DESCRIPTION LEFT */
 .description-block-full {
-  width: 100%;
-  padding: 40px 60px;
+  flex: 2;
   background: rgba(0,0,0,0.5);
+  padding: 30px;
+  border-radius: 10px;
   color: #fff;
   text-align: left;
-  box-sizing: border-box;
 }
 
 .description-block-full h2 {
@@ -127,12 +137,11 @@ header {
   margin: 8px 0;
 }
 
-/* ===== CONTACT FORM ===== */
+/* CONTACT FORM RIGHT */
 .contact-block {
-  max-width: 600px;
-  margin: 40px auto 60px auto;
-  padding: 30px;
+  flex: 1;
   background: rgba(0,0,0,0.5);
+  padding: 30px;
   border-radius: 10px;
   color: #fff;
   text-align: center;
@@ -180,11 +189,16 @@ header {
 
 @media (max-width: 768px) {
   .slide-text { font-size: 1.5rem; padding: 10px 15px; }
-  .description-block-full { padding: 20px 30px; text-align: left; }
+  .info-contact-container {
+    flex-direction: column;
+  }
+  .description-block-full,
+  .contact-block {
+    width: 100%;
+    padding: 20px;
+  }
   .description-block-full h2 { font-size: 2rem; }
   .description-block-full p { font-size: 1rem; }
-  .logo { font-size: 1.5rem; margin-right: 20px; }
-  .social-links { gap: 10px; }
 }
 </style>
 </head>
@@ -229,23 +243,26 @@ header {
     <div class="slide" style="background-image: url('battle5.png');"><div class="slide-text">Creating Culture Together</div></div>
   </div>
 
-  <!-- DESCRIPTION -->
-  <div class="description-block-full">
-    <h2>Graffiti Artist & Event Organizer</h2>
-    <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
-    <p>Organizer of festivals, jams, and cultural events.</p>
-    <p>Painting walls, building art spaces, and taking part in international projects.</p>
-  </div>
+  <!-- INFO + CONTACT FLEX -->
+  <div class="info-contact-container">
+    <!-- DESCRIPTION LEFT -->
+    <div class="description-block-full">
+      <h2>Graffiti Artist & Event Organizer</h2>
+      <p>Creating graffiti focused on style, lettering, and visual storytelling.</p>
+      <p>Organizer of festivals, jams, and cultural events.</p>
+      <p>Painting walls, building art spaces, and taking part in international projects.</p>
+    </div>
 
-  <!-- CONTACT FORM -->
-  <div class="contact-block">
-    <h2>Send a Message</h2>
-    <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
-      <input type="text" name="Name" placeholder="Your Name" required>
-      <input type="email" name="Email" placeholder="Your Email" required>
-      <textarea name="Message" placeholder="Your Message" required></textarea>
-      <button type="submit">Send</button>
-    </form>
+    <!-- CONTACT FORM RIGHT -->
+    <div class="contact-block">
+      <h2>Send a Message</h2>
+      <form action="mailto:trbkwsk@gmail.com" method="post" enctype="text/plain">
+        <input type="text" name="Name" placeholder="Your Name" required>
+        <input type="email" name="Email" placeholder="Your Email" required>
+        <textarea name="Message" placeholder="Your Message" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </div>
   </div>
 
   <script>
