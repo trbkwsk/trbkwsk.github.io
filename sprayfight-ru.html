@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SprayFight System by TORB</title>
+<title>Спрэйфайт Система | TORB</title>
 <link rel="icon" href="favicon.png" type="image/png">
 <meta name="theme-color" content="#000000">
 
@@ -18,6 +18,8 @@ body {
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
 }
+
+/* Header */
 header {
   display: flex;
   align-items: center;
@@ -26,58 +28,153 @@ header {
   border-bottom: 1px solid #333;
   flex-wrap: wrap;
 }
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .logo {
   font-family: 'Russo One', sans-serif;
   font-size: 2rem;
 }
-.language-switch a {
+
+.graffiti-system {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #ffcc00;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.socials, .language-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.socials a, .language-switch a {
   color: #fff;
   text-decoration: none;
   font-size: 1rem;
   padding: 5px 10px;
   transition: 0.3s;
 }
-.language-switch a:hover {
+
+.socials a:hover, .language-switch a:hover {
   color: #ffcc00;
 }
+
+/* Slider */
+.slider-container {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+/* About & Content */
 .content-section {
   display: flex;
   flex-direction: column;
-  padding: 40px;
-  gap: 30px;
-  max-width: 1000px;
-  margin: 0 auto;
+  padding: 20px 40px;
+  gap: 20px;
 }
-.content-section h2, .content-section h3 {
-  font-family: 'Russo One', sans-serif;
-  color: #fff;
-}
-.content-section h2 {
-  font-size: 2.5rem;
-  margin-bottom: 15px;
-}
-.content-section h3 {
-  font-size: 1.5rem;
-  margin-top: 20px;
-}
-.content-section p, .content-section li {
+
+.about {
   font-size: 1.1rem;
-  line-height: 1.6;
+  line-height: 1.5;
+  margin-bottom: 10px;
 }
-ul {
-  margin-left: 20px;
+
+.about h2 {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #fff;
+  text-align: left;
 }
-a.back-link {
-  color: #ffcc00;
-  text-decoration: none;
+
+p {
+  margin: 0 0 15px 0;
+  line-height: 1.4;
+}
+
+/* Contact Form */
+.contact-form input, .contact-form textarea {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.contact-form button {
+  padding: 12px 20px;
+  background: #ffcc00;
+  color: #000;
+  border: none;
+  cursor: pointer;
   font-weight: bold;
+  transition: 0.3s;
 }
-a.back-link:hover {
-  text-decoration: underline;
+
+.contact-form button:hover {
+  background: #e6b800;
 }
+
+/* Mobile social links */
+.mobile-socials {
+  display: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.mobile-socials a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  padding: 5px 8px;
+  white-space: nowrap;
+}
+
 @media (max-width: 900px) {
-  .content-section {
-    padding: 20px;
+  .slider-container {
+    height: 400px;
+  }
+  .mobile-socials {
+    display: flex;
+  }
+  .socials {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .slider-container {
+    height: 300px;
   }
 }
 </style>
@@ -85,52 +182,38 @@ a.back-link:hover {
 <body>
 
 <header>
-  <div class="logo">TORB</div>
+  <div class="header-left">
+    <div class="logo">TORB</div>
+    <a href="sprayfight-ru.html" class="graffiti-system">Спрэйфайт Система</a>
+  </div>
+
+  <div class="socials">
+    <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+    <a href="https://x.com/trbkwsk?s=21" target="_blank">X</a>
+    <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
+    <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+    <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+  </div>
+
   <div class="language-switch">
-    <a href="index.html">EN</a>
-    <a href="index-ru.html">RU</a>
+    <a href="sprayfight.html">EN</a>
+    <a href="sprayfight-ru.html">RU</a>
   </div>
 </header>
 
+<!-- Content Section -->
 <div class="content-section">
-  <h2>SprayFight System</h2>
-  <p><em>The System of Graffiti Battles</em> <strong>by TORB</strong></p>
-
-  <h3>Идея</h3>
-  <p>Граффити всегда привлекает внимание своими масштабами, цветами и деталями. Но процесс создания часто занимает много времени, и для зрителей он может быть скучным.</p>
-  <p>Существует также <strong>бомбинг</strong> — быстрые граффити, где главное — показать своё присутствие: теги, throw-up’ы, простые шрифты или персонажи. Людям интересно наблюдать, как создаётся граффити, а художники соревнуются между собой: кто сделает круче, быстрее и ярче.</p>
-  <p><strong>SprayFight System</strong> решает эту проблему, объединяя зрелищность, динамику и профессиональный подход.</p>
-
-  <h3>Цель системы</h3>
-  <ul>
-    <li>Зрителям интересно наблюдать за процессом;</li>
-    <li>Художникам интересно соревноваться и побеждать, показывая свои навыки;</li>
-    <li>Сохраняется дух улицы при чётких и динамичных правилах.</li>
-  </ul>
-
-  <h3>Формат</h3>
-  <p>16 участников, турнирная сетка, раунды с ограниченным временем, рандомные слова и цветовые ограничения.</p>
-
-  <h3>Раунды</h3>
-  <ul>
-    <li><strong>Top 16:</strong> 30 секунд, рандомное слово (тег), показать стиль и скорость.</li>
-    <li><strong>Top 8:</strong> 1 минута, throw-up или простой шрифт, один цвет.</li>
-    <li><strong>Top 4:</strong> 1 минута 30 секунд, два цвета, более сложная форма, оценивается динамика, баланс и чистота.</li>
-    <li><strong>Финал:</strong> 3 минуты, до 4 цветов, участники могут менять имена, главный критерий — креатив, стиль и мастерство.</li>
-  </ul>
-
-  <h3>Судейство</h3>
-  <p>3–5 независимых судей оценивают стиль, динамику и подачу. Судьи выбираются из уважаемых представителей граффити-культуры, чтобы решение было справедливым и независимым.</p>
-
-  <h3>Организация процесса</h3>
-  <p>Используются мобильные конструкции или сменные панели, если рядом нет стены. После каждого баттла участники или помощники быстро закрашивают поверхность. Важнее скорость и динамика, чем идеальная чистота.</p>
-
-  <h3>Почему это работает</h3>
-  <p>На протяжении 5 лет проведения баттлов этот формат вовлекает зрителей, делает культуру граффити понятной и интересной, а для художников мотивирует развивать стиль. Многие начинают совершенствоваться или впервые пробуют свои силы после участия или просмотра <strong>SprayFight System</strong>.</p>
-
-  <p><strong>Финальный слоган:</strong> Fast. Raw. Real.</p>
-
-  <p><a href="index-ru.html" class="back-link">← Вернуться на главную</a></p>
+  <div class="about">
+    <h2>Система граффити баттлов</h2>
+    <p>Граффити всегда выглядят интересно и впечатляют своими масштабами, деталями и цветами. Рисуется оно достаточно долго, и процесс для зрителей может становиться нудным. Но есть быстрый формат – бомбинг, где граффити делается очень быстро, чтобы показать "я здесь был".</p>
+    <p>Граффити-художники часто соревнуются между собой: кто круче сделает, кто больше кусков. Баттлы всегда привлекают внимание и показывают динамику работы.</p>
+    <p>Система граффити баттлов, разработанная мной, позволяет зрителям наблюдать за процессом, а художникам – показать свой скилл и побороться за победу.</p>
+    <p>Формат: 16 художников, сетка, поединки один на один. Каждый раунд – новое случайное слово, ограничение по времени: 30 секунд для первого раунда, 1:30 для топ-4, финал – 3 минуты с возможностью использовать 4 цвета.</p>
+    <p>Судьи – 3–5 независимых экспертов из разных направлений граффити-культуры. Побеждает один участник, можно добавить баттл за третье место.</p>
+    <p>Баттлы динамичные: участники быстро закрашивают фон, судьи оценивают стиль и форму, зрители остаются вовлечёнными.</p>
+    <p>На протяжении 5 лет такие баттлы привлекают внимание к культуре граффити, побуждая новое поколение совершенствоваться и начинать рисовать.</p>
+  </div>
 </div>
 
 </body>
