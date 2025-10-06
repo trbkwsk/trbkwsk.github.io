@@ -29,26 +29,22 @@ header {
   flex-wrap: wrap;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .logo {
   font-family: 'Russo One', sans-serif;
   font-size: 2rem;
 }
 
-.main-nav {
-  margin-left: 20px;
-}
-
-.main-nav .nav-link {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-  padding: 5px 10px;
-  transition: 0.3s;
+.graffiti-system {
   font-family: 'Inter', sans-serif;
-}
-
-.main-nav .nav-link:hover {
+  font-size: 1rem;
   color: #ffcc00;
+  font-weight: bold;
 }
 
 .socials, .language-switch {
@@ -186,12 +182,10 @@ header {
 <body>
 
 <header>
-  <div class="logo">TORB</div>
-  
-  <!-- Ссылка на SprayFight System -->
-  <nav class="main-nav">
-    <a href="sprayfight-ru.html" class="nav-link">SprayFight System</a>
-  </nav>
+  <div class="header-left">
+    <div class="logo">TORB</div>
+    <div class="graffiti-system">Спрэйфайт Система</div>
+  </div>
 
   <div class="socials">
     <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
@@ -210,19 +204,16 @@ header {
 
 <!-- Slider -->
 <div class="slider-container">
-  <!-- Masterclass 4 -->
   <div class="slide active" style="background-image: url('masterclass1.png');"></div>
   <div class="slide" style="background-image: url('masterclass2.png');"></div>
   <div class="slide" style="background-image: url('masterclass3.png');"></div>
   <div class="slide" style="background-image: url('masterclass4.png');"></div>
 
-  <!-- Festival 4 -->
   <div class="slide" style="background-image: url('festival1.png');"></div>
   <div class="slide" style="background-image: url('festival2.png');"></div>
   <div class="slide" style="background-image: url('festival3.png');"></div>
   <div class="slide" style="background-image: url('festival4.png');"></div>
 
-  <!-- Battle 4 (без battle2) -->
   <div class="slide" style="background-image: url('battle1.png');"></div>
   <div class="slide" style="background-image: url('battle3.png');"></div>
   <div class="slide" style="background-image: url('battle4.png');"></div>
