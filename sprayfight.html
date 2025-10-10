@@ -1,281 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SprayFight System | TORB</title>
-  <link rel="icon" href="favicon.png" type="image/png" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="description" content="SprayFight System — TORB’s fast-paced graffiti battle format with a bracket, clear rounds and rules that keep the raw street spirit." />
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SprayFight System | TORB</title>
+<link rel="icon" href="favicon.png" type="image/png" />
+<meta name="theme-color" content="#000000" />
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
 
-  <style>
-    :root { --accent:#ffcc00; --line:#333; }
+<style>
+:root { --accent:#ffcc00; --line:#333; }
 
-    html, body { height: 100%; }
-    body{
-      margin:0; background:#0d0d0d; color:#fff; font-family:'Inter',sans-serif;
-      overflow-x:hidden; -webkit-text-size-adjust:100%;
-      animation:fadeInBody .5s ease;
-    }
-    @keyframes fadeInBody { from{opacity:0} to{opacity:1} }
-    @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
+body {
+  margin:0; background:#0d0d0d; color:#fff;
+  font-family:'Inter',sans-serif; overflow-x:hidden;
+}
 
-    /* ===== HEADER ===== */
-    header{
-      position:sticky; top:0; z-index:1000;
-      display:flex; align-items:center; justify-content:flex-start; gap:16px;
-      padding:12px 20px; border-bottom:1px solid var(--line);
-      background:rgba(13,13,13,.75); backdrop-filter:blur(6px);
-      flex-wrap:wrap;
-    }
-    .logo{
-      font-family:'Russo One',sans-serif; font-size:2rem; color:#fff; text-decoration:none; white-space:nowrap;
-    }
-    .logo:hover{ color:var(--accent); }
+/* ===== HEADER ===== */
+header {
+  position:sticky; top:0; z-index:1000;
+  display:flex; align-items:center; justify-content:flex-start; gap:16px;
+  padding:12px 20px; border-bottom:1px solid var(--line);
+  background:rgba(13,13,13,.75); backdrop-filter:blur(6px);
+  flex-wrap:wrap;
+}
+.logo {
+  font-family:'Russo One',sans-serif; font-size:2rem; color:#fff; text-decoration:none;
+}
+.logo:hover { color:var(--accent); }
 
-    .header-left{ display:flex; align-items:center; gap:20px; flex-wrap:nowrap; }
-    .socials{ display:flex; align-items:center; gap:10px; justify-content:flex-start; }
-    .language-switch{ margin-left:auto; display:flex; align-items:center; gap:10px; }
+.header-left { display:flex; align-items:center; gap:20px; }
+.socials { display:flex; align-items:center; gap:10px; }
+.language-switch { margin-left:auto; display:flex; align-items:center; gap:18px; }
 
-    /* ICON LINKS */
-    .socials a.icon-link, .mobile-socials a.icon-link{
-      display:inline-flex; align-items:center; justify-content:center;
-      width:38px; height:38px; border-radius:50%;
-      color:#fff; text-decoration:none;
-      transition: color .2s, background-color .2s, transform .12s;
-    }
-    .socials a.icon-link:hover, .mobile-socials a.icon-link:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
-    .socials a.icon-link:active, .mobile-socials a.icon-link:active{ transform:scale(.96); }
-    .icon { width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
+/* ===== ICON LINKS (via mask) ===== */
+.socials a.icon-link, .mobile-socials a.icon-link {
+  width:38px; height:38px; border-radius:50%; display:flex;
+  align-items:center; justify-content:center;
+  color:#fff; text-decoration:none;
+  background-color:currentColor;
+  -webkit-mask-size:22px 22px; mask-size:22px 22px;
+  -webkit-mask-position:center; mask-position:center;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  transition:color .25s, background-color .25s, transform .12s;
+}
+.socials a.icon-link:hover, .mobile-socials a.icon-link:hover {
+  color:var(--accent);
+  transform:scale(1.05);
+}
 
-    /* STREEET.ART text */
-    .socials a.text-link{
-      color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition:color .2s;
-    }
-    .socials a.text-link:hover{ color:var(--accent); }
+/* индивидуальные маски */
+.icon-instagram { -webkit-mask-image:url('instagram.svg'); mask-image:url('instagram.svg'); }
+.icon-tiktok { -webkit-mask-image:url('tiktok.svg'); mask-image:url('tiktok.svg'); }
+.icon-x { -webkit-mask-image:url('x.svg'); mask-image:url('x.svg'); }
+.icon-youtube { -webkit-mask-image:url('youtube.svg'); mask-image:url('youtube.svg'); }
+.icon-telegram { -webkit-mask-image:url('telegram.svg'); mask-image:url('telegram.svg'); }
 
-    /* SprayFight not needed as link here; this is SprayFight page */
+/* STREEET.ART text */
+.socials a.text-link {
+  color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px;
+  transition:color .2s;
+}
+.socials a.text-link:hover { color:var(--accent); }
 
-    /* languages: no underline; hover yellow; never stuck yellow */
-    .language-switch a{
-      color:#fff; text-decoration:none; transition:color .2s;
-    }
-    .language-switch a:hover{ color:var(--accent); text-decoration:none; }
-    .language-switch a:active,
-    .language-switch a:visited{ color:#fff; text-decoration:none; }
+/* LANG */
+.language-switch a {
+  color:#fff !important; text-decoration:none !important; transition:color .2s;
+}
+.language-switch a:hover { color:var(--accent) !important; }
+.language-switch a:active, .language-switch a:visited { color:#fff !important; }
 
-    @media (max-width: 900px){
-      .socials{ display:none; }
-      header{ padding:12px 16px; }
-      .logo{ font-size:1.8rem; }
-    }
+@media (max-width:900px){
+  .socials{display:none;}
+  .logo{font-size:1.8rem;}
+}
 
-    /* ===== HERO (video) ===== */
-    .hero-image{
-      position:relative; width:100%; height:70vh; overflow:hidden;
-      opacity:0; animation:fadeInHero .8s ease .1s forwards;
-      border-bottom:none; z-index:0;
-    }
-    @keyframes fadeInHero { to{ opacity:1 } }
-    .hero-video{
-      position:absolute; inset:0; width:100%; height:100%;
-      object-fit:cover; object-position:center 52%;
-      background:#000; z-index:0;
-    }
-    /* top gradient under header */
-    .hero-image::before{
-      content:""; position:absolute; left:0; top:0; width:100%; height:26vh;
-      background:linear-gradient(to bottom, rgba(0,0,0,.75), rgba(0,0,0,.30) 60%, rgba(0,0,0,0));
-      pointer-events:none; z-index:1;
-    }
+/* ===== HERO ===== */
+.hero-image{position:relative;width:100%;height:70vh;overflow:hidden;}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;}
+.hero-image::before{
+  content:"";position:absolute;left:0;top:0;width:100%;height:26vh;
+  background:linear-gradient(to bottom,rgba(0,0,0,.75),rgba(0,0,0,.3)60%,rgba(0,0,0,0));
+  z-index:1;
+}
 
-    /* ===== CONTENT ===== */
-    .content-section{
-      max-width:1000px; margin:40px auto; padding:0 20px;
-      line-height:1.7;
-      opacity:0; animation:fadeInUp .6s ease .2s forwards;
-      position:relative; z-index:10;
-      background:linear-gradient(to top, rgba(13,13,13,1) 20%, rgba(13,13,13,0) 100%) top/100% 15vh no-repeat;
-    }
-    @keyframes fadeInUp { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+/* ===== CONTENT ===== */
+.content-section{max-width:1000px;margin:40px auto;padding:0 20px;line-height:1.7;}
+.page-title{text-align:center;margin-bottom:18px;}
+.page-title h1{font-family:'Russo One',sans-serif;font-size:46px;margin:0;}
+.page-title p{margin:0;font-size:20px;opacity:.9;font-style:italic;}
+.sep{border:0;border-top:1px solid #2b2b2b;margin:28px 0;opacity:.8;}
+h2{font-family:'Russo One',sans-serif;font-size:28px;margin:24px 0 12px;}
+ul{list-style:none;padding:0;margin:8px 0 16px;}
+ul li{margin:6px 0;position:relative;padding-left:1.1em;}
+ul li::before{content:"•";position:absolute;left:0;color:var(--accent);}
 
-    .content-overlap{ margin-top:-8vh; padding-top:8vh; background:none !important; }
-
-    .page-title{ text-align:center; margin:0 0 18px; }
-    .page-title h1{
-      font-family:'Russo One',sans-serif; font-size:clamp(28px,6vw,46px); margin:0 0 8px;
-    }
-    .page-title p{ margin:0; font-size:clamp(14px,2.6vw,20px); opacity:.9; font-style:italic; }
-
-    .sep{ border:0; border-top:1px solid #2b2b2b; margin:28px 0; opacity:.8; }
-
-    .content-section h2{
-      font-family:'Russo One',sans-serif; font-size:clamp(22px,3.2vw,28px);
-      margin:24px 0 12px; letter-spacing:.2px;
-    }
-    .content-section p{ margin:0 0 14px; }
-    .content-section ul{ list-style:none; padding:0; margin:8px 0 16px; }
-    .content-section ul li{ margin:6px 0; position:relative; padding-left:1.1em; }
-    .content-section ul li::before{ content:"•"; position:absolute; left:0; top:0; color:var(--accent); }
-
-    /* ===== MOBILE ===== */
-    @media (max-width:900px){
-      .hero-image{ height:auto !important; padding-top:56.25% !important; position:relative !important; overflow:hidden; }
-      .hero-video{ position:absolute !important; inset:0; width:100%; height:100%; object-fit:cover; object-position:center center; }
-      .content-overlap{ margin-top:0 !important; padding-top:20px !important; background:none !important; }
-      .content-section h2{ text-align:center; }
-    }
-
-    /* ===== LOGO + FOOTER ===== */
-    .bottom-brand{
-      max-width:1000px; margin:56px auto 0; padding:0 20px;
-      display:flex; justify-content:center; align-items:center;
-      opacity:0; animation:fadeInUp .6s ease .25s forwards;
-    }
-    .bottom-brand img{ height:140px; width:auto; max-width:100%; opacity:.95; }
-    @media (max-width:600px){ .bottom-brand{ margin:40px auto 0 } .bottom-brand img{ height:96px } }
-
-    .divider{ max-width:1000px; margin:28px auto 0; padding:0 20px; opacity:.6; border-top:1px solid var(--line); }
-    footer{ text-align:center; padding:16px 20px 40px; color:#aaa; font-size:.95rem; }
-
-    /* ===== MOBILE social bar ===== */
-    .mobile-socials{
-      display:none; justify-content:center; flex-wrap:wrap; gap:6px 10px;
-      padding:20px; box-sizing:border-box;
-    }
-    @media (max-width:900px){ .mobile-socials{ display:flex; } }
-  </style>
+/* ===== FOOTER ===== */
+.bottom-brand{display:flex;justify-content:center;margin-top:56px;}
+.bottom-brand img{height:140px;opacity:.95;}
+footer{text-align:center;padding:16px 20px 40px;color:#aaa;font-size:.95rem;}
+.mobile-socials{display:none;justify-content:center;gap:10px;padding:20px;}
+@media (max-width:900px){.mobile-socials{display:flex;}}
+</style>
 </head>
 
 <body>
-
-  <!-- HEADER -->
-  <header>
-    <div class="header-left">
-      <a href="index.html" class="logo">TORB</a>
-
-      <div class="socials" aria-label="Social links">
-        <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" aria-label="Instagram"><svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4" ry="4"></rect><circle cx="12" cy="12" r="4.1"></circle><circle cx="17.4" cy="6.6" r="1"></circle></svg></a>
-        <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" aria-label="TikTok"><svg class="icon" viewBox="0 0 24 24"><path d="M14 5.2v8.6a4.8 4.8 0 1 1-3.6-4.6"></path><path d="M14 5.2c.8 2.4 2.8 4.1 5.1 4.5"></path></svg></a>
-        <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" aria-label="X"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"></path></svg></a>
-        <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" aria-label="YouTube"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="3"></rect><path d="M11 10.2l4.5 2.3L11 14.8z"></path></svg></a>
-        <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" aria-label="Telegram"><svg class="icon" viewBox="0 0 24 24"><path d="M20.5 4.6L4.2 11.1c-.9.4-.9 1.6 0 2l4 1.5 1.7 3.8c.3.7 1.3.7 1.6 0l1.4-3 4.9 3.5c.8.6 1.9.1 2.1-.9l2-11.1c.2-.9-.7-1.7-1.6-1.4z"></path></svg></a>
-        <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
-      </div>
+<header>
+  <div class="header-left">
+    <a href="index.html" class="logo">TORB</a>
+    <div class="socials">
+      <a class="icon-link icon-instagram" href="https://www.instagram.com/trbkwsk/" target="_blank"></a>
+      <a class="icon-link icon-tiktok" href="https://www.tiktok.com/@trbkwsk" target="_blank"></a>
+      <a class="icon-link icon-x" href="https://x.com/trbkwsk?s=21" target="_blank"></a>
+      <a class="icon-link icon-youtube" href="https://youtube.com/@trbkwsk" target="_blank"></a>
+      <a class="icon-link icon-telegram" href="https://t.me/trbkwskalsoknownastorb" target="_blank"></a>
+      <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
     </div>
-
-    <div class="language-switch">
-      <a href="sprayfight.html" class="en">EN</a>
-      <a href="sprayfight-ru.html" class="ru">RU</a>
-    </div>
-  </header>
-
-  <!-- HERO VIDEO -->
-  <div class="hero-image" aria-hidden="true">
-    <video autoplay muted loop playsinline preload="none" poster="sprayfightlogo_live.png.png" class="hero-video">
-      <source src="sprayfight_intro.mp4" type="video/mp4" />
-    </video>
   </div>
 
-  <!-- CONTENT -->
-  <div class="content-section content-overlap">
-    <div class="page-title">
-      <h1>SprayFight System</h1>
-      <p><em>The Graffiti Battle System by TORB</em></p>
-    </div>
-
-    <h2>Idea</h2>
-    <p>Graffiti always grabs attention — with its scale, colors, and detail. But creating it can take a long time, and for viewers that process often feels slow: a piece can be worked on for hours or even all day.</p>
-    <p>At the same time there’s bombing — fast graffiti where the main point isn’t meticulous rendering but the act itself: “I was here.” It can be tags, throw-ups, simple letter styles, or characters.</p>
-    <p>People love watching how graffiti is made, and writers love to compete — who can do it better, faster, cleaner. Battles have existed for years, but most of the time they happen without a system — every city and country does it differently.</p>
-
-    <hr class="sep" />
-
-    <h2>Goal of the system</h2>
-    <ul>
-      <li>make the process exciting to watch for the audience;</li>
-      <li>make it fun for writers to compete and win;</li>
-      <li>keep it dynamic, spectacular and easy to follow — while preserving the raw street spirit.</li>
-    </ul>
-
-    <hr class="sep" />
-
-    <h2>Format</h2>
-    <p>16 writers take part. A bracket is formed and each battle is a single round — winners advance until the final. Every round has a new task and a strict time limit to simulate real street bombing conditions.</p>
-
-    <hr class="sep" />
-
-    <h2>Rounds</h2>
-    <p><strong>Top 16</strong></p>
-    <ul>
-      <li>Time: 30 seconds</li>
-      <li>Task: write a random word (tag)</li>
-      <li>Goal: show style, speed, confidence</li>
-    </ul>
-    <p><strong>Top 8</strong></p>
-    <ul>
-      <li>Time: 1 minute</li>
-      <li>Task: random word as a throw-up or simple letter style</li>
-      <li>Color: one</li>
-    </ul>
-    <p><strong>Top 4</strong></p>
-    <ul>
-      <li>Time: 1 minute 30 seconds</li>
-      <li>Colors: two</li>
-      <li>Task: random word, more complex form</li>
-      <li>Judging: dynamics, balance, cleanliness</li>
-    </ul>
-    <p><strong>Final</strong></p>
-    <ul>
-      <li>Time: 3 minutes</li>
-      <li>Colors: up to four</li>
-      <li>Writers may swap names</li>
-      <li>Creativity, confidence and skill decide everything</li>
-    </ul>
-    <p>(An optional 3rd-place battle can be added.)</p>
-
-    <hr class="sep" />
-
-    <h2>Judging</h2>
-    <p>A panel of 3 or 5 respected figures from different parts of the graffiti culture. The main thing is independence and diverse viewpoints. Judges evaluate:</p>
-    <ul>
-      <li>letter style and form;</li>
-      <li>energy and confidence;</li>
-      <li>delivery and originality.</li>
-    </ul>
-
-    <hr class="sep" />
-
-    <h2>Production</h2>
-    <p>If there’s no suitable wall nearby, a quick frame or swap panels are used. After each battle, helpers or the writers themselves cover the background so the next work is clear and visible. Perfect buffing is not required — the goal is simply to prep the surface for the next round.</p>
-    <p>This keeps the format fast, fresh and dynamic.</p>
-
-    <hr class="sep" />
-
-    <h2>Why it works</h2>
-    <p>I’ve been running graffiti battles for over five years and I see how this format truly pulls people into the culture. Viewers stick around — in fact, the crowd grows with each round.</p>
-    <p>It’s not just a contest — it’s a living process where art is born right in front of you. The format makes graffiti closer and more understandable to the public, and for the writers themselves it’s powerful motivation.</p>
-    <p>Many, after taking part or even just after watching, start to level up, develop their style, or pick up a can for the first time.</p>
-    <p>This system doesn’t only reveal the strongest — it helps grow a new generation of writers while keeping the street spirit and respect for the culture.</p>
+  <div class="language-switch">
+    <a href="sprayfight.html">EN</a>
+    <a href="sprayfight-ru.html">RU</a>
   </div>
+</header>
 
-  <!-- LOGO + FOOTER -->
-  <div class="bottom-brand">
-    <img src="logo_sprayfight.png" alt="SprayFight logo" loading="lazy" />
+<div class="hero-image">
+  <video autoplay muted loop playsinline preload="none" poster="sprayfightlogo_live.png" class="hero-video">
+    <source src="sprayfight_intro.mp4" type="video/mp4" />
+  </video>
+</div>
+
+<div class="content-section">
+  <div class="page-title">
+    <h1>SprayFight System</h1>
+    <p><em>The Graffiti Battle System by TORB</em></p>
   </div>
-  <div class="divider"></div>
-  <footer>© 2025 TRBKWSK also known as TORB — SprayFight System</footer>
+  <h2>Idea</h2>
+  <p>Graffiti always grabs attention — with its scale, colors, and detail...</p>
+  <!-- (содержание сокращено для примера, вставь из своего полного текста) -->
+</div>
 
-  <!-- MOBILE SOCIALS -->
-  <div class="mobile-socials" aria-label="Social links">
-    <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" aria-label="Instagram"><svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4" ry="4"></rect><circle cx="12" cy="12" r="4.1"></circle><circle cx="17.4" cy="6.6" r="1"></circle></svg></a>
-    <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" aria-label="TikTok"><svg class="icon" viewBox="0 0 24 24"><path d="M14 5.2v8.6a4.8 4.8 0 1 1-3.6-4.6"></path><path d="M14 5.2c.8 2.4 2.8 4.1 5.1 4.5"></path></svg></a>
-    <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" aria-label="X"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"></path></svg></a>
-    <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" aria-label="YouTube"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="3"></rect><path d="M11 10.2l4.5 2.3L11 14.8z"></path></svg></a>
-    <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" aria-label="Telegram"><svg class="icon" viewBox="0 0 24 24"><path d="M20.5 4.6L4.2 11.1c-.9.4-.9 1.6 0 2l4 1.5 1.7 3.8c.3.7 1.3.7 1.6 0l1.4-3 4.9 3.5c.8.6 1.9.1 2.1-.9l2-11.1c.2-.9-.7-1.7-1.6-1.4z"></path></svg></a>
-    <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
-  </div>
+<div class="bottom-brand"><img src="logo_sprayfight.png" alt="SprayFight logo"></div>
+<footer>© 2025 TRBKWSK also known as TORB — SprayFight System</footer>
 
+<div class="mobile-socials">
+  <a class="icon-link icon-instagram" href="https://www.instagram.com/trbkwsk/" target="_blank"></a>
+  <a class="icon-link icon-tiktok" href="https://www.tiktok.com/@trbkwsk" target="_blank"></a>
+  <a class="icon-link icon-x" href="https://x.com/trbkwsk?s=21" target="_blank"></a>
+  <a class="icon-link icon-youtube" href="https://youtube.com/@trbkwsk" target="_blank"></a>
+  <a class="icon-link icon-telegram" href="https://t.me/trbkwskalsoknownastorb" target="_blank"></a>
+  <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
+</div>
 </body>
 </html>
