@@ -1,148 +1,254 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SprayFight System | TORB</title>
-<link rel="icon" href="favicon.png" type="image/png">
-<meta name="theme-color" content="#000000">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SprayFight System | TORB</title>
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="SprayFight System — система граффити-баттлов от TORB: быстрый, зрелищный формат с сеткой на 16 участников и раундами от тегов до финала." />
 
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
 
-<style>
-body {
-  margin: 0;
-  padding: 0;
-  background: #0d0d0d;
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-  animation: fadeInBody 1s ease-in-out;
-}
+  <style>
+    :root{
+      /* управляем плавным затемнением/смещением при скролле */
+      --heroDarken: 0;      /* 0..0.5 примерно */
+      --heroShift: 0px;     /* 0..20px */
+    }
 
-@keyframes fadeInBody {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+    /* БАЗА */
+    html, body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      background: #0d0d0d;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      animation: fadeInBody 0.8s ease-in-out;
+    }
+    @keyframes fadeInBody { from{opacity:0} to{opacity:1} }
 
-/* Header */
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 40px;
-  border-bottom: 1px solid #333;
-  flex-wrap: wrap;
-  z-index: 100;
-  position: relative;
-}
+    /* ШАПКА */
+    header {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 40px;
+      border-bottom: 1px solid #333;
+      background: rgba(13,13,13,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-family: 'Russo One', sans-serif;
+      font-size: 2rem;
+      color: #fff;
+      text-decoration: none;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .logo:hover { color: #ffcc00; }
 
-.logo {
-  font-family: 'Russo One', sans-serif;
-  font-size: 2rem;
-  color: #fff;
-  text-decoration: none;
-}
+    .socials, .language-switch {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .socials a, .language-switch a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 5px 10px;
+      transition: color .2s ease;
+    }
+    .socials a:hover, .language-switch a:hover { color: #ffcc00; }
 
-.logo:hover {
-  color: #ffcc00;
-}
+    /* HERO */
+    .hero-image{
+      position: relative;
+      width: 100%;
+      height: 100vh; /* полный экран */
+      background: url('sprayfightlogo_live.png') no-repeat center 35%;
+      background-size: cover;
+      background-attachment: fixed;
+      border-bottom: 1px solid #333;
+      opacity: 0;
+      animation: fadeInHero 1.2s ease-in-out forwards;
+      will-change: transform, opacity;
+      transform: translateY(calc(var(--heroShift) * 0.2)); /* лёгкий параллакс-сдвиг */
+      overflow: hidden;
+    }
+    @keyframes fadeInHero { to{opacity:1} }
 
-.socials, .language-switch {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    /* Общий динамический диммер (затемнение всей картинки при скролле) */
+    .hero-image .hero-dim{
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      opacity: var(--heroDarken);
+      pointer-events: none;
+      transition: opacity .15s linear;
+      will-change: opacity;
+    }
 
-.socials a, .language-switch a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 1rem;
-  padding: 5px 10px;
-  transition: 0.3s;
-}
+    /* Градиенты сверху/снизу — для читабельности под шапкой и плавного перехода к тексту */
+    .hero-image::before,
+    .hero-image::after{
+      content:"";
+      position:absolute;
+      left:0; width:100%;
+      pointer-events:none;
+    }
+    /* верх */
+    .hero-image::before{
+      top:0; height:28vh;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.75),
+        rgba(0,0,0,0.30) 60%,
+        rgba(0,0,0,0) 100%);
+    }
+    /* низ */
+    .hero-image::after{
+      bottom:0; height:25vh;
+      background: linear-gradient(to top,
+        rgba(13,13,13,1) 5%,
+        rgba(13,13,13,0.80) 35%,
+        rgba(13,13,13,0.30) 70%,
+        rgba(13,13,13,0) 100%);
+    }
 
-.socials a:hover, .language-switch a:hover {
-  color: #ffcc00;
-}
+    /* КОНТЕНТ */
+    .content-section {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+    .content-section h2 {
+      font-family: 'Russo One', sans-serif;
+      font-size: 1.8rem;
+      margin: 24px 0 15px;
+      color: #fff;
+      border-left: 4px solid #ffcc00;
+      padding-left: 10px;
+    }
+    .content-section p { margin-bottom: 15px; }
 
-/* Hero section (image) */
-.hero-image {
-  width: 100%;
-  height: 100vh;
-  background: url('sprayfightlogo_live.png') no-repeat center center;
-  background-size: cover;
-  background-attachment: fixed;
-  border-bottom: 1px solid #333;
-  opacity: 0;
-  animation: fadeInHero 2s ease-in-out forwards;
-}
+    /* МОБИЛЬНЫЕ СОЦСЕТИ */
+    .mobile-socials {
+      display: none;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .mobile-socials a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      padding: 5px 8px;
+      white-space: nowrap;
+    }
 
-@keyframes fadeInHero {
-  to { opacity: 1; }
-}
+    /* АДАПТИВ */
+    @media (max-width: 1200px){
+      .hero-image{ background-position: center 42%; }
+    }
+    @media (max-width: 900px){
+      .socials{ display:none; }
+      .mobile-socials{ display:flex; }
+      .hero-image{
+        height: 75vh;
+        background-attachment: scroll;   /* лучше производительность на мобилках */
+        background-position: center 48%;
+      }
+    }
+    @media (max-width: 600px){
+      header{ padding: 12px 18px; }
+      .logo{ font-size: 1.6rem; }
+      .hero-image{
+        height: 70vh;
+        background-position: center 55%;
+      }
+      .content-section h2{ text-align:center; }
+    }
 
-/* Content */
-.content-section {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 0 20px;
-  line-height: 1.6;
-}
-
-.content-section h2 {
-  font-family: 'Russo One', sans-serif;
-  font-size: 1.8rem;
-  margin-bottom: 15px;
-  color: #fff;
-  border-left: 4px solid #ffcc00;
-  padding-left: 10px;
-}
-
-.content-section p {
-  margin-bottom: 15px;
-}
-
-/* Mobile social links */
-.mobile-socials {
-  display: none;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.mobile-socials a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.2rem;
-  padding: 5px 8px;
-  white-space: nowrap;
-}
-
-@media (max-width: 900px) {
-  .content-section {
-    padding: 20px;
-  }
-  .mobile-socials {
-    display: flex;
-  }
-  .socials {
-    display: none;
-  }
-  .hero-image {
-    height: 70vh;
-    background-attachment: scroll;
-  }
-}
-</style>
+    /* Пользователи, кто предпочитает без анимаций */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <a href="index-ru.html" class="logo">TORB</a>
-  <div class="socials">
+  <header>
+    <a href="index-ru.html" class="logo">TORB</a>
+    <div class="socials">
+      <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
+      <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
+      <a href="https://x.com/trbkwsk?s=21" target="_blank">X</a>
+      <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
+      <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
+      <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+    </div>
+    <div class="language-switch">
+      <a href="index.html">EN</a>
+      <a href="index-ru.html">RU</a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero-image">
+    <div class="hero-dim"></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-section">
+    <h2>SprayFight System</h2>
+    <p><em>The Graffiti Battle System by TORB</em></p>
+
+    <h2>Введение</h2>
+    <p>Граффити всегда выглядят интересно и впечатляют своими масштабами, деталями и цветами. Но рисуется достаточно долго, и этот процесс для зрителей становится нудным, особенно если рисунок делается весь день.</p>
+    <p>Есть и быстрый формат — <strong>бомбинг</strong>: граффити делаются очень быстро, потому что часто выполняются вне разрешённых мест и нелегально — исполнителю приходится работать быстро из-за риска быть замеченным или задержанным. Зачастую это могут быть тэги, труапы или простые быстрые шрифты, иногда персонажи.</p>
+
+    <h2>Интерес к граффити и соревнования</h2>
+    <p>У людей всегда есть интерес к тому, как делается граффити, а сами художники зачастую соревнуются между собой: кто круче сделает или кто больше сделает кусков.</p>
+
+    <h2>Проблема отсутствия системы</h2>
+    <p>Граффити баттлы – это не новая штука, они есть и будут, но всегда происходят без какой-либо системы. В каждом городе и стране форматы разные, и <strong>по моему мнению это создаёт хаос для участников и зрителей</strong>.</p>
+
+    <h2>Решение – SprayFight System</h2>
+    <p>Для этого я придумал систему граффити-баттлов, чтобы зрителям было интересно наблюдать за процессом, а граффити-художникам – побеждать соперника и показывать свой лучший скилл. Система заключается в том, что отбираются 16 художников, выстраивается сетка, и они бьются друг против друга по одному раунду до финала.</p>
+
+    <h2>Формат баттлов</h2>
+    <p>Каждый баттл длится короткое время, имитируя условия уличного бомбинга:</p>
+    <ul>
+      <li><strong>Первый раунд:</strong> 30 секунд, рандомное слово, которое нужно тэгнуть.</li>
+      <li><strong>Топ-8:</strong> одно слово на раунд, сложность увеличивается, нужно делать одной цветом контурный труап или простой шрифт.</li>
+      <li><strong>Топ-4:</strong> два цвета, рандомные слова, время – 1 минута 30 секунд.</li>
+      <li><strong>Финал:</strong> три минуты, участники могут менять свои имена и использовать до 4 цветов.</li>
+    </ul>
+
+    <h2>Процесс баттла</h2>
+    <p>Возводится быстрая конструкция, если нет рядом стен, либо используется одна стена. После каждого баттла помощники или сами участники быстро закрашивают фон, чтобы было видно следующие работы. Судьи оценивают стиль, подачу и формы. Формат проходит очень быстро и динамично.</p>
+
+    <h2>Судьи</h2>
+    <p>Судьи – 3–5 человек, выбираются из уважаемых людей в граффити-культуре разных направлений. Это позволяет принять независимое и справедливое решение о победителе.</p>
+
+    <h2>Динамика и эффект</h2>
+    <p>На личном опыте, <strong>проводя такие баттлы более 5 лет</strong>, они удерживают зрителей до конца всех раундов, привлекают людей к культуре граффити, мотивируют новое поколение совершенствоваться и начинать рисовать после увиденного формата.</p>
+  </div>
+
+  <div class="mobile-socials">
     <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
     <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
     <a href="https://x.com/trbkwsk?s=21" target="_blank">X</a>
@@ -150,60 +256,25 @@ header {
     <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
     <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
   </div>
-  <div class="language-switch">
-    <a href="index.html">EN</a>
-    <a href="index-ru.html">RU</a>
-  </div>
-</header>
 
-<!-- Hero Section -->
-<div class="hero-image"></div>
+  <!-- мини-скрипт для мягкого scroll-перехода hero -->
+  <script>
+    (function(){
+      const hero = document.querySelector('.hero-image');
+      if(!hero) return;
 
-<!-- Content -->
-<div class="content-section">
-  <h2>SprayFight System</h2>
-  <p><em>The Graffiti Battle System by TORB</em></p>
+      const update = () => {
+        const h = hero.offsetHeight || 1;
+        const p = Math.min(Math.max(window.scrollY / h, 0), 1); // 0..1
+        // лёгкое затемнение и сдвиг
+        document.documentElement.style.setProperty('--heroDarken', (p * 0.5).toFixed(3));
+        document.documentElement.style.setProperty('--heroShift', (p * 20).toFixed(1) + 'px');
+      };
 
-  <h2>Введение</h2>
-  <p>Граффити всегда выглядят интересно и впечатляют своими масштабами, деталями и цветами. Но рисуется достаточно долго, и этот процесс для зрителей становится нудным, особенно если рисунок делается весь день.</p>
-  <p>Есть и быстрый формат — <strong>бомбинг</strong>: граффити делаются очень быстро, потому что часто выполняются вне разрешённых мест и нелегально — исполнителю приходится работать быстро из-за риска быть замеченным или задержанным. Зачастую это могут быть тэги, труапы или простые быстрые шрифты, иногда персонажи.</p>
-
-  <h2>Интерес к граффити и соревнования</h2>
-  <p>У людей всегда есть интерес к тому, как делается граффити, а сами художники зачастую соревнуются между собой: кто круче сделает или кто больше сделает кусков.</p>
-
-  <h2>Проблема отсутствия системы</h2>
-  <p>Граффити баттлы – это не новая штука, они есть и будут, но всегда происходят без какой-либо системы. В каждом городе и стране форматы разные, и <strong>по моему мнению это создаёт хаос для участников и зрителей</strong>.</p>
-
-  <h2>Решение – SprayFight System</h2>
-  <p>Для этого я придумал систему граффити баттлов, чтобы зрителям было интересно наблюдать за процессом, а граффити-художникам – побеждать соперника и показывать свой лучший скилл. Система заключается в том, что отбираются 16 художников, выстраивается сетка, и они бьются друг против друга по одному раунду до финала.</p>
-
-  <h2>Формат баттлов</h2>
-  <p>Каждый баттл длится короткое время, имитируя условия уличного бомбинга:</p>
-  <ul>
-    <li><strong>Первый раунд:</strong> 30 секунд, рандомное слово, которое нужно тэгнуть.</li>
-    <li><strong>Топ-8:</strong> одно слово на раунд, сложность увеличивается, нужно делать одной цветом контурный труап или простой шрифт.</li>
-    <li><strong>Топ-4:</strong> два цвета, рандомные слова, время – 1 минута 30 секунд.</li>
-    <li><strong>Финал:</strong> три минуты, участники могут менять свои имена и использовать до 4 цветов.</li>
-  </ul>
-
-  <h2>Процесс баттла</h2>
-  <p>Возводится быстрая конструкция, если нет рядом стен, либо используется одна стена. После каждого баттла помощники или сами участники быстро закрашивают фон, чтобы было видно следующие работы. Судьи оценивают стиль, подачу и формы. Формат проходит очень быстро и динамично.</p>
-
-  <h2>Судьи</h2>
-  <p>Судьи – 3–5 человек, выбираются из уважаемых людей в граффити-культуре разных направлений. Это позволяет принять независимое и справедливое решение о победителе.</p>
-
-  <h2>Динамика и эффект</h2>
-  <p>На личном опыте, <strong>проводя такие баттлы более 5 лет</strong>, они удерживают зрителей до конца всех раундов, привлекают людей к культуре граффити, мотивируют новое поколение совершенствоваться и начинать рисовать после увиденного формата.</p>
-</div>
-
-<div class="mobile-socials">
-  <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
-  <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
-  <a href="https://x.com/trbkwsk?s=21" target="_blank">X</a>
-  <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
-  <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
-  <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
-</div>
-
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+  </script>
 </body>
 </html>
