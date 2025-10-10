@@ -27,6 +27,7 @@
       display:flex; align-items:center; justify-content:space-between; gap:16px;
       padding:12px 20px; border-bottom:1px solid var(--line);
       background:rgba(13,13,13,.75); backdrop-filter:blur(6px);
+      flex-wrap:wrap;
     }
     .logo{
       font-family:'Russo One',sans-serif; font-size:2rem; color:#fff; text-decoration:none; white-space:nowrap;
@@ -34,11 +35,11 @@
     .logo:hover{ color:var(--accent); }
 
     .socials, .language-switch{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-    .language-switch{ margin-left:auto; white-space:nowrap; }
-    .language-switch a, .mobile-socials a.text-link{
+    .language-switch a{
       color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition:color .2s;
     }
-    .language-switch a:hover, .mobile-socials a.text-link:hover{ color:var(--accent); }
+    .language-switch a:hover{ color:var(--accent); }
+    .language-switch a.active{ color:var(--accent); pointer-events:none; }
 
     /* ICON LINKS */
     .socials a.icon-link, .mobile-socials a.icon-link{
@@ -182,8 +183,8 @@
     </div>
 
     <div class="language-switch">
-      <a href="index.html">EN</a>
-      <a href="index-ru.html">RU</a>
+      <a href="sprayfight.html" class="en">EN</a>
+      <a href="sprayfight-ru.html" class="ru">RU</a>
     </div>
   </header>
 
@@ -317,5 +318,13 @@
     <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link" aria-label="STREEET.ART" title="STREEET.ART">STREEET.ART</a>
   </div>
 
+  <script>
+    // Highlight active language
+    (function(){
+      const isRU = location.pathname.includes('sprayfight-ru');
+      document.querySelector('.language-switch .en')?.classList.toggle('active', !isRU);
+      document.querySelector('.language-switch .ru')?.classList.toggle('active',  isRU);
+    })();
+  </script>
 </body>
 </html>
