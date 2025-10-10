@@ -12,156 +12,155 @@
   <style>
     /* ===== БАЗА ===== */
     html, body { height: 100%; }
-    body {
-      margin: 0;
-      background: #0d0d0d;
-      color: #fff;
-      font-family: 'Inter', sans-serif;
-      -webkit-text-size-adjust: 100%;
-      overflow-x: hidden;
+    body{
+      margin:0; background:#0d0d0d; color:#fff; font-family:'Inter',sans-serif;
+      overflow-x:hidden; -webkit-text-size-adjust:100%;
+      animation:fadeInBody .6s ease;
     }
+    @keyframes fadeInBody { from{opacity:0} to{opacity:1} }
+    @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
 
     /* ===== ШАПКА ===== */
     header{
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 20px;
-      border-bottom: 1px solid #333;
-      background: rgba(13,13,13,0.75);    /* картинка будет «под» шапкой */
-      backdrop-filter: blur(6px);          /* можно убрать при желании */
+      position:sticky; top:0; z-index:1000;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding:12px 20px; border-bottom:1px solid #333;
+      background:rgba(13,13,13,.75); backdrop-filter:blur(6px);
     }
     .logo{
-      font-family: 'Russo One', sans-serif;
-      font-size: 2rem;
-      color:#fff; text-decoration:none; white-space:nowrap;
-      line-height: 1;
-      flex: 0 0 auto;
+      font-family:'Russo One',sans-serif;
+      font-size:2rem; line-height:1; color:#fff; text-decoration:none; white-space:nowrap;
     }
     .logo:hover{ color:#ffcc00; }
-
-    .socials, .language-switch{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    }
-    .socials a, .language-switch a{
+    .socials,.language-switch{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .socials a,.language-switch a{
       color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition:color .2s;
     }
-    .socials a:hover, .language-switch a:hover{ color:#ffcc00; }
-
-    /* держим языки справа в одну линию даже на мобиле */
+    .socials a:hover,.language-switch a:hover{ color:#ffcc00; }
     .language-switch{ margin-left:auto; white-space:nowrap; }
-
     @media (max-width: 900px){
-      .socials{ display:none; } /* прячем иконки соцсетей на телефонах */
-      header{ padding: 12px 16px; }
-      .logo{ font-size: 1.8rem; }
+      .socials{ display:none; }
+      header{ padding:12px 16px; }
+      .logo{ font-size:1.8rem; }
     }
 
-    /* ===== HERO: картинка под шапкой ===== */
+    /* ===== HERO: картинка уходит под шапку ===== */
     .hero-image{
-      position: relative;
-      width: 100%;
-      height: 70vh; /* 70–80vh: регулировать по вкусу */
-      background: url('sprayfightlogo_live.png') no-repeat center 38%;
-      background-size: cover;     /* без fixed для стабильности на iOS */
-      border-bottom: 1px solid #333;
-      overflow: hidden;
+      position:relative; width:100%;
+      height:70vh; /* итоговый размер как ты хотел */
+      background: url('sprayfightlogo_live.png') no-repeat center 52%; /* смещено чуть ниже, чтобы верх не «съедался» */
+      background-size:cover; /* без fixed — стабильно на iOS */
+      border-bottom:1px solid #333;
+      opacity:0; animation:fadeInHero .9s ease .1s forwards;
+      overflow:hidden;
     }
+    @keyframes fadeInHero { to{ opacity:1 } }
 
-    /* Градиенты: сверху — под шапкой, снизу — плавный переход к тексту */
+    /* Верхний градиент — логотип читается под шапкой */
     .hero-image::before,
     .hero-image::after{
-      content: "";
-      position: absolute;
-      left: 0; width: 100%;
-      pointer-events: none;
+      content:""; position:absolute; left:0; width:100%; pointer-events:none;
     }
     .hero-image::before{
-      top: 0; height: 26vh;
-      background: linear-gradient(to bottom,
-        rgba(0,0,0,0.75),
-        rgba(0,0,0,0.30) 60%,
+      top:0; height:26vh;
+      background:linear-gradient(to bottom,
+        rgba(0,0,0,.75),
+        rgba(0,0,0,.30) 60%,
         rgba(0,0,0,0)
       );
     }
+    /* Нижний градиент — мягкий переход к тексту */
     .hero-image::after{
-      bottom: 0; height: 22vh;
-      background: linear-gradient(to top,
+      bottom:0; height:22vh;
+      background:linear-gradient(to top,
         rgba(13,13,13,1) 8%,
-        rgba(13,13,13,0.80) 38%,
-        rgba(13,13,13,0.00)
+        rgba(13,13,13,.80) 38%,
+        rgba(13,13,13,0)
       );
     }
 
-    /* ===== КОНТЕНТ: «заезжает» на картинку ===== */
+    /* ===== КОНТЕНТ: «заезжает» на картинку аккуратно ===== */
     .content-section{
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-      line-height: 1.6;
+      max-width:1000px; margin:40px auto; padding:0 20px; line-height:1.6;
+      opacity:0; animation:fadeInUp .7s ease .2s forwards;
     }
-    .content-section h2{
-      font-family: 'Russo One', sans-serif;
-      font-size: 1.8rem;
-      margin: 24px 0 15px;
-      color: #fff;
-      border-left: 4px solid #ffcc00;
-      padding-left: 10px;
-    }
-    .content-section p{ margin-bottom: 15px; }
+    @keyframes fadeInUp { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
 
-    /* Заезд на картинку: отрицательный отступ + градиентная подложка сверху секции */
+    /* Заезд: короткий и чистый */
     .content-overlap{
-      position: relative;
-      z-index: 2;
-      margin-top: -12vh;     /* глубина заезда */
-      padding-top: 12vh;     /* компенсация внутренним отступом */
+      position:relative; z-index:2;
+      margin-top:-10vh;          /* глубина заезда */
+      padding-top:10vh;          /* компенсация */
       background:
-        linear-gradient(to top, rgba(13,13,13,1), rgba(13,13,13,0)) top/100% 12vh no-repeat,
+        linear-gradient(to top, rgba(13,13,13,1), rgba(13,13,13,0)) top/100% 10vh no-repeat,
         transparent;
     }
 
-    /* Мобильная кадрировка логотипа и глубина заезда */
+    /* Заголовки без жёлтой линии */
+    .content-section h2{
+      font-family:'Russo One',sans-serif;
+      font-size:1.8rem; margin:24px 0 12px;
+      letter-spacing:.2px;
+    }
+    .content-section p{ margin:0 0 15px; }
+
+    /* ===== Мобайл: безопасная кадрировка логотипа ===== */
     @media (max-width: 1200px){
-      .hero-image{ background-position: center 44%; }
-      .content-overlap{ margin-top: -10vh; padding-top: 10vh; background-size: 100% 10vh, auto; }
+      .hero-image{ background-position:center 56%; }
+      .content-overlap{ margin-top:-9vh; padding-top:9vh; background-size:100% 9vh, auto; }
     }
     @media (max-width: 900px){
-      .hero-image{ height: 62vh; background-position: center 50%; }
-      .content-overlap{ margin-top: -9vh; padding-top: 9vh; background-size: 100% 9vh, auto; }
+      .hero-image{ height:62vh; background-position:center 60%; }
+      .content-overlap{ margin-top:-8vh; padding-top:8vh; background-size:100% 8vh, auto; }
     }
     @media (max-width: 600px){
-      .hero-image{ height: 56vh; background-position: center 56%; }
-      .content-overlap{ margin-top: -8vh; padding-top: 8vh; background-size: 100% 8vh, auto; }
-      .content-section h2{ text-align: center; }
+      .hero-image{ height:58vh; background-position:center 64%; }
+      .content-overlap{ margin-top:-7vh; padding-top:7vh; background-size:100% 7vh, auto; }
+      .content-section h2{ text-align:center; }
     }
 
-    /* ===== Мобильные ссылки на соцсети внизу (по желанию) ===== */
+    /* ===== ЛОГО ВНИЗУ + ФУТЕР ===== */
+    .bottom-brand{
+      max-width:1000px; margin:56px auto 0; padding:0 20px;
+      display:flex; justify-content:center; align-items:center;
+      opacity:0; animation:fadeInUp .7s ease .3s forwards;
+    }
+    .bottom-brand img{
+      height:140px; width:auto; max-width:100%;
+      opacity:.95;
+    }
+    @media (max-width: 600px){
+      .bottom-brand{ margin:40px auto 0; }
+      .bottom-brand img{ height:96px; }
+    }
+
+    .divider{
+      max-width:1000px; margin:28px auto 0; padding:0 20px;
+      opacity:.6;
+      border-top:1px solid #333;
+    }
+
+    footer{
+      text-align:center; padding:16px 20px 40px; color:#aaa; font-size:.95rem;
+    }
+
+    /* ===== Мобильные соцсети (опционально) ===== */
     .mobile-socials {
       display: none;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 20px;
-      box-sizing: border-box;
+      flex-wrap: wrap; gap: 10px;
+      padding: 20px; box-sizing: border-box;
     }
     .mobile-socials a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1.2rem;
-      padding: 5px 8px;
-      white-space: nowrap;
+      color: #fff; text-decoration: none; font-size: 1.1rem;
+      padding: 5px 8px; white-space: nowrap;
     }
-    @media (max-width: 900px) { .mobile-socials{ display:flex; } }
+    @media (max-width: 900px){ .mobile-socials{ display:flex; } }
   </style>
 </head>
 <body>
 
-  <!-- ===== ШАПКА ===== -->
+  <!-- Шапка -->
   <header>
     <a href="index-ru.html" class="logo">TORB</a>
 
@@ -180,10 +179,10 @@
     </div>
   </header>
 
-  <!-- ===== HERO: картинка уходит под шапку ===== -->
+  <!-- Hero: картинка начинается прямо под шапкой и уходит под неё при скролле -->
   <div class="hero-image" aria-hidden="true"></div>
 
-  <!-- ===== КОНТЕНТ: «заходит» на картинку ===== -->
+  <!-- Контент: заходит на картинку, плавный переход -->
   <div class="content-section content-overlap">
     <h2>SprayFight System</h2>
     <p><em>The Graffiti Battle System by TORB</em></p>
@@ -220,7 +219,20 @@
     <p>На личном опыте, <strong>проводя такие баттлы более 5 лет</strong>, они удерживают зрителей до конца всех раундов, привлекают людей к культуре граффити, мотивируют новое поколение совершенствоваться и начинать рисовать после увиденного формата.</p>
   </div>
 
-  <!-- Соцсети для мобилки (опционально) -->
+  <!-- Лого внизу (как у постера) -->
+  <div class="bottom-brand">
+    <img src="logo_sprayfight.png" alt="SprayFight logo" loading="lazy" />
+  </div>
+
+  <!-- Разделительная линия -->
+  <div class="divider"></div>
+
+  <!-- Футер -->
+  <footer>
+    © 2025 TRBKWSK also known as TORB — SprayFight System
+  </footer>
+
+  <!-- (опционально) мобильные ссылки на соцсети -->
   <div class="mobile-socials">
     <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
     <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
