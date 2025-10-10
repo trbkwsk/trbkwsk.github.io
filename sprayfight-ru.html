@@ -15,7 +15,7 @@
     body{
       margin:0; background:#0d0d0d; color:#fff; font-family:'Inter',sans-serif;
       overflow-x:hidden; -webkit-text-size-adjust:100%;
-      animation:fadeInBody .6s ease;
+      animation:fadeInBody .5s ease;
     }
     @keyframes fadeInBody { from{opacity:0} to{opacity:1} }
     @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
@@ -47,16 +47,19 @@
     /* ===== HERO: картинка уходит под шапку ===== */
     .hero-image{
       position:relative; width:100%;
-      height:70vh; /* итоговый размер как ты хотел */
-      background: url('sprayfightlogo_live.png') no-repeat center 52%; /* смещено чуть ниже, чтобы верх не «съедался» */
-      background-size:cover; /* без fixed — стабильно на iOS */
+      height:70vh; /* целевой визуальный размер */
+      background-image:url('sprayfightlogo_live.png');
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position:center 52%;   /* смещение ниже, чтобы верх не «съедался» */
+      background-attachment:scroll !important; /* гарантируем отсутствие fixed */
       border-bottom:1px solid #333;
-      opacity:0; animation:fadeInHero .9s ease .1s forwards;
+      opacity:0; animation:fadeInHero .8s ease .1s forwards;
       overflow:hidden;
     }
     @keyframes fadeInHero { to{ opacity:1 } }
 
-    /* Верхний градиент — логотип читается под шапкой */
+    /* верхний и нижний градиенты — плавный переход */
     .hero-image::before,
     .hero-image::after{
       content:""; position:absolute; left:0; width:100%; pointer-events:none;
@@ -69,7 +72,6 @@
         rgba(0,0,0,0)
       );
     }
-    /* Нижний градиент — мягкий переход к тексту */
     .hero-image::after{
       bottom:0; height:22vh;
       background:linear-gradient(to top,
@@ -79,14 +81,14 @@
       );
     }
 
-    /* ===== КОНТЕНТ: «заезжает» на картинку аккуратно ===== */
+    /* ===== КОНТЕНТ: заезд на картинку + центрированные заголовки ===== */
     .content-section{
       max-width:1000px; margin:40px auto; padding:0 20px; line-height:1.6;
-      opacity:0; animation:fadeInUp .7s ease .2s forwards;
+      opacity:0; animation:fadeInUp .6s ease .2s forwards;
     }
     @keyframes fadeInUp { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
 
-    /* Заезд: короткий и чистый */
+    /* заезд */
     .content-overlap{
       position:relative; z-index:2;
       margin-top:-10vh;          /* глубина заезда */
@@ -96,7 +98,20 @@
         transparent;
     }
 
-    /* Заголовки без жёлтой линии */
+    /* главный титул и подзаголовок по центру */
+    .page-title{
+      text-align:center; margin:0 0 18px;
+    }
+    .page-title h1{
+      font-family:'Russo One',sans-serif;
+      font-size:clamp(28px,6vw,46px);
+      margin:0 0 8px;
+    }
+    .page-title p{
+      margin:0; font-size:clamp(14px,2.6vw,20px); opacity:.9; font-style:italic;
+    }
+
+    /* остальные h2 — без жёлтой полосы */
     .content-section h2{
       font-family:'Russo One',sans-serif;
       font-size:1.8rem; margin:24px 0 12px;
@@ -104,7 +119,7 @@
     }
     .content-section p{ margin:0 0 15px; }
 
-    /* ===== Мобайл: безопасная кадрировка логотипа ===== */
+    /* ===== КАДРИРОВКА НА МОБИЛЕ ===== */
     @media (max-width: 1200px){
       .hero-image{ background-position:center 56%; }
       .content-overlap{ margin-top:-9vh; padding-top:9vh; background-size:100% 9vh, auto; }
@@ -123,11 +138,10 @@
     .bottom-brand{
       max-width:1000px; margin:56px auto 0; padding:0 20px;
       display:flex; justify-content:center; align-items:center;
-      opacity:0; animation:fadeInUp .7s ease .3s forwards;
+      opacity:0; animation:fadeInUp .6s ease .25s forwards;
     }
     .bottom-brand img{
-      height:140px; width:auto; max-width:100%;
-      opacity:.95;
+      height:140px; width:auto; max-width:100%; opacity:.95;
     }
     @media (max-width: 600px){
       .bottom-brand{ margin:40px auto 0; }
@@ -136,19 +150,16 @@
 
     .divider{
       max-width:1000px; margin:28px auto 0; padding:0 20px;
-      opacity:.6;
-      border-top:1px solid #333;
+      opacity:.6; border-top:1px solid #333;
     }
 
     footer{
       text-align:center; padding:16px 20px 40px; color:#aaa; font-size:.95rem;
     }
 
-    /* ===== Мобильные соцсети (опционально) ===== */
+    /* ===== Соцсети внизу для мобилы (опционально) ===== */
     .mobile-socials {
-      display: none;
-      justify-content: center;
-      flex-wrap: wrap; gap: 10px;
+      display: none; justify-content: center; flex-wrap: wrap; gap: 10px;
       padding: 20px; box-sizing: border-box;
     }
     .mobile-socials a {
@@ -179,13 +190,15 @@
     </div>
   </header>
 
-  <!-- Hero: картинка начинается прямо под шапкой и уходит под неё при скролле -->
+  <!-- Hero: картинка начинается под шапкой и уходит под неё при скролле -->
   <div class="hero-image" aria-hidden="true"></div>
 
-  <!-- Контент: заходит на картинку, плавный переход -->
+  <!-- Контент: заходит на картинку, титулы по центру -->
   <div class="content-section content-overlap">
-    <h2>SprayFight System</h2>
-    <p><em>The Graffiti Battle System by TORB</em></p>
+    <div class="page-title">
+      <h1>SprayFight System</h1>
+      <p><em>The Graffiti Battle System by TORB</em></p>
+    </div>
 
     <h2>Введение</h2>
     <p>Граффити всегда выглядят интересно и впечатляют своими масштабами, деталями и цветами. Но рисуется достаточно долго, и этот процесс для зрителей становится нудным, особенно если рисунок делается весь день.</p>
@@ -232,7 +245,7 @@
     © 2025 TRBKWSK also known as TORB — SprayFight System
   </footer>
 
-  <!-- (опционально) мобильные ссылки на соцсети -->
+  <!-- (опционально) мобильные соцсети снизу -->
   <div class="mobile-socials">
     <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
     <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
