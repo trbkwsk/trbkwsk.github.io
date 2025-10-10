@@ -7,184 +7,133 @@
   <link rel="icon" href="favicon.png" type="image/png" />
   <meta name="theme-color" content="#000000" />
   <meta name="description" content="SprayFight System — система граффити-баттлов от TORB: быстрый, зрелищный формат с сеткой на 16 участников и раундами от тегов до финала." />
-
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
 
   <style>
     :root{
-      /* управляем плавным затемнением/смещением при скролле */
-      --heroDarken: 0;      /* 0..0.5 примерно */
-      --heroShift: 0px;     /* 0..20px */
+      --heroDarken: 0;
+      --heroShift: 0px;
     }
 
-    /* БАЗА */
-    html, body {
-      height: 100%;
+    html, body { height: 100%; }
+    body{
+      margin:0; background:#0d0d0d; color:#fff; font-family:'Inter',sans-serif; overflow-x:hidden;
+      animation: fadeInBody .6s ease;
     }
-    body {
-      margin: 0;
-      background: #0d0d0d;
-      color: #fff;
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-      animation: fadeInBody 0.8s ease-in-out;
-    }
-    @keyframes fadeInBody { from{opacity:0} to{opacity:1} }
+    @keyframes fadeInBody{from{opacity:0}to{opacity:1}}
 
-    /* ШАПКА */
-    header {
-      position: sticky;
-      top: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 15px 40px;
-      border-bottom: 1px solid #333;
-      background: rgba(13,13,13,0.75);
-      backdrop-filter: blur(6px);
-      z-index: 100;
-      gap: 16px;
-      flex-wrap: wrap;
+    /* HEADER */
+    header{
+      position:sticky; top:0; z-index:100;
+      display:flex; align-items:center; gap:16px;
+      padding:12px 20px;
+      border-bottom:1px solid #333;
+      background:rgba(13,13,13,.75); backdrop-filter:blur(6px);
+      flex-wrap:wrap; /* десктопу позволяем переносить соцсети при необходимости */
     }
-    .logo {
-      font-family: 'Russo One', sans-serif;
-      font-size: 2rem;
-      color: #fff;
-      text-decoration: none;
-      line-height: 1;
-      white-space: nowrap;
+    .logo{
+      font-family:'Russo One',sans-serif; font-size:2rem; line-height:1; color:#fff; text-decoration:none; white-space:nowrap;
     }
-    .logo:hover { color: #ffcc00; }
+    .logo:hover{ color:#ffcc00; }
+    .socials,.language-switch{ display:flex; align-items:center; gap:10px; }
+    .socials a,.language-switch a{
+      color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition:color .2s;
+    }
+    .socials a:hover,.language-switch a:hover{ color:#ffcc00; }
 
-    .socials, .language-switch {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .socials a, .language-switch a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1rem;
-      padding: 5px 10px;
-      transition: color .2s ease;
-    }
-    .socials a:hover, .language-switch a:hover { color: #ffcc00; }
+    /* держим переключатель языков справа даже на мобиле */
+    .language-switch{ margin-left:auto; white-space:nowrap; }
 
     /* HERO */
     .hero-image{
-      position: relative;
-      width: 100%;
-      height: 100vh; /* полный экран */
-      background: url('sprayfightlogo_live.png') no-repeat center 35%;
-      background-size: cover;
-      background-attachment: fixed;
-      border-bottom: 1px solid #333;
-      opacity: 0;
-      animation: fadeInHero 1.2s ease-in-out forwards;
-      will-change: transform, opacity;
-      transform: translateY(calc(var(--heroShift) * 0.2)); /* лёгкий параллакс-сдвиг */
-      overflow: hidden;
+      position:relative; width:100%; height:100vh;
+      background:url('sprayfightlogo_live.png') no-repeat center 35%;
+      background-size:cover; background-attachment:fixed;
+      border-bottom:1px solid #333;
+      opacity:0; animation:fadeInHero 1s ease forwards;
+      transform: translateY(calc(var(--heroShift)*.2));
+      overflow:hidden;
     }
-    @keyframes fadeInHero { to{opacity:1} }
+    @keyframes fadeInHero{to{opacity:1}}
 
-    /* Общий динамический диммер (затемнение всей картинки при скролле) */
+    /* общая затемняющая плёнка (динамическая от скролла) */
     .hero-image .hero-dim{
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      opacity: var(--heroDarken);
-      pointer-events: none;
-      transition: opacity .15s linear;
-      will-change: opacity;
+      position:absolute; inset:0; background:#000; opacity:var(--heroDarken);
+      pointer-events:none; transition:opacity .15s linear;
     }
 
-    /* Градиенты сверху/снизу — для читабельности под шапкой и плавного перехода к тексту */
+    /* верхний и нижний градиенты для читабельности */
     .hero-image::before,
     .hero-image::after{
-      content:"";
-      position:absolute;
-      left:0; width:100%;
-      pointer-events:none;
+      content:""; position:absolute; left:0; width:100%; pointer-events:none;
     }
-    /* верх */
     .hero-image::before{
       top:0; height:28vh;
-      background: linear-gradient(to bottom,
-        rgba(0,0,0,0.75),
-        rgba(0,0,0,0.30) 60%,
-        rgba(0,0,0,0) 100%);
+      background:linear-gradient(to bottom, rgba(0,0,0,.75), rgba(0,0,0,.3) 60%, rgba(0,0,0,0));
     }
-    /* низ */
     .hero-image::after{
       bottom:0; height:25vh;
-      background: linear-gradient(to top,
-        rgba(13,13,13,1) 5%,
-        rgba(13,13,13,0.80) 35%,
-        rgba(13,13,13,0.30) 70%,
-        rgba(13,13,13,0) 100%);
+      background:linear-gradient(to top, rgba(13,13,13,1) 5%, rgba(13,13,13,.8) 35%, rgba(13,13,13,.3) 70%, rgba(13,13,13,0));
     }
 
-    /* КОНТЕНТ */
-    .content-section {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-      line-height: 1.6;
+    /* ТЕКСТ ПОВЕРХ КАРТИНКИ */
+    .hero-content{
+      position:absolute; inset:auto 0 8vh 0;
+      max-width:1000px; margin:0 auto; padding:0 20px;
+      text-align:left; z-index:2;
     }
-    .content-section h2 {
-      font-family: 'Russo One', sans-serif;
-      font-size: 1.8rem;
-      margin: 24px 0 15px;
-      color: #fff;
-      border-left: 4px solid #ffcc00;
-      padding-left: 10px;
+    .hero-title{
+      font-family:'Russo One',sans-serif;
+      font-size:clamp(28px, 6vw, 64px);
+      margin:0 0 8px;
+      letter-spacing:.5px;
     }
-    .content-section p { margin-bottom: 15px; }
-
-    /* МОБИЛЬНЫЕ СОЦСЕТИ */
-    .mobile-socials {
-      display: none;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-    .mobile-socials a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1.2rem;
-      padding: 5px 8px;
-      white-space: nowrap;
+    .hero-sub{
+      font-size:clamp(14px, 2.6vw, 22px);
+      opacity:.9; margin:0;
     }
 
-    /* АДАПТИВ */
+    .content-section{
+      max-width:1000px; margin:40px auto; padding:0 20px; line-height:1.6;
+    }
+    .content-section h2{
+      font-family:'Russo One',sans-serif; font-size:1.8rem; margin:24px 0 15px;
+      border-left:4px solid #ffcc00; padding-left:10px;
+    }
+    .content-section p{ margin-bottom:15px; }
+
+    .mobile-socials{ display:none; justify-content:center; flex-wrap:wrap; gap:10px; padding:20px; box-sizing:border-box; }
+    .mobile-socials a{ color:#fff; text-decoration:none; font-size:1.2rem; padding:5px 8px; white-space:nowrap; }
+
+    /* ADAPTIVE */
     @media (max-width: 1200px){
-      .hero-image{ background-position: center 42%; }
+      .hero-image{ background-position:center 42%; }
     }
     @media (max-width: 900px){
+      /* важное: шапка в одну линию: лого слева, языки справа */
+      header{ flex-wrap:nowrap; }
       .socials{ display:none; }
       .mobile-socials{ display:flex; }
+
       .hero-image{
-        height: 75vh;
-        background-attachment: scroll;   /* лучше производительность на мобилках */
-        background-position: center 48%;
+        height:72vh;
+        background-attachment:scroll;
+        background-position:center 52%;
       }
+      /* делаем текст читаемым на фоне: компактнее и жирнее */
+      .hero-content{ inset:auto 0 6vh 0; text-align:center; }
+      .hero-title{ font-size:clamp(26px,8vw,40px); }
+      .hero-sub{ font-size:clamp(13px,4.2vw,18px); }
+      /* доп. затемнение на мобилке */
+      .hero-image .hero-dim{ opacity: max(var(--heroDarken), .25); }
     }
     @media (max-width: 600px){
-      header{ padding: 12px 18px; }
-      .logo{ font-size: 1.6rem; }
-      .hero-image{
-        height: 70vh;
-        background-position: center 55%;
-      }
+      .hero-image{ height:66vh; background-position:center 58%; }
       .content-section h2{ text-align:center; }
     }
 
-    /* Пользователи, кто предпочитает без анимаций */
     @media (prefers-reduced-motion: reduce){
-      *{ animation: none !important; transition: none !important; }
+      *{ animation:none!important; transition:none!important; }
     }
   </style>
 </head>
@@ -192,6 +141,7 @@
 
   <header>
     <a href="index-ru.html" class="logo">TORB</a>
+
     <div class="socials">
       <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
       <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
@@ -200,6 +150,7 @@
       <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
       <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
     </div>
+
     <div class="language-switch">
       <a href="index.html">EN</a>
       <a href="index-ru.html">RU</a>
@@ -209,13 +160,16 @@
   <!-- HERO -->
   <div class="hero-image">
     <div class="hero-dim"></div>
+
+    <!-- Текст поверх изображения -->
+    <div class="hero-content">
+      <h1 class="hero-title">SprayFight System</h1>
+      <p class="hero-sub"><em>The Graffiti Battle System by TORB</em></p>
+    </div>
   </div>
 
-  <!-- CONTENT -->
+  <!-- CONTENT (без дублирования заголовка/подзаголовка) -->
   <div class="content-section">
-    <h2>SprayFight System</h2>
-    <p><em>The Graffiti Battle System by TORB</em></p>
-
     <h2>Введение</h2>
     <p>Граффити всегда выглядят интересно и впечатляют своими масштабами, деталями и цветами. Но рисуется достаточно долго, и этот процесс для зрителей становится нудным, особенно если рисунок делается весь день.</p>
     <p>Есть и быстрый формат — <strong>бомбинг</strong>: граффити делаются очень быстро, потому что часто выполняются вне разрешённых мест и нелегально — исполнителю приходится работать быстро из-за риска быть замеченным или задержанным. Зачастую это могут быть тэги, труапы или простые быстрые шрифты, иногда персонажи.</p>
@@ -257,21 +211,18 @@
     <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
   </div>
 
-  <!-- мини-скрипт для мягкого scroll-перехода hero -->
+  <!-- Лёгкая реакция на скролл: затемнение и сдвиг hero -->
   <script>
     (function(){
       const hero = document.querySelector('.hero-image');
       if(!hero) return;
-
       const update = () => {
         const h = hero.offsetHeight || 1;
         const p = Math.min(Math.max(window.scrollY / h, 0), 1); // 0..1
-        // лёгкое затемнение и сдвиг
         document.documentElement.style.setProperty('--heroDarken', (p * 0.5).toFixed(3));
         document.documentElement.style.setProperty('--heroShift', (p * 20).toFixed(1) + 'px');
       };
-
-      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('scroll', update, { passive:true });
       window.addEventListener('resize', update);
       update();
     })();
