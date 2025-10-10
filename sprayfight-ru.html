@@ -59,13 +59,13 @@
       .logo { font-size: 1.8rem; }
     }
 
-    /* ===== HERO (видео + верхний градиент) ===== */
+    /* ===== HERO ===== */
     .hero-image {
       position: relative; width: 100%;
       height: 70vh;
       overflow: hidden;
       opacity: 0; animation: fadeInHero .8s ease .1s forwards;
-      border-bottom: none;                 /* не рисуем линию на видео */
+      border-bottom: none;
       z-index: 0;
     }
     @keyframes fadeInHero { to { opacity: 1; } }
@@ -79,7 +79,7 @@
       z-index: 0;
     }
 
-    /* верхний градиент под шапкой */
+    /* верхний градиент */
     .hero-image::before {
       content: "";
       position: absolute; left: 0; top: 0; width:100%;
@@ -95,16 +95,15 @@
       line-height: 1.7;
       opacity: 0; animation: fadeInUp .6s ease .2s forwards;
       position: relative; z-index: 10;
+      background: linear-gradient(to top, rgba(13,13,13,1) 20%, rgba(13,13,13,0) 100%) top/100% 15vh no-repeat;
     }
     @keyframes fadeInUp { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
 
-    /* лёгкий «заезд» на десктопе */
     .content-overlap {
       margin-top: -8vh; padding-top: 8vh;
-      background: linear-gradient(to top, rgba(13,13,13,1), rgba(13,13,13,0)) top/100% 8vh no-repeat;
+      background: none !important;
     }
 
-    /* титул */
     .page-title { text-align: center; margin: 0 0 18px; }
     .page-title h1 {
       font-family: 'Russo One', sans-serif;
@@ -118,14 +117,12 @@
       font-style: italic;
     }
 
-    /* разделители */
     .sep {
       border: 0; border-top: 1px solid #2b2b2b;
       margin: 28px 0;
       opacity: .8;
     }
 
-    /* секции */
     .content-section h2 {
       font-family: 'Russo One', sans-serif;
       font-size: clamp(22px, 3.2vw, 28px);
@@ -143,7 +140,7 @@
       content: "•"; position: absolute; left: 0; top: 0; color: #ffcc00;
     }
 
-    /* ===== МОБИЛЬНОЕ ВИДЕО: горизонтально, текст не исчезает ===== */
+    /* ===== МОБИЛКА ===== */
     @media (max-width: 900px) {
       .hero-image {
         height: auto !important;
@@ -156,7 +153,6 @@
         width: 100%; height: 100%;
         object-fit: cover; object-position: center center;
       }
-      /* на мобиле без «заезда» — всё читабельно */
       .content-overlap {
         margin-top: 0 !important;
         padding-top: 20px !important;
@@ -165,7 +161,7 @@
       .content-section h2 { text-align: center; }
     }
 
-    /* ===== LOGO + FOOTER ===== */
+    /* ===== ЛОГО И ФУТЕР ===== */
     .bottom-brand {
       max-width: 1000px; margin: 56px auto 0; padding: 0 20px;
       display: flex; justify-content: center; align-items: center;
@@ -177,7 +173,6 @@
     .divider { max-width:1000px; margin:28px auto 0; padding:0 20px; opacity:.6; border-top:1px solid #333; }
     footer { text-align:center; padding:16px 20px 40px; color:#aaa; font-size:.95rem; }
 
-    /* нижние соцсети для мобилы (опционально) */
     .mobile-socials {
       display: none; justify-content: center; flex-wrap: wrap; gap: 10px;
       padding: 20px; box-sizing: border-box;
@@ -213,7 +208,7 @@
     </video>
   </div>
 
-  <!-- CONTENT (НОВЫЙ ТЕКСТ) -->
+  <!-- CONTENT -->
   <div class="content-section content-overlap">
     <div class="page-title">
       <h1>SprayFight System</h1>
@@ -228,7 +223,6 @@
     <hr class="sep" />
 
     <h2>Цель системы</h2>
-    <p>Я создал систему граффити-баттлов, чтобы:</p>
     <ul>
       <li>зрителям было интересно наблюдать за процессом;</li>
       <li>художникам было интересно соревноваться и побеждать;</li>
@@ -292,7 +286,7 @@
     <h2>Почему это работает</h2>
     <p>На протяжении пяти лет я провожу граффити-баттлы и вижу, как этот формат действительно привлекает людей к культуре. Зрители не отходят — наоборот, с каждым раундом их становится больше.</p>
     <p>Это не просто соревнование, а живой процесс, где на глазах рождается искусство. Такой формат делает граффити ближе и понятнее людям, а для самих художников становится мощной мотивацией.</p>
-    <p>Многие после участия или даже просто просмотра начинают совершенствоваться, развивать стиль или впервые берут баллон в руки.</p>
+    <p>Многие после участия или даже после просмотра начинают совершенствоваться, развивать стиль или впервые берут баллон в руки.</p>
     <p>Эта система не просто выявляет сильнейшего — она помогает развивать новое поколение граффити-художников, сохраняя дух улицы и уважение к культуре.</p>
   </div>
 
@@ -303,7 +297,7 @@
   <div class="divider"></div>
   <footer>© 2025 TRBKWSK also known as TORB — SprayFight System</footer>
 
-  <!-- MOBILE SOCIALS (опционально) -->
+  <!-- MOBILE SOCIALS -->
   <div class="mobile-socials">
     <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
     <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
