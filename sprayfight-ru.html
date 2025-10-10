@@ -25,36 +25,39 @@
 
     /* ===== HEADER ===== */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 20px;
-      border-bottom: 1px solid #333;
-      background: rgba(13, 13, 13, .75);
-      backdrop-filter: blur(6px);
+      position: sticky; top: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 12px 20px; border-bottom: 1px solid #333;
+      background: rgba(13, 13, 13, .75); backdrop-filter: blur(6px);
     }
     .logo {
       font-family: 'Russo One', sans-serif;
-      font-size: 2rem;
-      color: #fff;
-      text-decoration: none;
-      white-space: nowrap;
+      font-size: 2rem; color: #fff; text-decoration: none; white-space: nowrap;
     }
     .logo:hover { color: #ffcc00; }
+
     .socials, .language-switch {
       display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     }
-    .socials a, .language-switch a {
-      color: #fff; text-decoration: none; font-size: 1rem; padding: 5px 8px; transition: color .2s;
-    }
-    .socials a:hover, .language-switch a:hover { color: #ffcc00; }
     .language-switch { margin-left: auto; white-space: nowrap; }
-    @media (max-width: 900px) {
-      .socials { display: none; }
+    .language-switch a, .mobile-socials a.text-link {
+      color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition: color .2s;
+    }
+    .language-switch a:hover, .mobile-socials a.text-link:hover { color:#ffcc00; }
+
+    /* Icon links */
+    .socials a.icon-link, .mobile-socials a.icon-link {
+      display:inline-flex; align-items:center; justify-content:center;
+      width:38px; height:38px; border-radius:50%;
+      color:#fff; text-decoration:none; transition: color .2s, background-color .2s, transform .15s;
+    }
+    .socials a.icon-link:hover, .mobile-socials a.icon-link:hover { color:#ffcc00; background:rgba(255,204,0,0.08); }
+    .socials a.icon-link:active, .mobile-socials a.icon-link:active { transform: scale(0.96); }
+
+    .icon { width:22px; height:22px; stroke: currentColor; fill: none; stroke-width: 1.8; vector-effect: non-scaling-stroke; }
+
+    @media (max-width: 900px){
+      .socials { display:none; } /* иконки в шапке скрываем на мобиле — ниже есть мобильный блок */
       header { padding: 12px 16px; }
       .logo { font-size: 1.8rem; }
     }
@@ -62,31 +65,22 @@
     /* ===== HERO ===== */
     .hero-image {
       position: relative; width: 100%;
-      height: 70vh;
-      overflow: hidden;
+      height: 70vh; overflow: hidden;
       opacity: 0; animation: fadeInHero .8s ease .1s forwards;
-      border-bottom: none;
-      z-index: 0;
+      border-bottom: none; z-index: 0;
     }
     @keyframes fadeInHero { to { opacity: 1; } }
 
     .hero-video {
       position: absolute; inset: 0;
       width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center 52%;
-      background-color: #000;
-      z-index: 0;
+      object-fit: cover; object-position: center 52%;
+      background-color: #000; z-index: 0;
     }
-
-    /* верхний градиент */
     .hero-image::before {
-      content: "";
-      position: absolute; left: 0; top: 0; width:100%;
-      height: 26vh;
-      background: linear-gradient(to bottom, rgba(0,0,0,.75), rgba(0,0,0,.30) 60%, rgba(0,0,0,0));
-      pointer-events: none;
-      z-index: 1;
+      content: ""; position: absolute; left: 0; top: 0; width:100%;
+      height: 26vh; background: linear-gradient(to bottom, rgba(0,0,0,.75), rgba(0,0,0,.30) 60%, rgba(0,0,0,0));
+      pointer-events: none; z-index: 1;
     }
 
     /* ===== CONTENT ===== */
@@ -99,69 +93,34 @@
     }
     @keyframes fadeInUp { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
 
-    .content-overlap {
-      margin-top: -8vh; padding-top: 8vh;
-      background: none !important;
-    }
+    .content-overlap { margin-top: -8vh; padding-top: 8vh; background: none !important; }
 
     .page-title { text-align: center; margin: 0 0 18px; }
     .page-title h1 {
-      font-family: 'Russo One', sans-serif;
-      font-size: clamp(28px, 6vw, 46px);
-      margin: 0 0 8px;
+      font-family: 'Russo One', sans-serif; font-size: clamp(28px, 6vw, 46px); margin: 0 0 8px;
     }
-    .page-title p {
-      margin: 0;
-      font-size: clamp(14px, 2.6vw, 20px);
-      opacity: .9;
-      font-style: italic;
-    }
+    .page-title p { margin: 0; font-size: clamp(14px, 2.6vw, 20px); opacity: .9; font-style: italic; }
 
-    .sep {
-      border: 0; border-top: 1px solid #2b2b2b;
-      margin: 28px 0;
-      opacity: .8;
-    }
+    .sep { border: 0; border-top: 1px solid #2b2b2b; margin: 28px 0; opacity: .8; }
 
     .content-section h2 {
-      font-family: 'Russo One', sans-serif;
-      font-size: clamp(22px, 3.2vw, 28px);
-      margin: 24px 0 12px;
-      letter-spacing: .2px;
+      font-family: 'Russo One', sans-serif; font-size: clamp(22px, 3.2vw, 28px);
+      margin: 24px 0 12px; letter-spacing: .2px;
     }
     .content-section p { margin: 0 0 14px; }
-    .content-section ul {
-      list-style: none; padding: 0; margin: 8px 0 16px;
-    }
-    .content-section ul li {
-      margin: 6px 0; position: relative; padding-left: 1.1em;
-    }
-    .content-section ul li::before {
-      content: "•"; position: absolute; left: 0; top: 0; color: #ffcc00;
-    }
+    .content-section ul { list-style: none; padding: 0; margin: 8px 0 16px; }
+    .content-section ul li { margin: 6px 0; position: relative; padding-left: 1.1em; }
+    .content-section ul li::before { content: "•"; position: absolute; left: 0; top: 0; color: #ffcc00; }
 
-    /* ===== МОБИЛКА ===== */
+    /* ===== MOBILE HERO RATIO ===== */
     @media (max-width: 900px) {
-      .hero-image {
-        height: auto !important;
-        padding-top: 56.25% !important;   /* 16:9 */
-        position: relative !important;
-        overflow: hidden;
-      }
-      .hero-video {
-        position: absolute !important; inset: 0;
-        width: 100%; height: 100%;
-        object-fit: cover; object-position: center center;
-      }
-      .content-overlap {
-        margin-top: 0 !important;
-        padding-top: 20px !important;
-        background: none !important;
-      }
+      .hero-image { height: auto !important; padding-top: 56.25% !important; position: relative !important; overflow: hidden; }
+      .hero-video { position: absolute !important; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center center; }
+      .content-overlap { margin-top: 0 !important; padding-top: 20px !important; background: none !important; }
       .content-section h2 { text-align: center; }
     }
 
-    /* ===== ЛОГО И ФУТЕР ===== */
+    /* ===== LOGO + FOOTER ===== */
     .bottom-brand {
       max-width: 1000px; margin: 56px auto 0; padding: 0 20px;
       display: flex; justify-content: center; align-items: center;
@@ -173,11 +132,11 @@
     .divider { max-width:1000px; margin:28px auto 0; padding:0 20px; opacity:.6; border-top:1px solid #333; }
     footer { text-align:center; padding:16px 20px 40px; color:#aaa; font-size:.95rem; }
 
+    /* ===== MOBILE SOCIALS (icons + STREEET.ART text) ===== */
     .mobile-socials {
-      display: none; justify-content: center; flex-wrap: wrap; gap: 10px;
+      display: none; justify-content: center; flex-wrap: wrap; gap: 6px 10px;
       padding: 20px; box-sizing: border-box;
     }
-    .mobile-socials a { color: #fff; text-decoration: none; font-size: 1.1rem; padding: 5px 8px; white-space: nowrap; }
     @media (max-width: 900px){ .mobile-socials { display: flex; } }
   </style>
 </head>
@@ -187,14 +146,42 @@
   <!-- HEADER -->
   <header>
     <a href="index-ru.html" class="logo">TORB</a>
-    <div class="socials">
-      <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
-      <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
-      <a href="https://x.com/trbkwsk?s=21" target="_blank">X</a>
-      <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
-      <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
-      <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+
+    <!-- ICON SOCIALS -->
+    <div class="socials" aria-label="Social links">
+      <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" aria-label="Instagram" title="Instagram">
+        <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+          <rect x="3.5" y="3.5" width="17" height="17" rx="4" ry="4"></rect>
+          <circle cx="12" cy="12" r="4.2"></circle>
+          <circle cx="17.5" cy="6.5" r="1"></circle>
+        </svg>
+      </a>
+      <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" aria-label="TikTok" title="TikTok">
+        <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+          <path d="M14 5.5v8.2a4.7 4.7 0 1 1-3.3-4.5"></path>
+          <path d="M14 5.5c.7 2.2 2.6 3.9 4.9 4.3"></path>
+        </svg>
+      </a>
+      <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" aria-label="X" title="X">
+        <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+          <path d="M4 4l16 16M20 4L4 20"></path>
+        </svg>
+      </a>
+      <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" aria-label="YouTube" title="YouTube">
+        <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+          <rect x="3" y="6.5" width="18" height="11" rx="3"></rect>
+          <path d="M11 10.2l4.5 2.3L11 14.8z"></path>
+        </svg>
+      </a>
+      <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" aria-label="Telegram" title="Telegram">
+        <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+          <path d="M20.5 4.5L3.8 11.1c-.9.4-.9 1.6 0 2l4.1 1.6 1.7 3.8c.3.7 1.3.7 1.6 0l1.5-3.1 4.8 3.6c.8.6 1.9.1 2.1-.9l2-11.1c.2-.9-.7-1.7-1.6-1.4z"></path>
+        </svg>
+      </a>
+      <!-- STREEET.ART stays as text -->
+      <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link" aria-label="STREEET.ART" title="STREEET.ART">STREEET.ART</a>
     </div>
+
     <div class="language-switch">
       <a href="index.html">EN</a>
       <a href="index-ru.html">RU</a>
@@ -297,14 +284,39 @@
   <div class="divider"></div>
   <footer>© 2025 TRBKWSK also known as TORB — SprayFight System</footer>
 
-  <!-- MOBILE SOCIALS -->
-  <div class="mobile-socials">
-    <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
-    <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
-    <a href="https://x.com/trbkwsk?s=21" target="_blank">X</a>
-    <a href="https://youtube.com/@trbkwsk" target="_blank">YouTube</a>
-    <a href="https://t.me/trbkwskalsoknownastorb" target="_blank">Telegram</a>
-    <a href="https://streeet.art/@trbkwsk" target="_blank">STREEET.ART</a>
+  <!-- MOBILE SOCIALS (icons + STREEET.ART text) -->
+  <div class="mobile-socials" aria-label="Social links">
+    <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" aria-label="Instagram" title="Instagram">
+      <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4" ry="4"></rect>
+        <circle cx="12" cy="12" r="4.2"></circle>
+        <circle cx="17.5" cy="6.5" r="1"></circle>
+      </svg>
+    </a>
+    <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" aria-label="TikTok" title="TikTok">
+      <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+        <path d="M14 5.5v8.2a4.7 4.7 0 1 1-3.3-4.5"></path>
+        <path d="M14 5.5c.7 2.2 2.6 3.9 4.9 4.3"></path>
+      </svg>
+    </a>
+    <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" aria-label="X" title="X">
+      <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+        <path d="M4 4l16 16M20 4L4 20"></path>
+      </svg>
+    </a>
+    <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" aria-label="YouTube" title="YouTube">
+      <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+        <rect x="3" y="6.5" width="18" height="11" rx="3"></rect>
+        <path d="M11 10.2l4.5 2.3L11 14.8z"></path>
+      </svg>
+    </a>
+    <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" aria-label="Telegram" title="Telegram">
+      <svg class="icon" viewBox="0 0 24 24" role="img" aria-hidden="true">
+        <path d="M20.5 4.5L3.8 11.1c-.9.4-.9 1.6 0 2l4.1 1.6 1.7 3.8c.3.7 1.3.7 1.6 0l1.5-3.1 4.8 3.6c.8.6 1.9.1 2.1-.9l2-11.1c.2-.9-.7-1.7-1.6-1.4z"></path>
+      </svg>
+    </a>
+    <!-- STREEET.ART остаётся текстом -->
+    <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link" aria-label="STREEET.ART" title="STREEET.ART">STREEET.ART</a>
   </div>
 
 </body>
