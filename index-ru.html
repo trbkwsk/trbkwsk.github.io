@@ -20,7 +20,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Header */
+/* ===== HEADER ===== */
 header {
   display: flex;
   align-items: center;
@@ -35,94 +35,165 @@ header {
   z-index: 1000;
 }
 
-.header-left { display:flex; align-items:center; gap:20px; }
+/* блок с логотипом и соцсетями */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
 
 .logo {
   font-family: 'Russo One', sans-serif;
   font-size: 2rem;
-  color:#fff; text-decoration:none;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
 }
 .logo:hover { color: var(--accent); }
 
-/* ← Белый по умолчанию, на ховере — жёлтый */
+/* соцсети */
+.socials {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.socials a.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  text-decoration: none;
+  transition: color .2s, background-color .2s, transform .1s;
+}
+.socials a.icon-link:hover {
+  color: var(--accent);
+  background: rgba(255,204,0,.08);
+}
+.socials a.icon-link:active { transform: scale(.96); }
+
+.icon {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ссылка СпреФайт Система */
 .graffiti-system {
   font: 700 1rem/1 'Inter', sans-serif;
-  color:#fff;
-  text-decoration:none;
-  letter-spacing:.2px;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: .2px;
   transition: color .2s;
 }
 .graffiti-system:hover { color: var(--accent); }
 
-.socials, .language-switch { display:flex; align-items:center; gap:10px; }
-
-/* icon links */
-.socials a.icon-link, .mobile-socials a.icon-link{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:38px; height:38px; border-radius:50%;
-  color:#fff; text-decoration:none;
-  transition: color .2s, background-color .2s, transform .1s;
-}
-.socials a.icon-link:hover, .mobile-socials a.icon-link:hover{
-  color:var(--accent); background:rgba(255,204,0,.08);
-}
-.socials a.icon-link:active, .mobile-socials a.icon-link:active{ transform:scale(.96); }
-
-/* контурные иконки */
-.icon{ width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
-
-/* STREEET.ART текстовой */
-.socials a.text-link, .mobile-socials a.text-link{
-  color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition:color .2s;
-}
-.socials a.text-link:hover, .mobile-socials a.text-link:hover{ color:var(--accent); }
-.socials a.text-link:visited, .mobile-socials a.text-link:visited{ color:#fff; }
-
 /* языки */
-.language-switch a{
-  color:#fff; text-decoration:none; font-size:1rem; padding:5px 10px; transition:.2s;
+.language-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.language-switch a:hover{ color:var(--accent); }
+.language-switch a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 5px 10px;
+  transition: 0.3s;
+}
+.language-switch a:hover { color: var(--accent); }
 
-/* Slider */
-.slider-container{
-  position:relative; width:100%; height:600px; overflow:hidden; margin:0 auto;
-}
-.slide{
-  position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transition:opacity .8s ease;
-}
-.slide.active{ opacity:1; z-index:1; }
-
-/* Content */
-.content-section{
-  display:flex; flex-wrap:wrap; padding:40px; gap:40px;
-}
-.about{ flex:1 1 400px; font-size:1.1rem; line-height:1.6; }
-.about h2{
-  font-family:'Russo One', sans-serif; font-size:2rem; margin:0 0 20px; color:#fff; text-align:left;
-}
-.contact-form{ flex:1 1 400px; }
-.contact-form input, .contact-form textarea{
-  width:100%; margin-bottom:15px; padding:10px; font-size:1rem; border-radius:4px; border:1px solid #ccc; box-sizing:border-box; background:#111; color:#fff;
-}
-.contact-form input:focus, .contact-form textarea:focus{ border-color:#777; }
-.contact-form button{
-  padding:12px 20px; background:var(--accent); color:#000; border:none; cursor:pointer; font-weight:700; transition:.2s;
-}
-.contact-form button:hover{ background:#e6b800; }
-
-/* Mobile social links */
-.mobile-socials{
-  display:none; justify-content:center; flex-wrap:wrap; gap:10px; padding:20px; box-sizing:border-box;
+/* ===== SLIDER ===== */
+.slider-container {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+  margin: 0 auto;
 }
 
-@media (max-width: 900px){
-  .slider-container{ height:400px; }
-  .content-section{ flex-direction:column; padding:24px; gap:24px; }
-  .mobile-socials{ display:flex; }
-  .socials{ display:none; }
+.slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.8s ease;
 }
-@media (max-width: 500px){ .slider-container{ height:300px; } }
+.slide.active { opacity: 1; z-index: 1; }
+
+/* ===== CONTENT ===== */
+.content-section {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 40px;
+  gap: 40px;
+}
+
+.about {
+  flex: 1 1 400px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+.about h2 {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #fff;
+  text-align: left;
+}
+
+.contact-form { flex: 1 1 400px; }
+.contact-form input, .contact-form textarea {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  background: #111;
+  color: #fff;
+}
+.contact-form input:focus, .contact-form textarea:focus { border-color: #777; }
+.contact-form button {
+  padding: 12px 20px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.3s;
+}
+.contact-form button:hover { background: #e6b800; }
+
+/* ===== MOBILE ===== */
+.mobile-socials {
+  display: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+@media (max-width: 900px) {
+  .slider-container { height: 400px; }
+  .content-section { flex-direction: column; padding: 24px; gap: 24px; }
+  .mobile-socials { display: flex; }
+  .socials { display: none; }
+}
+@media (max-width: 500px) {
+  .slider-container { height: 300px; }
+}
 </style>
 </head>
 <body>
@@ -130,26 +201,26 @@ header {
 <header>
   <div class="header-left">
     <a href="index-ru.html" class="logo">TORB</a>
-    <a href="sprayfight-ru.html" class="graffiti-system">СпрейФайт Система</a>
-  </div>
 
-  <div class="socials" aria-label="Social links">
-    <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" aria-label="Instagram">
-      <svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4" ry="4"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.4" cy="6.6" r="1"/></svg>
-    </a>
-    <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" aria-label="TikTok">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M14 5.2v8.6a4.8 4.8 0 1 1-3.6-4.6"/><path d="M14 5.2c.8 2.4 2.8 4.1 5.1 4.5"/></svg>
-    </a>
-    <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" aria-label="X">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>
-    </a>
-    <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" aria-label="YouTube">
-      <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="3"/><path d="M11 10.2l4.5 2.3L11 14.8z"/></svg>
-    </a>
-    <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" aria-label="Telegram">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M20.5 4.6L4.2 11.1c-.9.4-.9 1.6 0 2l4 1.5 1.7 3.8c.3.7 1.3.7 1.6 0l1.4-3 4.9 3.5c.8.6 1.9.1 2.1-.9l2-11.1c.2-.9-.7-1.7-1.6-1.4z"/></svg>
-    </a>
-    <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
+    <div class="socials">
+      <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" aria-label="Instagram">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4" ry="4"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.4" cy="6.6" r="1"/></svg>
+      </a>
+      <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" aria-label="TikTok">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 5.2v8.6a4.8 4.8 0 1 1-3.6-4.6"/><path d="M14 5.2c.8 2.4 2.8 4.1 5.1 4.5"/></svg>
+      </a>
+      <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" aria-label="X">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>
+      </a>
+      <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" aria-label="YouTube">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="3"/><path d="M11 10.2l4.5 2.3L11 14.8z"/></svg>
+      </a>
+      <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" aria-label="Telegram">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20.5 4.6L4.2 11.1c-.9.4-.9 1.6 0 2l4 1.5 1.7 3.8c.3.7 1.3.7 1.6 0l1.4-3 4.9 3.5c.8.6 1.9.1 2.1-.9l2-11.1c.2-.9-.7-1.7-1.6-1.4z"/></svg>
+      </a>
+    </div>
+
+    <a href="sprayfight-ru.html" class="graffiti-system">СпреФайт Система</a>
   </div>
 
   <div class="language-switch">
@@ -158,7 +229,7 @@ header {
   </div>
 </header>
 
-<!-- Slider -->
+<!-- SLIDER -->
 <div class="slider-container">
   <div class="slide active" style="background-image: url('masterclass1.png');"></div>
   <div class="slide" style="background-image: url('masterclass2.png');"></div>
@@ -176,7 +247,7 @@ header {
   <div class="slide" style="background-image: url('battle5.png');"></div>
 </div>
 
-<!-- About & Contact -->
+<!-- CONTENT -->
 <div class="content-section">
   <div class="about">
     <h2>Обо мне</h2>
@@ -193,16 +264,6 @@ header {
       <button type="submit">Отправить</button>
     </form>
   </div>
-</div>
-
-<!-- Mobile socials -->
-<div class="mobile-socials" aria-label="Social links">
-  <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank"><svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4" ry="4"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.4" cy="6.6" r="1"/></svg></a>
-  <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank"><svg class="icon" viewBox="0 0 24 24"><path d="M14 5.2v8.6a4.8 4.8 0 1 1-3.6-4.6"/><path d="M14 5.2c.8 2.4 2.8 4.1 5.1 4.5"/></svg></a>
-  <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg></a>
-  <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="6.5" width="18" height="11" rx="3"/><path d="M11 10.2l4.5 2.3L11 14.8z"/></svg></a>
-  <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank"><svg class="icon" viewBox="0 0 24 24"><path d="M20.5 4.6L4.2 11.1c-.9.4-.9 1.6 0 2l4 1.5 1.7 3.8c.3.7 1.3.7 1.6 0l1.4-3 4.9 3.5c.8.6 1.9.1 2.1-.9l2-11.1c.2-.9-.7-1.7-1.6-1.4z"/></svg></a>
-  <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
 </div>
 
 <script>
