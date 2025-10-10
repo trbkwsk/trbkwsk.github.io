@@ -6,7 +6,7 @@
   <title>SprayFight System | TORB</title>
   <link rel="icon" href="favicon.png" type="image/png" />
   <meta name="theme-color" content="#000000" />
-  <meta name="description" content="SprayFight System — система граффити-баттлов от TORB: динамичный формат с сеткой на 16 участников и раундами от тегов до финала." />
+  <meta name="description" content="SprayFight System — система граффити-баттлов от TORB: динамичный формат с сеткой, раундами и ясными правилами, сохраняя дух улицы." />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
 
   <style>
@@ -20,8 +20,8 @@
       -webkit-text-size-adjust: 100%;
       animation: fadeInBody .5s ease;
     }
-
     @keyframes fadeInBody { from { opacity: 0; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
 
     /* ===== HEADER ===== */
     header {
@@ -37,7 +37,6 @@
       background: rgba(13, 13, 13, .75);
       backdrop-filter: blur(6px);
     }
-
     .logo {
       font-family: 'Russo One', sans-serif;
       font-size: 2rem;
@@ -45,122 +44,73 @@
       text-decoration: none;
       white-space: nowrap;
     }
-
     .logo:hover { color: #ffcc00; }
-
     .socials, .language-switch {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     }
-
     .socials a, .language-switch a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1rem;
-      padding: 5px 8px;
-      transition: color .2s;
+      color: #fff; text-decoration: none; font-size: 1rem; padding: 5px 8px; transition: color .2s;
     }
-
     .socials a:hover, .language-switch a:hover { color: #ffcc00; }
-
     .language-switch { margin-left: auto; white-space: nowrap; }
-
     @media (max-width: 900px) {
       .socials { display: none; }
       header { padding: 12px 16px; }
       .logo { font-size: 1.8rem; }
     }
 
-    /* ===== HERO (видео + градиенты) ===== */
+    /* ===== HERO (видео + верхний градиент) ===== */
     .hero-image {
-      position: relative;
-      width: 100%;
+      position: relative; width: 100%;
       height: 70vh;
       overflow: hidden;
-      border-bottom: 1px solid #333;
-      opacity: 0;
-      animation: fadeInHero .8s ease .1s forwards;
+      opacity: 0; animation: fadeInHero .8s ease .1s forwards;
+      border-bottom: none;                 /* не рисуем линию на видео */
+      z-index: 0;
     }
-
     @keyframes fadeInHero { to { opacity: 1; } }
 
     .hero-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
       object-fit: cover;
       object-position: center 52%;
-      z-index: 0;
       background-color: #000;
+      z-index: 0;
     }
 
-    .hero-image::before,
-    .hero-image::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      width: 100%;
-      pointer-events: none;
-    }
-
+    /* верхний градиент под шапкой */
     .hero-image::before {
-      top: 0;
+      content: "";
+      position: absolute; left: 0; top: 0; width:100%;
       height: 26vh;
-      background: linear-gradient(to bottom,
-        rgba(0,0,0,.75),
-        rgba(0,0,0,.30) 60%,
-        rgba(0,0,0,0)
-      );
-    }
-
-    .hero-image::after {
-      bottom: 0;
-      height: 22vh;
-      background: linear-gradient(to top,
-        rgba(13,13,13,1) 8%,
-        rgba(13,13,13,.80) 38%,
-        rgba(13,13,13,0)
-      );
+      background: linear-gradient(to bottom, rgba(0,0,0,.75), rgba(0,0,0,.30) 60%, rgba(0,0,0,0));
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* ===== CONTENT ===== */
     .content-section {
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 0 20px;
-      line-height: 1.6;
-      opacity: 0;
-      animation: fadeInUp .6s ease .2s forwards;
+      max-width: 1000px; margin: 40px auto; padding: 0 20px;
+      line-height: 1.7;
+      opacity: 0; animation: fadeInUp .6s ease .2s forwards;
+      position: relative; z-index: 10;
     }
+    @keyframes fadeInUp { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: none; }
-    }
-
+    /* лёгкий «заезд» на десктопе */
     .content-overlap {
-      position: relative;
-      z-index: 2;
-      margin-top: -10vh;
-      padding-top: 10vh;
-      background: linear-gradient(to top, rgba(13,13,13,1), rgba(13,13,13,0)) top/100% 10vh no-repeat;
+      margin-top: -8vh; padding-top: 8vh;
+      background: linear-gradient(to top, rgba(13,13,13,1), rgba(13,13,13,0)) top/100% 8vh no-repeat;
     }
 
-    .page-title {
-      text-align: center;
-      margin: 0 0 18px;
-    }
-
+    /* титул */
+    .page-title { text-align: center; margin: 0 0 18px; }
     .page-title h1 {
       font-family: 'Russo One', sans-serif;
       font-size: clamp(28px, 6vw, 46px);
       margin: 0 0 8px;
     }
-
     .page-title p {
       margin: 0;
       font-size: clamp(14px, 2.6vw, 20px);
@@ -168,83 +118,72 @@
       font-style: italic;
     }
 
+    /* разделители */
+    .sep {
+      border: 0; border-top: 1px solid #2b2b2b;
+      margin: 28px 0;
+      opacity: .8;
+    }
+
+    /* секции */
     .content-section h2 {
       font-family: 'Russo One', sans-serif;
-      font-size: 1.8rem;
+      font-size: clamp(22px, 3.2vw, 28px);
       margin: 24px 0 12px;
       letter-spacing: .2px;
     }
-
-    .content-section p { margin: 0 0 15px; }
-
-    @media (max-width: 900px) {
-      .hero-image { height: 62vh; }
-      .content-overlap { margin-top: -8vh; padding-top: 8vh; background-size: 100% 8vh, auto; }
+    .content-section p { margin: 0 0 14px; }
+    .content-section ul {
+      list-style: none; padding: 0; margin: 8px 0 16px;
+    }
+    .content-section ul li {
+      margin: 6px 0; position: relative; padding-left: 1.1em;
+    }
+    .content-section ul li::before {
+      content: "•"; position: absolute; left: 0; top: 0; color: #ffcc00;
     }
 
-    @media (max-width: 600px) {
-      .hero-image { height: 58vh; }
-      .content-overlap { margin-top: -7vh; padding-top: 7vh; background-size: 100% 7vh, auto; }
+    /* ===== МОБИЛЬНОЕ ВИДЕО: горизонтально, текст не исчезает ===== */
+    @media (max-width: 900px) {
+      .hero-image {
+        height: auto !important;
+        padding-top: 56.25% !important;   /* 16:9 */
+        position: relative !important;
+        overflow: hidden;
+      }
+      .hero-video {
+        position: absolute !important; inset: 0;
+        width: 100%; height: 100%;
+        object-fit: cover; object-position: center center;
+      }
+      /* на мобиле без «заезда» — всё читабельно */
+      .content-overlap {
+        margin-top: 0 !important;
+        padding-top: 20px !important;
+        background: none !important;
+      }
       .content-section h2 { text-align: center; }
     }
 
     /* ===== LOGO + FOOTER ===== */
     .bottom-brand {
-      max-width: 1000px;
-      margin: 56px auto 0;
-      padding: 0 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      animation: fadeInUp .6s ease .25s forwards;
+      max-width: 1000px; margin: 56px auto 0; padding: 0 20px;
+      display: flex; justify-content: center; align-items: center;
+      opacity: 0; animation: fadeInUp .6s ease .25s forwards;
     }
+    .bottom-brand img { height: 140px; width: auto; max-width: 100%; opacity: .95; }
+    @media (max-width:600px){ .bottom-brand{ margin:40px auto 0 } .bottom-brand img{ height:96px } }
 
-    .bottom-brand img {
-      height: 140px;
-      width: auto;
-      max-width: 100%;
-      opacity: .95;
-    }
+    .divider { max-width:1000px; margin:28px auto 0; padding:0 20px; opacity:.6; border-top:1px solid #333; }
+    footer { text-align:center; padding:16px 20px 40px; color:#aaa; font-size:.95rem; }
 
-    @media (max-width: 600px) {
-      .bottom-brand { margin: 40px auto 0; }
-      .bottom-brand img { height: 96px; }
-    }
-
-    .divider {
-      max-width: 1000px;
-      margin: 28px auto 0;
-      padding: 0 20px;
-      opacity: .6;
-      border-top: 1px solid #333;
-    }
-
-    footer {
-      text-align: center;
-      padding: 16px 20px 40px;
-      color: #aaa;
-      font-size: .95rem;
-    }
-
+    /* нижние соцсети для мобилы (опционально) */
     .mobile-socials {
-      display: none;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 20px;
-      box-sizing: border-box;
+      display: none; justify-content: center; flex-wrap: wrap; gap: 10px;
+      padding: 20px; box-sizing: border-box;
     }
-
-    .mobile-socials a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1.1rem;
-      padding: 5px 8px;
-      white-space: nowrap;
-    }
-
-    @media (max-width: 900px) { .mobile-socials { display: flex; } }
+    .mobile-socials a { color: #fff; text-decoration: none; font-size: 1.1rem; padding: 5px 8px; white-space: nowrap; }
+    @media (max-width: 900px){ .mobile-socials { display: flex; } }
   </style>
 </head>
 
@@ -274,41 +213,87 @@
     </video>
   </div>
 
-  <!-- CONTENT -->
+  <!-- CONTENT (НОВЫЙ ТЕКСТ) -->
   <div class="content-section content-overlap">
     <div class="page-title">
       <h1>SprayFight System</h1>
       <p><em>The Graffiti Battle System by TORB</em></p>
     </div>
 
-    <h2>Введение</h2>
-    <p>Граффити всегда выглядят интересно и впечатляют своими масштабами, деталями и цветами...</p>
+    <h2>Идея</h2>
+    <p>Граффити всегда привлекает внимание — своими масштабами, цветами и деталями. Но процесс его создания часто занимает много времени, и для зрителей он может быть скучным: рисунок делается часами или целый день.</p>
+    <p>В то же время существует бомбинг — быстрые граффити, где главное не проработка, а сам факт присутствия: «я здесь был». Это могут быть теги, throw-up’ы, простые шрифты или персонажи.</p>
+    <p>Людям всегда интересно наблюдать, как создаётся граффити, а художники — соревноваться между собой, кто сделает лучше, быстрее и круче. Граффити-баттлы существовали и раньше, но чаще всего проходили без системы — в каждом городе и стране по-своему.</p>
 
-    <h2>Интерес к граффити и соревнования</h2>
-    <p>У людей всегда есть интерес к тому, как делается граффити, а сами художники зачастую соревнуются между собой...</p>
+    <hr class="sep" />
 
-    <h2>Проблема отсутствия системы</h2>
-    <p>Граффити баттлы — это не новая штука, они есть и будут, но всегда происходят без какой-либо системы...</p>
-
-    <h2>Решение – SprayFight System</h2>
-    <p>Для этого я придумал систему граффити-баттлов, чтобы зрителям было интересно наблюдать...</p>
-
-    <h2>Формат баттлов</h2>
+    <h2>Цель системы</h2>
+    <p>Я создал систему граффити-баттлов, чтобы:</p>
     <ul>
-      <li><strong>Первый раунд:</strong> 30 секунд, рандомное слово...</li>
-      <li><strong>Топ-8:</strong> одно слово на раунд...</li>
-      <li><strong>Топ-4:</strong> два цвета, рандомные слова...</li>
-      <li><strong>Финал:</strong> три минуты...</li>
+      <li>зрителям было интересно наблюдать за процессом;</li>
+      <li>художникам было интересно соревноваться и побеждать;</li>
+      <li>всё происходило динамично, зрелищно и по понятным правилам, сохраняя дух улицы.</li>
     </ul>
 
-    <h2>Процесс баттла</h2>
-    <p>Возводится быстрая конструкция, если нет рядом стен...</p>
+    <hr class="sep" />
 
-    <h2>Судьи</h2>
-    <p>Судьи – 3–5 человек, выбираются из уважаемых людей...</p>
+    <h2>Формат</h2>
+    <p>В баттле участвуют 16 художников. Формируется сетка, где каждый сражается в один раунд до выхода в финал. Каждый раунд — это новое задание и ограниченное время, имитирующее реальные условия уличного бомбинга.</p>
 
-    <h2>Динамика и эффект</h2>
-    <p><strong>Проводя такие баттлы более 5 лет</strong>, я вижу, как они удерживают зрителей...</p>
+    <hr class="sep" />
+
+    <h2>Раунды</h2>
+    <p><strong>Top 16</strong></p>
+    <ul>
+      <li>Время: 30 секунд</li>
+      <li>Задание: написать рандомное слово (тег)</li>
+      <li>Цель: показать стиль, скорость, уверенность</li>
+    </ul>
+    <p><strong>Top 8</strong></p>
+    <ul>
+      <li>Время: 1 минута</li>
+      <li>Задание: рандомное слово, но уже в форме throw-up или простого шрифта</li>
+      <li>Цвет: один</li>
+    </ul>
+    <p><strong>Top 4</strong></p>
+    <ul>
+      <li>Время: 1 минута 30 секунд</li>
+      <li>Цвета: два</li>
+      <li>Задание: рандомное слово, более сложная форма</li>
+      <li>Оценивается динамика, баланс и чистота</li>
+    </ul>
+    <p><strong>Финал</strong></p>
+    <ul>
+      <li>Время: 3 минуты</li>
+      <li>Цвета: до четырёх</li>
+      <li>Участники могут меняться именами</li>
+      <li>Здесь всё решает креатив, уверенность и мастерство</li>
+    </ul>
+    <p>(При желании можно добавить баттл за третье место.)</p>
+
+    <hr class="sep" />
+
+    <h2>Судейство</h2>
+    <p>Судейская панель — 3 или 5 человек, уважаемых в культуре граффити. Главное — независимость и разносторонний взгляд на стиль. Судьи оценивают:</p>
+    <ul>
+      <li>стиль и форму букв;</li>
+      <li>динамику и уверенность;</li>
+      <li>подачу и оригинальность.</li>
+    </ul>
+
+    <hr class="sep" />
+
+    <h2>Организация</h2>
+    <p>Если рядом нет стены, используется мобильная конструкция или сменные панели. После каждого баттла участники или помощники быстро перекрывают предыдущие работы. Не требуется идеальная закраска — важно лишь подготовить поверхность для следующего участника.</p>
+    <p>Так формат остаётся живым, быстрым и динамичным.</p>
+
+    <hr class="sep" />
+
+    <h2>Почему это работает</h2>
+    <p>На протяжении пяти лет я провожу граффити-баттлы и вижу, как этот формат действительно привлекает людей к культуре. Зрители не отходят — наоборот, с каждым раундом их становится больше.</p>
+    <p>Это не просто соревнование, а живой процесс, где на глазах рождается искусство. Такой формат делает граффити ближе и понятнее людям, а для самих художников становится мощной мотивацией.</p>
+    <p>Многие после участия или даже просто просмотра начинают совершенствоваться, развивать стиль или впервые берут баллон в руки.</p>
+    <p>Эта система не просто выявляет сильнейшего — она помогает развивать новое поколение граффити-художников, сохраняя дух улицы и уважение к культуре.</p>
   </div>
 
   <!-- LOGO + FOOTER -->
@@ -318,7 +303,7 @@
   <div class="divider"></div>
   <footer>© 2025 TRBKWSK also known as TORB — SprayFight System</footer>
 
-  <!-- MOBILE SOCIALS -->
+  <!-- MOBILE SOCIALS (опционально) -->
   <div class="mobile-socials">
     <a href="https://www.instagram.com/trbkwsk/" target="_blank">Instagram</a>
     <a href="https://www.tiktok.com/@trbkwsk" target="_blank">TikTok</a>
