@@ -157,6 +157,31 @@ header {
 @media (max-width: 500px) {
   .slider-container { height: 300px; }
 }
+  /* === FIX: keep EN/RU on the right on mobile === */
+@media (max-width: 900px) {
+  header { 
+    flex-wrap: nowrap;          /* не позволяем переноситься */
+  }
+  .header-left{
+    flex: 1 1 auto;             /* занимает доступную ширину */
+    min-width: 0;
+    gap: 12px;                   /* чуть компактнее */
+  }
+  .sprayfight-link{
+    display: none;               /* убираем, чтобы хватило места */
+  }
+  .language-switch{
+    margin-left: auto;           /* уезжает вправо */
+    white-space: nowrap;         /* не переносим EN/RU */
+  }
+  .logo{
+    font-size: 1.8rem;           /* чуть меньше, чтобы влезало */
+  }
+}
+
+@media (max-width: 500px){
+  .logo{ font-size: 1.6rem; }    /* ещё компактнее на очень узких */
+}
 </style>
 </head>
 <body>
