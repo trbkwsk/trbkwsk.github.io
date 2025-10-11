@@ -157,30 +157,29 @@ header {
 @media (max-width: 500px) {
   .slider-container { height: 300px; }
 }
-  /* === FIX: keep EN/RU on the right on mobile === */
+  /* === FIX: show SprayFight on mobile and keep order === */
 @media (max-width: 900px) {
-  header { 
-    flex-wrap: nowrap;          /* не позволяем переноситься */
-  }
-  .header-left{
-    flex: 1 1 auto;             /* занимает доступную ширину */
-    min-width: 0;
-    gap: 12px;                   /* чуть компактнее */
-  }
+  /* показываем ссылку системы */
   .sprayfight-link{
-    display: none;               /* убираем, чтобы хватило места */
+    display: inline-block !important;
+    font-size: 1rem;
+    white-space: nowrap;
   }
-  .language-switch{
-    margin-left: auto;           /* уезжает вправо */
-    white-space: nowrap;         /* не переносим EN/RU */
-  }
-  .logo{
-    font-size: 1.8rem;           /* чуть меньше, чтобы влезало */
-  }
-}
 
+  /* прячем только соцсети */
+  .socials{ display: none !important; }
+
+  /* шапка не переносится, EN/RU справа */
+  header{ flex-wrap: nowrap; }
+  .header-left{ flex: 1 1 auto; min-width: 0; gap: 12px; }
+  .language-switch{ margin-left: auto; white-space: nowrap; }
+
+  /* чуть уменьшим логотип для узких экранов */
+  .logo{ font-size: 1.6rem; }
+}
 @media (max-width: 500px){
-  .logo{ font-size: 1.6rem; }    /* ещё компактнее на очень узких */
+  .logo{ font-size: 1.4rem; }
+}
 }
 </style>
 </head>
