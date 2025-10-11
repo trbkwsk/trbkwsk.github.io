@@ -140,6 +140,50 @@
       padding:20px; box-sizing:border-box;
     }
     @media (max-width:900px){ .mobile-socials{ display:flex; } }
+    /* === UNIVERSAL HEADER NORMALIZER (put last on every page) === */
+
+/* Базовые отступы/шрифт для ссылок EN/RU одинаковые везде */
+.language-switch{
+  display:flex; align-items:center; gap:12px;
+  margin:0 !important; white-space:nowrap;
+}
+.language-switch a{
+  padding:4px 6px; font-size:1rem; line-height:1;
+  color:#fff; text-decoration:none; transition:color .2s;
+}
+.language-switch a:hover{ color:var(--accent); }
+
+/* Десктоп: флекс, EN/RU справа, равномерно */
+header{
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:nowrap;
+}
+.header-left{ display:flex; align-items:center; gap:20px; min-width:0; }
+.sprayfight-link{ display:inline-block; white-space:nowrap; }
+
+/* Мобилки: сетка 3 колонки: [логотип+система | авто | EN/RU] */
+@media (max-width: 900px){
+  header{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center; gap:12px;
+  }
+  .header-left{
+    display:flex; align-items:center; gap:12px; min-width:0;
+  }
+  /* соцсети скрываем на мобилке, чтобы не ломали геометрию */
+  .socials{ display:none !important; }
+
+  /* показываем ссылку системы, фиксируем размер логотипа */
+  .sprayfight-link{ display:inline-block !important; font-size:1rem; }
+  .logo{ font-size:1.6rem; }
+
+  /* EN/RU строго у правого края и с одинаковым расстоянием */
+  .language-switch{ justify-self:end; gap:12px !important; }
+}
+@media (max-width: 500px){
+  .logo{ font-size:1.4rem; }
+}
   </style>
 </head>
 
