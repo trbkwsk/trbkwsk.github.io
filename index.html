@@ -167,6 +167,9 @@ header {
   display: flex; flex-direction: column;
   gap: 10px; padding: 14px 16px; z-index: 1001;
 }
+/* гарантированно скрыто по умолчанию */
+.mobile-menu[hidden]{ display:none !important; }
+
 .mobile-menu a{
   color:#fff; text-decoration:none; font:700 1.05rem/1.3 'Inter', sans-serif;
   padding:10px 6px; border-radius:6px; transition: color .2s, background-color .2s;
@@ -179,6 +182,7 @@ header {
   .mobile-socials { display: flex; }
   .socials { display: none; }
 
+  /* показываем сендвич, скрываем десктопные вкладки */
   .burger{ display:inline-flex; }
   .header-left .sprayfight-link{ display:none; }
   .header-left{ gap:12px; }
@@ -224,12 +228,13 @@ header {
   </div>
 
   <div class="language-switch">
+    <!-- RU EN порядок, EN активен -->
     <a href="index-ru.html">RU</a>
     <a href="index.html" aria-current="page">EN</a>
   </div>
 </header>
 
-<!-- Mobile slide menu -->
+<!-- Mobile slide menu (по умолчанию скрыто) -->
 <nav id="mobile-menu" class="mobile-menu" hidden>
   <a href="torb-district.html">Torb District</a>
   <a href="workshops.html">Workshops</a>
@@ -238,16 +243,19 @@ header {
 
 <!-- Slider -->
 <div class="slider-container">
+  <!-- Masterclass 4 -->
   <div class="slide active" style="background-image: url('masterclass1.png');"></div>
   <div class="slide" style="background-image: url('masterclass2.png');"></div>
   <div class="slide" style="background-image: url('masterclass3.png');"></div>
   <div class="slide" style="background-image: url('masterclass4.png');"></div>
 
+  <!-- Festival 4 -->
   <div class="slide" style="background-image: url('festival1.png');"></div>
   <div class="slide" style="background-image: url('festival2.png');"></div>
   <div class="slide" style="background-image: url('festival3.png');"></div>
   <div class="slide" style="background-image: url('festival4.png');"></div>
 
+  <!-- Battle 4 (no battle2) -->
   <div class="slide" style="background-image: url('battle1.png');"></div>
   <div class="slide" style="background-image: url('battle3.png');"></div>
   <div class="slide" style="background-image: url('battle4.png');"></div>
@@ -294,6 +302,7 @@ header {
 </div>
 
 <script>
+/* slider */
 const slides = document.querySelectorAll('.slide');
 let index = 0;
 setInterval(() => {
@@ -302,16 +311,19 @@ setInterval(() => {
   slides[index].classList.add('active');
 }, 2000);
 
-// burger menu
+/* burger menu */
 const burger = document.querySelector('.burger');
 const mobileMenu = document.getElementById('mobile-menu');
+
 if (burger && mobileMenu) {
   burger.addEventListener('click', () => {
     const open = burger.getAttribute('aria-expanded') === 'true';
     burger.setAttribute('aria-expanded', String(!open));
-    mobileMenu.hidden = open;
-    document.body.style.overflow = open ? '' : 'hidden';
+    mobileMenu.hidden = open; // скрыть/показать
+    document.body.style.overflow = open ? '' : 'hidden'; // блок скролла при открытом меню
   });
+
+  // авто-закрытие по клику на ссылку
   mobileMenu.addEventListener('click', (e) => {
     if (e.target.tagName === 'A') {
       burger.setAttribute('aria-expanded', 'false');
