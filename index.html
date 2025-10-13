@@ -35,7 +35,7 @@ header {
   z-index: 1000;
 }
 
-/* left cluster: logo + socials + SprayFight link */
+/* left cluster: logo + socials + links */
 .header-left {
   display: flex;
   align-items: center;
@@ -69,7 +69,6 @@ header {
 }
 .socials a.icon-link:active, .mobile-socials a.icon-link:active{ transform:scale(.96); }
 
-/* external SVG as mask so we can color via currentColor */
 .icon {
   width:22px; height:22px; display:inline-block;
   background-color: currentColor;
@@ -77,18 +76,17 @@ header {
           mask: var(--icon) no-repeat center / contain;
 }
 
-/* STREEET.ART stays text */
 .socials a.text-link, .mobile-socials a.text-link{
   color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition:color .2s;
 }
 .socials a.text-link:hover, .mobile-socials a.text-link:hover{ color:var(--accent); }
 .socials a.text-link:visited, .mobile-socials a.text-link:visited{ color:#fff; }
 
-/* SprayFight link */
+/* nav links */
 .sprayfight-link{
-  font: 700 1rem/1 'Inter', sans-serif;
+  font:700 1rem/1 'Inter',sans-serif;
   color:#fff; text-decoration:none; letter-spacing:.2px; transition:color .2s;
-  white-space: nowrap;
+  white-space:nowrap;
 }
 .sprayfight-link:hover{ color:var(--accent); }
 
@@ -148,11 +146,45 @@ header {
   padding: 20px;
   box-sizing: border-box;
 }
+
+/* burger button */
+.burger{
+  display:none; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:8px;
+  background:#111; color:#fff; border:1px solid var(--line);
+  cursor:pointer; transition:transform .15s, background-color .2s, color .2s;
+}
+.burger:active{ transform:scale(.96); }
+.burger[aria-expanded="true"]{ background:#151515; }
+
+/* mobile slide menu */
+.mobile-menu{
+  position: fixed; top: 60px;
+  right: 0; left: 0;
+  background: rgba(13,13,13,.96);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--line);
+  display: flex; flex-direction: column;
+  gap: 10px; padding: 14px 16px; z-index: 1001;
+}
+.mobile-menu a{
+  color:#fff; text-decoration:none; font:700 1.05rem/1.3 'Inter', sans-serif;
+  padding:10px 6px; border-radius:6px; transition: color .2s, background-color .2s;
+}
+.mobile-menu a:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
+
 @media (max-width: 900px) {
   .slider-container { height: 400px; }
   .content-section { flex-direction: column; padding: 24px; gap: 24px; }
   .mobile-socials { display: flex; }
   .socials { display: none; }
+
+  .burger{ display:inline-flex; }
+  .header-left .sprayfight-link{ display:none; }
+  .header-left{ gap:12px; }
+  .logo{ order:1; }
+  .burger{ order:0; }
+  .language-switch{ display:flex; }
 }
 @media (max-width: 500px) {
   .slider-container { height: 300px; }
@@ -163,6 +195,7 @@ header {
 
 <header>
   <div class="header-left">
+    <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">☰</button>
     <a href="index.html" class="logo">TORB</a>
 
     <div class="socials" aria-label="Social links">
@@ -184,30 +217,37 @@ header {
       <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
     </div>
 
+    <!-- new sections -->
+    <a href="torb-district.html" class="sprayfight-link">Torb District</a>
+    <a href="workshops.html" class="sprayfight-link">Workshops</a>
     <a href="sprayfight.html" class="sprayfight-link">SprayFight System</a>
   </div>
 
   <div class="language-switch">
-    <a href="index.html" aria-current="page">EN</a>
     <a href="index-ru.html">RU</a>
+    <a href="index.html" aria-current="page">EN</a>
   </div>
 </header>
 
+<!-- Mobile slide menu -->
+<nav id="mobile-menu" class="mobile-menu" hidden>
+  <a href="torb-district.html">Torb District</a>
+  <a href="workshops.html">Workshops</a>
+  <a href="sprayfight.html">SprayFight System</a>
+</nav>
+
 <!-- Slider -->
 <div class="slider-container">
-  <!-- Masterclass 4 -->
   <div class="slide active" style="background-image: url('masterclass1.png');"></div>
   <div class="slide" style="background-image: url('masterclass2.png');"></div>
   <div class="slide" style="background-image: url('masterclass3.png');"></div>
   <div class="slide" style="background-image: url('masterclass4.png');"></div>
 
-  <!-- Festival 4 -->
   <div class="slide" style="background-image: url('festival1.png');"></div>
   <div class="slide" style="background-image: url('festival2.png');"></div>
   <div class="slide" style="background-image: url('festival3.png');"></div>
   <div class="slide" style="background-image: url('festival4.png');"></div>
 
-  <!-- Battle 4 (no battle2) -->
   <div class="slide" style="background-image: url('battle1.png');"></div>
   <div class="slide" style="background-image: url('battle3.png');"></div>
   <div class="slide" style="background-image: url('battle4.png');"></div>
@@ -261,6 +301,25 @@ setInterval(() => {
   index = (index + 1) % slides.length;
   slides[index].classList.add('active');
 }, 2000);
+
+// burger menu
+const burger = document.querySelector('.burger');
+const mobileMenu = document.getElementById('mobile-menu');
+if (burger && mobileMenu) {
+  burger.addEventListener('click', () => {
+    const open = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!open));
+    mobileMenu.hidden = open;
+    document.body.style.overflow = open ? '' : 'hidden';
+  });
+  mobileMenu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      burger.setAttribute('aria-expanded', 'false');
+      mobileMenu.hidden = true;
+      document.body.style.overflow = '';
+    }
+  });
+}
 </script>
 
 </body>
