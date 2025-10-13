@@ -35,7 +35,7 @@ header {
   z-index: 1000;
 }
 
-/* left cluster: logo + socials + SprayFight link */
+/* left cluster: logo + socials + links */
 .header-left {
   display: flex;
   align-items: center;
@@ -69,7 +69,6 @@ header {
 }
 .socials a.icon-link:active, .mobile-socials a.icon-link:active{ transform:scale(.96); }
 
-/* external SVG as mask */
 .icon {
   width:22px; height:22px; display:inline-block;
   background-color: currentColor;
@@ -77,25 +76,24 @@ header {
           mask: var(--icon) no-repeat center / contain;
 }
 
-/* STREEET.ART */
 .socials a.text-link, .mobile-socials a.text-link{
   color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition:color .2s;
 }
 .socials a.text-link:hover, .mobile-socials a.text-link:hover{ color:var(--accent); }
 .socials a.text-link:visited, .mobile-socials a.text-link:visited{ color:#fff; }
 
-/* SprayFight link */
+/* nav links */
 .sprayfight-link{
-  font: 700 1rem/1 'Inter', sans-serif;
+  font:700 1rem/1 'Inter',sans-serif;
   color:#fff; text-decoration:none; letter-spacing:.2px; transition:color .2s;
-  white-space: nowrap;
+  white-space:nowrap;
 }
 .sprayfight-link:hover{ color:var(--accent); }
 
 /* languages */
-.language-switch{ display:flex; align-items:center; gap:10px; white-space:nowrap; }
+.language-switch{ display:flex; align-items:center; gap:12px; white-space:nowrap; }
 .language-switch a{
-  color:#fff; text-decoration:none; font-size:1rem; padding:5px 10px; transition:.2s;
+  color:#fff; text-decoration:none; font-size:1rem; padding:4px 6px; transition:.2s;
 }
 .language-switch a:hover{ color:var(--accent); }
 
@@ -148,82 +146,50 @@ header {
   padding: 20px;
   box-sizing: border-box;
 }
+
+/* burger button */
+.burger{
+  display:none; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:8px;
+  background:#111; color:#fff; border:1px solid var(--line);
+  cursor:pointer; transition:transform .15s, background-color .2s, color .2s;
+}
+.burger:active{ transform:scale(.96); }
+.burger[aria-expanded="true"]{ background:#151515; }
+
+/* mobile slide menu */
+.mobile-menu{
+  position: fixed; top: 60px;
+  right: 0; left: 0;
+  background: rgba(13,13,13,.96);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--line);
+  display: flex; flex-direction: column;
+  gap: 10px; padding: 14px 16px; z-index: 1001;
+}
+.mobile-menu[hidden]{ display:none !important; }
+
+.mobile-menu a{
+  color:#fff; text-decoration:none; font:700 1.05rem/1.3 'Inter', sans-serif;
+  padding:10px 6px; border-radius:6px; transition: color .2s, background-color .2s;
+}
+.mobile-menu a:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
+
 @media (max-width: 900px) {
   .slider-container { height: 400px; }
   .content-section { flex-direction: column; padding: 24px; gap: 24px; }
   .mobile-socials { display: flex; }
   .socials { display: none; }
+
+  .burger{ display:inline-flex; }
+  .header-left .sprayfight-link{ display:none; }
+  .header-left{ gap:12px; }
+  .logo{ order:1; }
+  .burger{ order:0; }
+  .language-switch{ display:flex; }
 }
 @media (max-width: 500px) {
   .slider-container { height: 300px; }
-}
-  /* === FIX: show SprayFight on mobile and keep order === */
-@media (max-width: 900px) {
-  /* показываем ссылку системы */
-  .sprayfight-link{
-    display: inline-block !important;
-    font-size: 1rem;
-    white-space: nowrap;
-  }
-
-  /* прячем только соцсети */
-  .socials{ display: none !important; }
-
-  /* шапка не переносится, EN/RU справа */
-  header{ flex-wrap: nowrap; }
-  .header-left{ flex: 1 1 auto; min-width: 0; gap: 12px; }
-  .language-switch{ margin-left: auto; white-space: nowrap; }
-
-  /* чуть уменьшим логотип для узких экранов */
-  .logo{ font-size: 1.6rem; }
-}
-@media (max-width: 500px){
-  .logo{ font-size: 1.4rem; }
-}
-  /* === UNIVERSAL HEADER NORMALIZER (put last on every page) === */
-
-/* Базовые отступы/шрифт для ссылок EN/RU одинаковые везде */
-.language-switch{
-  display:flex; align-items:center; gap:12px;
-  margin:0 !important; white-space:nowrap;
-}
-.language-switch a{
-  padding:4px 6px; font-size:1rem; line-height:1;
-  color:#fff; text-decoration:none; transition:color .2s;
-}
-.language-switch a:hover{ color:var(--accent); }
-
-/* Десктоп: флекс, EN/RU справа, равномерно */
-header{
-  display:flex; align-items:center; justify-content:space-between;
-  flex-wrap:nowrap;
-}
-.header-left{ display:flex; align-items:center; gap:20px; min-width:0; }
-.sprayfight-link{ display:inline-block; white-space:nowrap; }
-
-/* Мобилки: сетка 3 колонки: [логотип+система | авто | EN/RU] */
-@media (max-width: 900px){
-  header{
-    display:grid;
-    grid-template-columns:auto 1fr auto;
-    align-items:center; gap:12px;
-  }
-  .header-left{
-    display:flex; align-items:center; gap:12px; min-width:0;
-  }
-  /* соцсети скрываем на мобилке, чтобы не ломали геометрию */
-  .socials{ display:none !important; }
-
-  /* показываем ссылку системы, фиксируем размер логотипа */
-  .sprayfight-link{ display:inline-block !important; font-size:1rem; }
-  .logo{ font-size:1.6rem; }
-
-  /* EN/RU строго у правого края и с одинаковым расстоянием */
-  .language-switch{ justify-self:end; gap:12px !important; }
-}
-@media (max-width: 500px){
-  .logo{ font-size:1.4rem; }
-}
 }
 </style>
 </head>
@@ -231,6 +197,7 @@ header{
 
 <header>
   <div class="header-left">
+    <button class="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">☰</button>
     <a href="index-ru.html" class="logo">TORB</a>
 
     <div class="socials" aria-label="Социальные ссылки">
@@ -252,50 +219,58 @@ header{
       <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
     </div>
 
-    <a href="sprayfight-ru.html" class="sprayfight-link">Система SprayFight</a>
+    <!-- новые разделы -->
+    <a href="torb-district-ru.html" class="sprayfight-link">Арт Квартал</a>
+    <a href="workshops-ru.html" class="sprayfight-link">Мастер Классы</a>
+    <a href="sprayfight-ru.html" class="sprayfight-link">СпрэйФайт</a>
   </div>
 
   <div class="language-switch">
-    <a href="index.html">EN</a>
+    <!-- RU EN порядок, RU активен -->
     <a href="index-ru.html" aria-current="page">RU</a>
+    <a href="index.html">EN</a>
   </div>
 </header>
 
+<!-- Мобильное меню -->
+<nav id="mobile-menu" class="mobile-menu" hidden>
+  <a href="torb-district-ru.html">Арт Квартал</a>
+  <a href="workshops-ru.html">Мастер Классы</a>
+  <a href="sprayfight-ru.html">СпрэйФайт</a>
+</nav>
+
 <!-- Слайдер -->
 <div class="slider-container">
-  <!-- Masterclass 4 -->
   <div class="slide active" style="background-image: url('masterclass1.png');"></div>
   <div class="slide" style="background-image: url('masterclass2.png');"></div>
   <div class="slide" style="background-image: url('masterclass3.png');"></div>
   <div class="slide" style="background-image: url('masterclass4.png');"></div>
 
-  <!-- Festival 4 -->
   <div class="slide" style="background-image: url('festival1.png');"></div>
   <div class="slide" style="background-image: url('festival2.png');"></div>
   <div class="slide" style="background-image: url('festival3.png');"></div>
   <div class="slide" style="background-image: url('festival4.png');"></div>
 
-  <!-- Battle 4 -->
   <div class="slide" style="background-image: url('battle1.png');"></div>
   <div class="slide" style="background-image: url('battle3.png');"></div>
   <div class="slide" style="background-image: url('battle4.png');"></div>
   <div class="slide" style="background-image: url('battle5.png');"></div>
 </div>
 
-<!-- Обо мне и контакт -->
+<!-- О себе и Контакты -->
 <div class="content-section">
  <div class="about">
   <h2>Обо мне</h2>
-  <p>Создаю граффити с фокусом на стиль и визуальный сторителлинг.</p>
+  <p>Создаю граффити, сосредоточенное на стиле и визуальном повествовании.</p>
   <p>Провожу мастер-классы, организую фестивали, джемы и культурные события.</p>
-  <p>Рисую на стенах, строю арт-пространства и участвую в международных проектах.</p>
+  <p>Раскрашиваю стены, создаю арт-пространства и участвую в международных проектах.</p>
 </div>
 
   <div class="contact-form">
     <form action="mailto:trbkwsk@gmail.com" method="POST" enctype="text/plain">
       <input type="text" name="name" placeholder="Ваше имя" required>
-      <input type="email" name="email" placeholder="Ваш e-mail" required>
-      <textarea name="message" rows="5" placeholder="Сообщение" required></textarea>
+      <input type="email" name="email" placeholder="Ваш Email" required>
+      <textarea name="message" rows="5" placeholder="Ваше сообщение" required></textarea>
       <button type="submit">Отправить</button>
     </form>
   </div>
@@ -322,6 +297,7 @@ header{
 </div>
 
 <script>
+/* слайдер */
 const slides = document.querySelectorAll('.slide');
 let index = 0;
 setInterval(() => {
@@ -329,6 +305,27 @@ setInterval(() => {
   index = (index + 1) % slides.length;
   slides[index].classList.add('active');
 }, 2000);
+
+/* бургер меню */
+const burger = document.querySelector('.burger');
+const mobileMenu = document.getElementById('mobile-menu');
+
+if (burger && mobileMenu) {
+  burger.addEventListener('click', () => {
+    const open = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!open));
+    mobileMenu.hidden = open;
+    document.body.style.overflow = open ? '' : 'hidden';
+  });
+
+  mobileMenu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      burger.setAttribute('aria-expanded', 'false');
+      mobileMenu.hidden = true;
+      document.body.style.overflow = '';
+    }
+  });
+}
 </script>
 
 </body>
