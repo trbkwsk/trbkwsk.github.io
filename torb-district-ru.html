@@ -18,7 +18,7 @@ body{
   overflow-x:hidden; -webkit-text-size-adjust:100%;
 }
 
-/* ===== HEADER (та же шапка, что и на других страницах) ===== */
+/* ===== HEADER ===== */
 header{
   position:sticky; top:0; z-index:1000;
   display:flex; align-items:center; justify-content:space-between;
@@ -79,24 +79,17 @@ header{
 }
 .mobile-menu a:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
 
-/* ===== SLIDER ===== */
+/* ===== SLIDER (base) ===== */
 .td-wrap{ max-width:1200px; margin:24px auto 12px; padding:0 16px; }
 .td-slider{
   position:relative; width:100%; overflow:hidden; border-radius:8px;
   background:#000; border:1px solid #1b1b1b;
 }
-.td-track{
-  display:flex; transition:transform .5s ease; will-change:transform;
-}
-.td-slide{
-  min-width:100%; user-select:none; position:relative;
-}
+.td-track{ display:flex; transition:transform .5s ease; will-change:transform; }
+.td-slide{ min-width:100%; user-select:none; position:relative; }
 .td-slide img{
-  width:100%; height:64vh; object-fit:cover; object-position:center;
-  display:block; background:#000;
+  width:100%; height:64vh; object-fit:cover; object-position:center; display:block; background:#000;
 }
-@media (max-width: 900px){ .td-slide img{ height:52vh; } }
-@media (max-width: 520px){ .td-slide img{ height:48vh; } }
 
 /* arrows */
 .td-arrow{
@@ -105,7 +98,7 @@ header{
   border:1px solid #2a2a2a; background:rgba(15,15,15,.6);
   display:flex; align-items:center; justify-content:center;
   color:#fff; cursor:pointer; transition:background .2s, border-color .2s, transform .08s;
-  z-index:5;
+  z-index:5; line-height:1;
 }
 .td-arrow:hover{ background:rgba(15,15,15,.85); border-color:#3a3a3a; }
 .td-arrow:active{ transform:translateY(-50%) scale(.96); }
@@ -117,7 +110,7 @@ header{
 }
 .td-dot{
   width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer;
-  transition:transform .15s, background-color .2s;
+  transition:transform .15s, background-color .2s; padding:0;
 }
 .td-dot[aria-current="true"]{ background:var(--accent); transform:scale(1.15); }
 
@@ -160,7 +153,9 @@ header{
   display:none; justify-content:center; flex-wrap:wrap; gap:6px 10px;
   padding:20px; box-sizing:border-box;
 }
-@media (max-width:900px){
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px){
   header{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; padding:12px 16px; }
   .header-left{ gap:12px; }
   .socials{ display:none !important; } /* соцсети только внизу на мобилке */
@@ -170,7 +165,38 @@ header{
   /* десктопные ссылки в шапке скрываем — они есть в мобильном меню */
   .header-left .nav-link{ display:none; }
   .mobile-socials{ display:flex; }
+  .td-slide img{ height:52vh; }
 }
+@media (max-width: 520px){
+  .logo{ font-size:1.4rem; }
+  .td-slide img{ height:48vh; }
+}
+
+/* ===== FULL-WIDTH OVERRIDE (cinematic) ===== */
+.td-wrap { max-width: none; margin: 0; padding: 0; }
+.td-slider { border: none; border-radius: 0; }
+.td-slide img {
+  height: 86vh; width: 100%; object-fit: cover; object-position: center;
+}
+@media (max-width: 900px) { .td-slide img { height: 64vh; } }
+@media (max-width: 520px) { .td-slide img { height: 58vh; } }
+
+/* ===== REVERT CONTROL SIZES & PREVENT STRETCH ===== */
+.td-arrow{
+  width:40px !important;
+  height:40px !important;
+  font-size: 1rem !important;
+  padding:0 !important;
+  line-height:1 !important;
+  flex: 0 0 auto !important;
+}
+.td-dots{ bottom:10px !important; }
+.td-dot{
+  width:9px !important; height:9px !important; border-radius:50% !important;
+  flex: 0 0 auto !important; padding:0 !important;
+}
+.td-dot[aria-current="true"]{ transform: scale(1.15) !important; }
+.td-dots, .td-arrow, .td-dot{ align-self: center !important; }
 </style>
 </head>
 <body>
@@ -322,7 +348,7 @@ function startAutoplay(){
 function stopAutoplay(){ if (autoTimer) clearInterval(autoTimer); }
 function restartAutoplay(){ stopAutoplay(); startAutoplay(); }
 
-/* resize keeps slide width */
+/* keep position on resize */
 window.addEventListener('resize', updateUI);
 
 /* hover pause (desktop) */
