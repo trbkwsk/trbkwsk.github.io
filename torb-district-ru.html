@@ -18,7 +18,7 @@ body{
   overflow-x:hidden; -webkit-text-size-adjust:100%;
 }
 
-/* ===== HEADER ===== */
+/* ===== HEADER (единая шапка) ===== */
 header{
   position:sticky; top:0; z-index:1000;
   display:flex; align-items:center; justify-content:space-between;
@@ -79,19 +79,19 @@ header{
 }
 .mobile-menu a:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
 
-/* ===== SLIDER (base) ===== */
-.td-wrap{ max-width:1200px; margin:24px auto 12px; padding:0 16px; }
+/* ===== SLIDER (база) ===== */
+.td-wrap { max-width:none; margin:0; padding:0; }   /* full-width */
 .td-slider{
-  position:relative; width:100%; overflow:hidden; border-radius:8px;
-  background:#000; border:1px solid #1b1b1b;
+  position:relative; width:100%; overflow:hidden; border-radius:0;
+  background:#000; border:none;
 }
 .td-track{ display:flex; transition:transform .5s ease; will-change:transform; }
 .td-slide{ min-width:100%; user-select:none; position:relative; }
 .td-slide img{
-  width:100%; height:64vh; object-fit:cover; object-position:center; display:block; background:#000;
+  width:100%; height:86vh; object-fit:cover; object-position:center; display:block; background:#000;
 }
 
-/* arrows */
+/* arrows (базовые размеры) */
 .td-arrow{
   position:absolute; top:50%; transform:translateY(-50%);
   width:40px; height:40px; border-radius:50%;
@@ -104,7 +104,7 @@ header{
 .td-arrow:active{ transform:translateY(-50%) scale(.96); }
 .td-prev{ left:12px; } .td-next{ right:12px; }
 
-/* dots */
+/* dots (базовые размеры) */
 .td-dots{
   position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:8px; z-index:4;
 }
@@ -158,45 +158,25 @@ header{
 @media (max-width: 900px){
   header{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; padding:12px 16px; }
   .header-left{ gap:12px; }
-  .socials{ display:none !important; } /* соцсети только внизу на мобилке */
+  .socials{ display:none !important; } /* соцсети уезжают вниз */
   .logo{ font-size:1.6rem; }
   .language-switch{ justify-self:end; }
   .burger{ display:inline-flex; }
-  /* десктопные ссылки в шапке скрываем — они есть в мобильном меню */
-  .header-left .nav-link{ display:none; }
+  .header-left .nav-link{ display:none; } /* пункты меню в бургер */
   .mobile-socials{ display:flex; }
-  .td-slide img{ height:52vh; }
+
+  /* Мобильная пропорция 16:9 без квадрата */
+  .td-slide{ min-width:100vw; }
+  .td-slide img{
+    width:100vw; height:auto; aspect-ratio:16 / 9;
+    object-fit:cover; object-position:center;
+  }
 }
 @media (max-width: 520px){
   .logo{ font-size:1.4rem; }
-  .td-slide img{ height:48vh; }
+  .td-slide{ min-width:100vw; }
+  .td-slide img{ width:100vw; height:auto; aspect-ratio:16 / 9; }
 }
-
-/* ===== FULL-WIDTH OVERRIDE (cinematic) ===== */
-.td-wrap { max-width: none; margin: 0; padding: 0; }
-.td-slider { border: none; border-radius: 0; }
-.td-slide img {
-  height: 86vh; width: 100%; object-fit: cover; object-position: center;
-}
-@media (max-width: 900px) { .td-slide img { height: 64vh; } }
-@media (max-width: 520px) { .td-slide img { height: 58vh; } }
-
-/* ===== REVERT CONTROL SIZES & PREVENT STRETCH ===== */
-.td-arrow{
-  width:40px !important;
-  height:40px !important;
-  font-size: 1rem !important;
-  padding:0 !important;
-  line-height:1 !important;
-  flex: 0 0 auto !important;
-}
-.td-dots{ bottom:10px !important; }
-.td-dot{
-  width:9px !important; height:9px !important; border-radius:50% !important;
-  flex: 0 0 auto !important; padding:0 !important;
-}
-.td-dot[aria-current="true"]{ transform: scale(1.15) !important; }
-.td-dots, .td-arrow, .td-dot{ align-self: center !important; }
 </style>
 </head>
 <body>
@@ -261,8 +241,9 @@ header{
 <!-- ===== DESCRIPTION ===== -->
 <div class="section">
   <h1>Арт Квартал TORB</h1>
-  <p>Задумка — превратить улицу в центре города в пространство, где граффити стало живым облагораживанием стен и заборов. Проект вырос из одной работы и превратился в открытую галерею.</p>
-  <p>Главные персонажи — утки, поэтому место называют «Утиные истории». Квартал меняется сезон за сезоном: новые буквы, новые герои, новые слои краски.</p>
+  <p>Идея проста — превратить обычную улицу в центре города в пространство, где граффити оживает и делает стены красивее.</p>
+  <p>Всё началось с одной работы, а со временем квартал стал открытой галереей. Здесь нет шаблонов: каждый рисунок — часть живого потока.</p>
+  <p>Главные герои — утки. За это место давно закрепилось название «Утиные истории». Стены меняются с каждым сезоном — новые буквы, новые лица, новые слои краски.</p>
 </div>
 
 <div class="divider"></div>
@@ -315,7 +296,7 @@ const dotsWrap = slider.querySelector('.td-dots');
 
 let idx = 0;
 let autoTimer = null;
-const AUTOPLAY_MS = 3500;
+const AUTOPLAY_MS = 4000; // 4 секунды
 
 /* dots */
 slides.forEach((_, i) => {
