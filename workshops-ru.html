@@ -79,26 +79,40 @@ header{
 }
 .mobile-menu a:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
 
-/* ===== SLIDER (авто, без управления) ===== */
+/* ===== SLIDER (70vh desktop, 16:9 mobile) ===== */
 .ws-wrap { max-width:none; margin:0; padding:0; }
 .ws-slider{
-  position:relative; width:100%; overflow:hidden; border-radius:0;
-  background:#000; border:none;
+  position:relative; width:100%; overflow:hidden; background:#000;
 }
 .ws-track{ display:flex; transition:transform .5s ease; will-change:transform; }
 .ws-slide{ min-width:100%; user-select:none; position:relative; }
 .ws-slide img{
-  width:100%; height:86vh; object-fit:cover; object-position:center; display:block; background:#000;
+  width:100%; height:70vh;            /* как hero-видео: 70% высоты окна */
+  object-fit:cover; object-position:center; display:block; background:#000;
 }
 
-/* ===== TEXT ===== */
-.section{
-  max-width:1000px; margin:24px auto 40px; padding:0 16px; line-height:1.7;
+/* ===== CONTENT (как на SprayFight) ===== */
+.content-section{
+  max-width:1000px; margin:40px auto; padding:0 20px;
+  line-height:1.7;
+  position:relative; z-index:10;
 }
-.section h1{
-  margin:14px 0 8px; font-family:'Russo One',sans-serif; font-size:clamp(26px,5vw,40px);
+.page-title{ text-align:center; margin:0 0 18px; }
+.page-title h1{
+  font-family:'Russo One',sans-serif; font-size:clamp(28px,6vw,46px); margin:0 0 8px;
 }
-.section p{ margin:0 0 12px; font-size:1.05rem; }
+.page-title p{ margin:0; font-size:clamp(14px,2.6vw,20px); opacity:.9; font-style:italic; }
+
+.sep{ border:0; border-top:1px solid #2b2b2b; margin:28px 0; opacity:.8; }
+
+.content-section h2{
+  font-family:'Russo One',sans-serif; font-size:clamp(22px,3.2vw,28px);
+  margin:24px 0 12px; letter-spacing:.2px;
+}
+.content-section p{ margin:0 0 14px; }
+.content-section ul{ list-style:none; padding:0; margin:8px 0 16px; }
+.content-section ul li{ margin:6px 0; position:relative; padding-left:1.1em; }
+.content-section ul li::before{ content:"•"; position:absolute; left:0; top:0; color:var(--accent); }
 
 /* ===== MOBILE SOCIALS ===== */
 .mobile-socials{
@@ -110,14 +124,14 @@ header{
 @media (max-width: 900px){
   header{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; padding:12px 16px; }
   .header-left{ gap:12px; }
-  .socials{ display:none !important; } /* соцсети внизу */
+  .socials{ display:none !important; } /* соцсети вниз */
   .logo{ font-size:1.6rem; }
   .language-switch{ justify-self:end; }
   .burger{ display:inline-flex; }
-  .header-left .nav-link{ display:none; } /* пункты меню в бургер */
+  .header-left .nav-link{ display:none; } /* пункты в бургер */
   .mobile-socials{ display:flex; }
 
-  /* мобильный 16:9 (без квадрата) */
+  /* мобайл 16:9 */
   .ws-slide{ min-width:100vw !important; }
   .ws-slide img{
     width:100vw !important; height:auto !important;
@@ -177,28 +191,38 @@ header{
       <div class="ws-slide"><img src="./masterclass3.png" alt="Мастер-классы по граффити — фото 3" loading="lazy" decoding="async"></div>
       <div class="ws-slide"><img src="./masterclass4.png" alt="Мастер-классы по граффити — фото 4" loading="lazy" decoding="async"></div>
     </div>
-    <!-- без стрелок/точек/кликов — чистый автослайдер -->
+    <!-- без стрелок/точек/кликов -->
   </div>
 </div>
 
-<!-- ===== TEXT ===== -->
-<div class="section">
-  <h1>Мастер-классы по граффити</h1>
+<!-- ===== CONTENT (как на SprayFight) ===== -->
+<div class="content-section">
+  <div class="page-title">
+    <h1>Мастер-классы по граффити</h1>
+    <p><em>История, теория и практика уличного искусства</em></p>
+  </div>
+
   <p>Это образовательная программа, объединяющая историю, теорию и практику уличного искусства.</p>
+
   <p>В рамках занятий я знакомлю участников с культурой граффити, её развитием и ключевыми стилями. Особое внимание уделяется не только технике, но и контексту — пониманию того, как граффити сформировалось как язык улиц и стало самостоятельным направлением современного искусства.</p>
-  <p>Практическая часть включает работу с аэрозольной краской, создание шрифтов, персонажей и композиций, а также анализ индивидуальных идей участников.
-  Каждое занятие выстроено на балансе между теорией и действием — от первых эскизов до реализации работы на стене.</p>
+
+  <p>Практическая часть включает работу с аэрозольной краской, создание шрифтов, персонажей и композиций, а также анализ индивидуальных идей участников. Каждое занятие выстроено на балансе между теорией и действием — от первых эскизов до реализации работы на стене.</p>
+
+  <hr class="sep" />
+
   <p>Мастер-классы проходят на территории Torb District / Арт-Квартала, а также на фестивалях, образовательных платформах и выездных проектах. Форматы включают индивидуальные и групповые занятия, лекции и коллаборации с учебными и культурными организациями.</p>
-  <p><strong>Основные направления:</strong><br/>
-  – история и философия граффити-культуры;<br/>
-  – теория шрифта и визуального ритма;<br/>
-  – практика работы с аэрозольной краской;<br/>
-  – создание авторского стиля и композиции;<br/>
-  – взаимодействие искусства и городской среды.</p>
+
+  <h2>Основные направления</h2>
+  <ul>
+    <li>история и философия граффити-культуры;</li>
+    <li>теория шрифта и визуального ритма;</li>
+    <li>практика работы с аэрозольной краской;</li>
+    <li>создание авторского стиля и композиции;</li>
+    <li>взаимодействие искусства и городской среды.</li>
+  </ul>
+
   <p>Моя цель — передать опыт, вдохновить и показать, что граффити — это живая форма искусства, объединяющая свободу, эстетику и движение.</p>
 </div>
-
-<div class="divider"></div>
 
 <!-- ===== MOBILE SOCIALS ===== -->
 <div class="mobile-socials" aria-label="Социальные ссылки">
@@ -230,7 +254,7 @@ if (burger && mobileMenu) {
   });
 }
 
-/* simple autoplay slider (no controls, no click) */
+/* autoplay slider 2s, no controls */
 const slider = document.getElementById('ws-slider');
 const track  = slider.querySelector('.ws-track');
 const slides = Array.from(track.children);
@@ -254,11 +278,8 @@ let timer = setInterval(next, AUTOPLAY_MS);
 /* keep position on resize */
 window.addEventListener('resize', updateUI);
 
-/* prevent accidental dragging ghost images on desktop */
-slides.forEach(s => {
-  const img = s.querySelector('img');
-  img.setAttribute('draggable', 'false');
-});
+/* prevent dragging ghost images on desktop */
+slides.forEach(s => s.querySelector('img').setAttribute('draggable','false'));
 </script>
 </body>
 </html>
