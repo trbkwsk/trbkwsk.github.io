@@ -79,8 +79,8 @@ header{
 }
 .mobile-menu a:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
 
-/* ===== SLIDER (база) ===== */
-.td-wrap { max-width:none; margin:0; padding:0; }   /* full-width */
+/* ===== SLIDER (full-width) ===== */
+.td-wrap { max-width:none; margin:0; padding:0; }
 .td-slider{
   position:relative; width:100%; overflow:hidden; border-radius:0;
   background:#000; border:none;
@@ -91,7 +91,7 @@ header{
   width:100%; height:86vh; object-fit:cover; object-position:center; display:block; background:#000;
 }
 
-/* arrows (базовые размеры) */
+/* arrows (базовый размер) */
 .td-arrow{
   position:absolute; top:50%; transform:translateY(-50%);
   width:40px; height:40px; border-radius:50%;
@@ -104,7 +104,7 @@ header{
 .td-arrow:active{ transform:translateY(-50%) scale(.96); }
 .td-prev{ left:12px; } .td-next{ right:12px; }
 
-/* dots (базовые размеры) */
+/* dots (базовый размер) */
 .td-dots{
   position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:8px; z-index:4;
 }
@@ -165,17 +165,19 @@ header{
   .header-left .nav-link{ display:none; } /* пункты меню в бургер */
   .mobile-socials{ display:flex; }
 
-  /* Мобильная пропорция 16:9 без квадрата */
-  .td-slide{ min-width:100vw; }
+  /* Мобильная пропорция 16:9 без "квадрата" */
+  .td-slide{ min-width:100vw !important; }
   .td-slide img{
-    width:100vw; height:auto; aspect-ratio:16 / 9;
-    object-fit:cover; object-position:center;
+    width:100vw !important; height:auto !important;
+    aspect-ratio:16 / 9 !important;
+    object-fit:cover !important; object-position:center !important;
+    display:block !important;
   }
 }
 @media (max-width: 520px){
   .logo{ font-size:1.4rem; }
-  .td-slide{ min-width:100vw; }
-  .td-slide img{ width:100vw; height:auto; aspect-ratio:16 / 9; }
+  .td-slide{ min-width:100vw !important; }
+  .td-slide img{ width:100vw !important; height:auto !important; aspect-ratio:16 / 9 !important; }
 }
 </style>
 </head>
@@ -218,18 +220,18 @@ header{
 <div class="td-wrap" aria-label="Слайдер фотографий Арт Квартала">
   <div class="td-slider" id="td-slider">
     <div class="td-track">
-      <!-- 11 слайдов -->
-      <div class="td-slide"><img src="torb-district1.png"  alt="Арт Квартал TORB — фото 1"  loading="lazy" decoding="async"><a href="torb-district1.png" aria-label="Открыть фото 1"></a></div>
-      <div class="td-slide"><img src="torb-district2.png"  alt="Арт Квартал TORB — фото 2"  loading="lazy" decoding="async"><a href="torb-district2.png" aria-label="Открыть фото 2"></a></div>
-      <div class="td-slide"><img src="torb-district3.png"  alt="Арт Квартал TORB — фото 3"  loading="lazy" decoding="async"><a href="torb-district3.png" aria-label="Открыть фото 3"></a></div>
-      <div class="td-slide"><img src="torb-district4.png"  alt="Арт Квартал TORB — фото 4"  loading="lazy" decoding="async"><a href="torb-district4.png" aria-label="Открыть фото 4"></a></div>
-      <div class="td-slide"><img src="torb-district5.png"  alt="Арт Квартал TORB — фото 5"  loading="lazy" decoding="async"><a href="torb-district5.png" aria-label="Открыть фото 5"></a></div>
-      <div class="td-slide"><img src="torb-district6.png"  alt="Арт Квартал TORB — фото 6"  loading="lazy" decoding="async"><a href="torb-district6.png" aria-label="Открыть фото 6"></a></div>
-      <div class="td-slide"><img src="torb-district7.png"  alt="Арт Квартал TORB — фото 7"  loading="lazy" decoding="async"><a href="torb-district7.png" aria-label="Открыть фото 7"></a></div>
-      <div class="td-slide"><img src="torb-district8.png"  alt="Арт Квартал TORB — фото 8"  loading="lazy" decoding="async"><a href="torb-district8.png" aria-label="Открыть фото 8"></a></div>
-      <div class="td-slide"><img src="torb-district9.png"  alt="Арт Квартал TORB — фото 9"  loading="lazy" decoding="async"><a href="torb-district9.png" aria-label="Открыть фото 9"></a></div>
-      <div class="td-slide"><img src="torb-district10.png" alt="Арт Квартал TORB — фото 10" loading="lazy" decoding="async"><a href="torb-district10.png" aria-label="Открыть фото 10"></a></div>
-      <div class="td-slide"><img src="torb-district11.png" alt="Арт Квартал TORB — фото 11" loading="lazy" decoding="async"><a href="torb-district11.png" aria-label="Открыть фото 11"></a></div>
+      <!-- 11 слайдов — явные относительные пути -->
+      <div class="td-slide"><img src="./torb-district1.png"  alt="Арт Квартал TORB — фото 1"  loading="lazy" decoding="async"><a href="./torb-district1.png"  aria-label="Открыть фото 1"></a></div>
+      <div class="td-slide"><img src="./torb-district2.png"  alt="Арт Квартал TORB — фото 2"  loading="lazy" decoding="async"><a href="./torb-district2.png"  aria-label="Открыть фото 2"></a></div>
+      <div class="td-slide"><img src="./torb-district3.png"  alt="Арт Квартал TORB — фото 3"  loading="lazy" decoding="async"><a href="./torb-district3.png"  aria-label="Открыть фото 3"></a></div>
+      <div class="td-slide"><img src="./torb-district4.png"  alt="Арт Квартал TORB — фото 4"  loading="lazy" decoding="async"><a href="./torb-district4.png"  aria-label="Открыть фото 4"></a></div>
+      <div class="td-slide"><img src="./torb-district5.png"  alt="Арт Квартал TORB — фото 5"  loading="lazy" decoding="async"><a href="./torb-district5.png"  aria-label="Открыть фото 5"></a></div>
+      <div class="td-slide"><img src="./torb-district6.png"  alt="Арт Квартал TORB — фото 6"  loading="lazy" decoding="async"><a href="./torb-district6.png"  aria-label="Открыть фото 6"></a></div>
+      <div class="td-slide"><img src="./torb-district7.png"  alt="Арт Квартал TORB — фото 7"  loading="lazy" decoding="async"><a href="./torb-district7.png"  aria-label="Открыть фото 7"></a></div>
+      <div class="td-slide"><img src="./torb-district8.png"  alt="Арт Квартал TORB — фото 8"  loading="lazy" decoding="async"><a href="./torb-district8.png"  aria-label="Открыть фото 8"></a></div>
+      <div class="td-slide"><img src="./torb-district9.png"  alt="Арт Квартал TORB — фото 9"  loading="lazy" decoding="async"><a href="./torb-district9.png"  aria-label="Открыть фото 9"></a></div>
+      <div class="td-slide"><img src="./torb-district10.png" alt="Арт Квартал TORB — фото 10" loading="lazy" decoding="async"><a href="./torb-district10.png" aria-label="Открыть фото 10"></a></div>
+      <div class="td-slide"><img src="./torb-district11.png" alt="Арт Квартал TORB — фото 11" loading="lazy" decoding="async"><a href="./torb-district11.png" aria-label="Открыть фото 11"></a></div>
     </div>
 
     <button class="td-arrow td-prev" aria-label="Предыдущая">‹</button>
@@ -329,12 +331,10 @@ function startAutoplay(){
 function stopAutoplay(){ if (autoTimer) clearInterval(autoTimer); }
 function restartAutoplay(){ stopAutoplay(); startAutoplay(); }
 
-/* keep position on resize */
-window.addEventListener('resize', updateUI);
-
-/* hover pause (desktop) */
-slider.addEventListener('mouseenter', stopAutoplay);
-slider.addEventListener('mouseleave', startAutoplay);
+/* удерживаем автоплей: убрали паузу при mouseenter; пауза только на прямое действие */
+slider.addEventListener('pointerdown', stopAutoplay);
+slider.addEventListener('pointerup', startAutoplay);
+slider.addEventListener('pointercancel', startAutoplay);
 
 /* arrows */
 prevBtn.addEventListener('click', () => prev());
@@ -361,6 +361,9 @@ slides.forEach((s, i) => {
 /* init */
 updateUI();
 startAutoplay();
+
+/* keep position on resize */
+window.addEventListener('resize', updateUI);
 
 /* lightbox */
 const lb = document.getElementById('lb');
