@@ -224,6 +224,19 @@ header {
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/108789136" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+<script>
+if (!sessionStorage.getItem('lang-checked')) {
+  sessionStorage.setItem('lang-checked', '1');
+  fetch('https://ipapi.co/country/')
+    .then(r => r.text())
+    .then(country => {
+      if (country.trim() !== 'RU') {
+        window.location.href = '/index.html';
+      }
+    })
+    .catch(() => {});
+}
+</script>
 </head>
 <body>
 
