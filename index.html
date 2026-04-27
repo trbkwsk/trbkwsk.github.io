@@ -250,9 +250,9 @@ header {
 <div class="slider-container">
 <!-- Festival 4 -->
   <div class="slide active" style="background-image: url('festival1.png');"></div>
-  <div class="slide" style="background-image: url('festival2.png');"></div>
-  <div class="slide" style="background-image: url('festival3.png');"></div>
-  <div class="slide" style="background-image: url('festival4.png');"></div>
+  <div class="slide" data-bg="festival2.png"></div>
+  <div class="slide" data-bg="festival3.png"></div>
+  <div class="slide" data-bg="festival4.png"></div>
 </div>
 
 <!-- About & Contact -->
@@ -296,7 +296,9 @@ let index = 0;
 setInterval(() => {
   slides.forEach(s => s.classList.remove('active'));
   index = (index + 1) % slides.length;
-  slides[index].classList.add('active');
+  const next = slides[index];
+  if (next.dataset.bg) { next.style.backgroundImage = "url('" + next.dataset.bg + "')"; delete next.dataset.bg; }
+  next.classList.add('active');
 }, 5000);
 
 /* burger menu */
