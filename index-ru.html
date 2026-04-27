@@ -265,7 +265,11 @@ header {
 </div>
 
   <div class="contact-form">
-    <a href="https://forms.yandex.ru/u/69ef91819029024d98ffc96e/" target="_blank" style="display:inline-block;padding:12px 32px;background:var(--accent);color:#000;font-weight:700;text-decoration:none;border-radius:4px;font-size:1rem;letter-spacing:1px;">Написать</a>
+    <input type="text" id="tg-name" placeholder="Ваше имя" required>
+    <input type="email" id="tg-email" placeholder="Ваш Email" required>
+    <textarea id="tg-message" rows="5" placeholder="Ваше сообщение" required></textarea>
+    <button onclick="handleSend()">Отправить</button>
+    <p id="tg-status" style="margin-top:10px;color:var(--accent);display:none;">✅ Сообщение отправлено!</p>
   </div>
 </div>
 
@@ -321,5 +325,19 @@ if (burger && mobileMenu) {
 }
 </script>
 
+<script src="tgbot.js"></script>
+<script>
+async function handleSend() {
+  const name = document.getElementById("tg-name").value;
+  const email = document.getElementById("tg-email").value;
+  const message = document.getElementById("tg-message").value;
+  if (!name || !email || !message) return alert("Заполните все поля");
+  await sendToTelegram(name, email, message);
+  document.getElementById("tg-status").style.display = "block";
+  document.getElementById("tg-name").value = "";
+  document.getElementById("tg-email").value = "";
+  document.getElementById("tg-message").value = "";
+}
+</script>
 </body>
 </html>
