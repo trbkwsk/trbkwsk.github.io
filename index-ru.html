@@ -198,6 +198,16 @@ header {
 @media (max-width: 500px) {
   .slider-container { height: 300px; }
 }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>
 
 <link rel="alternate" hreflang="ru" href="https://trbkwsk.github.io/index-ru.html" />
@@ -270,8 +280,8 @@ header {
 </div>
 
 <!-- О себе и Контакты -->
-<div class="content-section">
- <div class="about">
+<div class="content-section reveal">
+ <div class="about reveal">
   <h2>Обо мне</h2>
   <p>Создаю граффити, сосредоточенное на стиле и визуальном повествовании.</p>
   <p>Провожу мастер-классы, организую фестивали, джемы и культурные события.</p>
@@ -352,6 +362,13 @@ async function handleSend() {
   document.getElementById("tg-email").value = "";
   document.getElementById("tg-message").value = "";
 }
+</script>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>

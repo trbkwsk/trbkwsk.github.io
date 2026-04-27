@@ -146,6 +146,16 @@ header{
   .ws-slide{ min-width:100vw !important; }
   .ws-slide img{ width:100vw !important; height:auto !important; aspect-ratio:16 / 9 !important; }
 }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>
 
 <link rel="alternate" hreflang="en" href="https://trbkwsk.github.io/workshops.html" />
@@ -212,7 +222,7 @@ header{
 </div>
 
 <!-- ===== CONTENT (SprayFight style) ===== -->
-<div class="content-section">
+<div class="content-section reveal">
   <div class="page-title">
     <h1>Graffiti Workshops</h1>
     <p><em>An educational program that blends history, theory, and hands-on practice</em></p>
@@ -296,6 +306,13 @@ window.addEventListener('resize', updateUI);
 
 /* prevent ghost-drag on desktop */
 slides.forEach(s => s.querySelector('img').setAttribute('draggable','false'));
+</script>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>

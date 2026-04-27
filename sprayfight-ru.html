@@ -202,7 +202,17 @@
       padding:20px; box-sizing:border-box;
     }
     @media (max-width:900px){ .mobile-socials{ display:flex; } }
-  </style>
+  
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
 
 <link rel="alternate" hreflang="ru" href="https://trbkwsk.github.io/sprayfight-ru.html" />
 <link rel="alternate" hreflang="en" href="https://trbkwsk.github.io/sprayfight.html" />
@@ -406,5 +416,12 @@
     }
   </script>
 
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>

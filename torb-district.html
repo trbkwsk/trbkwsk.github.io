@@ -184,6 +184,16 @@ header{
   .td-slide{ min-width:100vw !important; }
   .td-slide img{ width:100vw !important; height:auto !important; aspect-ratio:16 / 9 !important; }
 }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>
 
 <link rel="alternate" hreflang="en" href="https://trbkwsk.github.io/torb-district.html" />
@@ -419,6 +429,13 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') lbGo(lbIdx-1);
   if (e.key === 'ArrowRight') lbGo(lbIdx+1);
 });
+</script>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>

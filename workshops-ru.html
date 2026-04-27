@@ -151,6 +151,16 @@ header{
   .ws-slide{ min-width:100vw !important; }
   .ws-slide img{ width:100vw !important; height:auto !important; aspect-ratio:16 / 9 !important; }
 }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 </style>
 
 <link rel="alternate" hreflang="ru" href="https://trbkwsk.github.io/workshops-ru.html" />
@@ -217,7 +227,7 @@ header{
 </div>
 
 <!-- ===== CONTENT (как на SprayFight) ===== -->
-<div class="content-section">
+<div class="content-section reveal">
   <div class="page-title">
     <h1>Мастер-классы по граффити</h1>
     <p><em>История, теория и практика уличного искусства</em></p>
@@ -301,6 +311,13 @@ window.addEventListener('resize', updateUI);
 
 /* prevent dragging ghost images on desktop */
 slides.forEach(s => s.querySelector('img').setAttribute('draggable','false'));
+</script>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
