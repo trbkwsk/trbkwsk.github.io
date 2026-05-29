@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://trbkwsk.github.io/index.html</loc><priority>1.0</priority></url>
-  <url><loc>https://trbkwsk.github.io/index-ru.html</loc><priority>1.0</priority></url>
-  <url><loc>https://trbkwsk.github.io/sprayfight.html</loc><priority>0.8</priority></url>
-  <url><loc>https://trbkwsk.github.io/sprayfight-ru.html</loc><priority>0.8</priority></url>
-  <url><loc>https://trbkwsk.github.io/workshops.html</loc><priority>0.8</priority></url>
-  <url><loc>https://trbkwsk.github.io/workshops-ru.html</loc><priority>0.8</priority></url>
-  <url><loc>https://trbkwsk.github.io/torb-district.html</loc><priority>0.8</priority></url>
-  <url><loc>https://trbkwsk.github.io/torb-district-ru.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.trbkwsk.com/index.html</loc><priority>1.0</priority></url>
+  <url><loc>https://www.trbkwsk.com/index-ru.html</loc><priority>1.0</priority></url>
+  <url><loc>https://www.trbkwsk.com/sprayfight.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.trbkwsk.com/sprayfight-ru.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.trbkwsk.com/workshops.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.trbkwsk.com/workshops-ru.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.trbkwsk.com/torb-district.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.trbkwsk.com/torb-district-ru.html</loc><priority>0.8</priority></url>
 </urlset>

@@ -11,8 +11,9 @@
 <meta name="description" content="TORB — граффити-артист. Мастер-классы, фестивали, система SprayFight, Torb District." />
 <meta property="og:title" content="TORB — Граффити-артист" />
 <meta property="og:description" content="Мастер-классы, фестивали, система SprayFight, Torb District." />
-<meta property="og:image" content="https://trbkwsk.github.io/festival1.webp" />
-<meta property="og:url" content="https://trbkwsk.github.io/index-ru.html" />
+<meta property="og:image" content="https://www.trbkwsk.com/festival1.webp" />
+<meta property="og:url" content="https://www.trbkwsk.com/index-ru.html" />
+<link rel="canonical" href="https://www.trbkwsk.com/index-ru.html" />
 <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
 
 <style>
@@ -209,9 +210,10 @@ header {
   transform: translateY(0);
 }
 </style>
+<link rel="stylesheet" href="shared.css" />
 
-<link rel="alternate" hreflang="ru" href="https://trbkwsk.github.io/index-ru.html" />
-<link rel="alternate" hreflang="en" href="https://trbkwsk.github.io/index.html" />
+<link rel="alternate" hreflang="ru" href="https://www.trbkwsk.com/index-ru.html" />
+<link rel="alternate" hreflang="en" href="https://www.trbkwsk.com/index.html" />
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function(m,e,t,r,i,k,a){
@@ -246,22 +248,22 @@ if (!sessionStorage.getItem('lang-checked')) {
     <a href="index-ru.html" class="logo">TORB</a>
 
     <div class="socials" aria-label="Социальные ссылки">
-      <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" aria-label="Instagram">
+      <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
         <span class="icon" style="--icon: url('instagram.svg');"></span>
       </a>
-      <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" aria-label="TikTok">
+      <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
         <span class="icon" style="--icon: url('tiktok.svg');"></span>
       </a>
-      <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" aria-label="X">
+      <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" rel="noopener noreferrer" aria-label="X">
         <span class="icon" style="--icon: url('x.svg');"></span>
       </a>
-      <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" aria-label="YouTube">
+      <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
         <span class="icon" style="--icon: url('youtube.svg');"></span>
       </a>
-      <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" aria-label="Telegram">
+      <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
         <span class="icon" style="--icon: url('telegram.svg');"></span>
       </a>
-      <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
+      <a href="https://streeet.art/@trbkwsk" target="_blank" rel="noopener noreferrer" class="text-link">STREEET.ART</a>
     </div>
 
     <!-- новые разделы -->
@@ -290,6 +292,15 @@ if (!sessionStorage.getItem('lang-checked')) {
   <div class="slide" style="background-image: url('festival2.webp');"></div>
   <div class="slide" style="background-image: url('festival3.webp');"></div>
   <div class="slide" style="background-image: url('festival4.webp');"></div>
+  <div class="hero-copy">
+    <h1>TORB</h1>
+    <p>Граффити-артист: стены, мастер-классы, фестивали и живые баттлы SprayFight.</p>
+    <div class="hero-actions" aria-label="Главные действия">
+      <a href="workshops-ru.html">Записаться на мастер-класс</a>
+      <a href="#contact">Заказать стену</a>
+      <a href="#contact">Связаться</a>
+    </div>
+  </div>
 </div>
 
 <!-- О себе и Контакты -->
@@ -301,33 +312,33 @@ if (!sessionStorage.getItem('lang-checked')) {
   <p>Раскрашиваю стены, создаю арт-пространства и участвую в международных проектах.</p>
 </div>
 
-  <div class="contact-form">
-    <input type="text" id="tg-name" placeholder="Ваше имя" required>
-    <input type="email" id="tg-email" placeholder="Ваш Email" required>
-    <textarea id="tg-message" rows="5" placeholder="Ваше сообщение" required></textarea>
-    <button onclick="handleSend()">Отправить</button>
-    <p id="tg-status" style="margin-top:10px;color:var(--accent);display:none;">✅ Сообщение отправлено!</p>
-  </div>
+  <form class="contact-form" id="contact" data-contact-form data-endpoint="https://ultrat0rb.trbkwsk.com:8443/api/contact" data-sending-text="Отправка..." data-required-text="Заполните все поля" data-success-text="Сообщение отправлено. Я скоро отвечу." data-error-text="Не удалось отправить сообщение. Напишите в Telegram или Instagram.">
+    <input type="text" name="name" placeholder="Ваше имя" autocomplete="name" required>
+    <input type="email" name="email" placeholder="Ваш Email" autocomplete="email" required>
+    <textarea name="message" rows="5" placeholder="Ваше сообщение" required></textarea>
+    <button type="submit">Отправить</button>
+    <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+  </form>
 </div>
 
 <!-- Мобильные соцсети -->
 <div class="mobile-socials" aria-label="Социальные ссылки">
-  <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" aria-label="Instagram">
+  <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
     <span class="icon" style="--icon: url('instagram.svg');"></span>
   </a>
-  <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" aria-label="TikTok">
+  <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
     <span class="icon" style="--icon: url('tiktok.svg');"></span>
   </a>
-  <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" aria-label="X">
+  <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" rel="noopener noreferrer" aria-label="X">
     <span class="icon" style="--icon: url('x.svg');"></span>
   </a>
-  <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" aria-label="YouTube">
+  <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
     <span class="icon" style="--icon: url('youtube.svg');"></span>
   </a>
-  <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" aria-label="Telegram">
+  <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
     <span class="icon" style="--icon: url('telegram.svg');"></span>
   </a>
-  <a href="https://streeet.art/@trbkwsk" target="_blank" class="text-link">STREEET.ART</a>
+  <a href="https://streeet.art/@trbkwsk" target="_blank" rel="noopener noreferrer" class="text-link">STREEET.ART</a>
 </div>
 
 <script>
@@ -362,20 +373,7 @@ if (burger && mobileMenu) {
 }
 </script>
 
-<script src="tgbot.js"></script>
-<script>
-async function handleSend() {
-  const name = document.getElementById("tg-name").value;
-  const email = document.getElementById("tg-email").value;
-  const message = document.getElementById("tg-message").value;
-  if (!name || !email || !message) return alert("Заполните все поля");
-  await sendToTelegram(name, email, message);
-  document.getElementById("tg-status").style.display = "block";
-  document.getElementById("tg-name").value = "";
-  document.getElementById("tg-email").value = "";
-  document.getElementById("tg-message").value = "";
-}
-</script>
+<script src="contact.js"></script>
 
 <script>
 const observer = new IntersectionObserver((entries) => {

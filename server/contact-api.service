@@ -1,0 +1,14 @@
+[Unit]
+Description=TORB contact form API
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/opt/trbkwsk_site
+ExecStart=/usr/bin/python3 /opt/trbkwsk_site/contact_api.py
+Restart=always
+RestartSec=3
+Environment=CONTACT_API_PORT=8443
+
+[Install]
+WantedBy=multi-user.target
