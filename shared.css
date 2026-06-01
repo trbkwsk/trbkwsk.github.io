@@ -74,58 +74,17 @@
   max-width: 680px;
 }
 
-.workshop-contact-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.workshop-contact-actions a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 12px 18px;
-  border-radius: 4px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: background-color .2s, color .2s, border-color .2s;
-}
-
-.workshop-contact-actions .primary {
-  background: var(--accent);
-  color: #000;
-}
-
-.workshop-contact-actions .primary:hover {
-  background: #e6b800;
-}
-
-.workshop-contact-actions .secondary {
-  border: 1px solid rgba(255, 255, 255, .42);
-  color: #fff;
-}
-
-.workshop-contact-actions .secondary:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.workshop-contact-form {
-  margin-top: 28px;
-}
-
-.workshop-contact-form .contact-form {
+.workshop-contact-cta .contact-form {
+  margin-top: 22px;
   max-width: 720px;
+}
+
+.workshop-contact-cta .form-status {
+  margin-bottom: 0;
 }
 
 @media (max-width: 520px) {
   .workshop-contact-cta {
     padding: 18px;
-  }
-
-  .workshop-contact-actions a {
-    width: 100%;
   }
 }
