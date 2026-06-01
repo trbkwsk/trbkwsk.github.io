@@ -249,8 +249,7 @@ header{
     <h2 id="workshop-contact-title">Book a Workshop</h2>
     <p>For private sessions, group workshops, festivals, schools, or brand events, send a short message with your city, date, and format.</p>
     <div class="workshop-contact-actions">
-      <a class="primary" href="https://t.me/trbkwskalsoknownastorb" target="_blank" rel="noopener noreferrer">Write on Telegram</a>
-      <a class="secondary" href="index.html#contact">Contact Form</a>
+      <a class="primary" href="#workshop-contact-form">Contact Form</a>
     </div>
   </section>
 
@@ -264,6 +263,17 @@ header{
   </ul>
 
   <p>My goal is to share experience, inspire, and show that graffiti is a living art form — combining freedom, aesthetics, and movement.</p>
+
+  <section class="workshop-contact-form" id="workshop-contact-form" aria-labelledby="workshop-form-title">
+    <h2 id="workshop-form-title">Contact Form</h2>
+    <form class="contact-form" data-contact-form data-endpoint="https://ultrat0rb.trbkwsk.com:8443/api/contact" data-sending-text="Sending..." data-required-text="Fill all fields" data-success-text="Message sent. I will get back to you soon." data-error-text="Could not send the message. Please try again later.">
+      <input type="text" name="name" placeholder="Your Name" autocomplete="name" required>
+      <input type="email" name="email" placeholder="Your Email" autocomplete="email" required>
+      <textarea name="message" rows="5" placeholder="Tell me about the workshop format, date, and city" required></textarea>
+      <button type="submit">Send</button>
+      <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+    </form>
+  </section>
 </div>
 
 <!-- ===== MOBILE SOCIALS ===== -->
@@ -323,6 +333,8 @@ window.addEventListener('resize', updateUI);
 /* prevent ghost-drag on desktop */
 slides.forEach(s => s.querySelector('img').setAttribute('draggable','false'));
 </script>
+
+<script src="contact.js"></script>
 
 <script>
 const observer = new IntersectionObserver((entries) => {

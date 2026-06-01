@@ -249,8 +249,7 @@ header{
     <h2 id="workshop-contact-title">Записаться на мастер-класс</h2>
     <p>Для индивидуальных занятий, групп, фестивалей, школ или бренд-событий напишите город, дату и желаемый формат.</p>
     <div class="workshop-contact-actions">
-      <a class="primary" href="https://t.me/trbkwskalsoknownastorb" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
-      <a class="secondary" href="index-ru.html#contact">Форма заявки</a>
+      <a class="primary" href="#workshop-contact-form">Форма заявки</a>
     </div>
   </section>
 
@@ -264,6 +263,17 @@ header{
   </ul>
 
   <p>Моя цель — передать опыт, вдохновить и показать, что граффити — это живая форма искусства, объединяющая свободу, эстетику и движение.</p>
+
+  <section class="workshop-contact-form" id="workshop-contact-form" aria-labelledby="workshop-form-title">
+    <h2 id="workshop-form-title">Форма заявки</h2>
+    <form class="contact-form" data-contact-form data-endpoint="https://ultrat0rb.trbkwsk.com:8443/api/contact" data-sending-text="Отправка..." data-required-text="Заполните все поля" data-success-text="Сообщение отправлено. Я скоро отвечу." data-error-text="Не удалось отправить сообщение. Попробуйте позже.">
+      <input type="text" name="name" placeholder="Ваше имя" autocomplete="name" required>
+      <input type="email" name="email" placeholder="Ваш Email" autocomplete="email" required>
+      <textarea name="message" rows="5" placeholder="Напишите формат, дату и город мастер-класса" required></textarea>
+      <button type="submit">Отправить</button>
+      <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+    </form>
+  </section>
 </div>
 
 <!-- ===== MOBILE SOCIALS ===== -->
@@ -323,6 +333,8 @@ window.addEventListener('resize', updateUI);
 /* prevent dragging ghost images on desktop */
 slides.forEach(s => s.querySelector('img').setAttribute('draggable','false'));
 </script>
+
+<script src="contact.js"></script>
 
 <script>
 const observer = new IntersectionObserver((entries) => {

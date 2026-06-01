@@ -112,6 +112,14 @@
   color: var(--accent);
 }
 
+.workshop-contact-form {
+  margin-top: 28px;
+}
+
+.workshop-contact-form .contact-form {
+  max-width: 720px;
+}
+
 @media (max-width: 520px) {
   .workshop-contact-cta {
     padding: 18px;
