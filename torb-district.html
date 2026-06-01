@@ -86,42 +86,64 @@ header{
 }
 .mobile-menu a:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
 
-/* ===== SLIDER (full-width) ===== */
+/* ===== SLIDER (two-photo stage) ===== */
 .td-wrap { max-width:none; margin:0; padding:0; }
 .td-slider{
   position:relative; width:100%; overflow:hidden; border-radius:0;
   background:#000; border:none;
 }
 .td-track{ display:flex; transition:transform .5s ease; will-change:transform; }
-.td-slide{ min-width:100%; user-select:none; position:relative; }
-.td-slide img{
-  width:100%; height:86vh; object-fit:cover; object-position:center; display:block; background:#000;
+.td-slide{
+  min-width:100%;
+  height:72vh;
+  min-height:460px;
+  user-select:none;
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:20px;
+  padding:24px 22px 64px;
+  background:#000;
+}
+.td-photo{
+  position:relative;
+  overflow:hidden;
+  background:#050505;
+  margin:0;
+}
+.td-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+  background:#000;
 }
 
 /* arrows & dots (base sizes) */
 .td-arrow{
   position:absolute; top:50%; transform:translateY(-50%);
-  width:40px; height:40px; border-radius:50%;
-  border:1px solid #2a2a2a; background:rgba(15,15,15,.6);
+  width:48px; height:64px; border-radius:0;
+  border:0; background:transparent;
   display:flex; align-items:center; justify-content:center;
-  color:#fff; cursor:pointer; transition:background .2s, border-color .2s, transform .08s;
-  z-index:5; line-height:1;
+  color:#fff; cursor:pointer; transition:opacity .2s, transform .08s;
+  z-index:5; line-height:1; font-size:54px; font-weight:300;
 }
-.td-arrow:hover{ background:rgba(15,15,15,.85); border-color:#3a3a3a; }
+.td-arrow:hover{ opacity:.7; }
 .td-arrow:active{ transform:translateY(-50%) scale(.96); }
-.td-prev{ left:12px; } .td-next{ right:12px; }
+.td-prev{ left:28px; } .td-next{ right:28px; }
 
 .td-dots{
-  position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:8px; z-index:4;
+  position:absolute; left:0; right:0; bottom:24px; display:flex; justify-content:center; gap:14px; z-index:4;
 }
 .td-dot{
-  width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.35); border:none; cursor:pointer;
+  width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,.14); border:none; cursor:pointer;
   transition:transform .15s, background-color .2s; padding:0;
 }
-.td-dot[aria-current="true"]{ background:var(--accent); transform:scale(1.15); }
+.td-dot[aria-current="true"]{ background:#fff; transform:scale(1.08); }
 
 /* click to open */
-.td-slide a{ position:absolute; inset:0; }
+.td-photo a{ position:absolute; inset:0; }
 
 /* ===== LIGHTBOX ===== */
 .lb{
@@ -171,19 +193,29 @@ header{
   .header-left .nav-link{ display:none; }  /* menu items in burger on mobile */
   .mobile-socials{ display:flex; }
 
-  /* mobile 16:9 (no square) */
-  .td-slide{ min-width:100vw !important; }
-  .td-slide img{
-    width:100vw !important; height:auto !important;
-    aspect-ratio:16 / 9 !important;
+  .td-slide{
+    min-width:100vw !important;
+    height:auto;
+    min-height:0;
+    grid-template-columns:1fr;
+    gap:10px;
+    padding:12px 12px 46px;
+  }
+  .td-photo{
+    aspect-ratio:16 / 9;
+  }
+  .td-photo img{
+    width:100% !important; height:100% !important;
     object-fit:cover !important; object-position:center !important;
     display:block !important;
   }
+  .td-prev{ left:8px; } .td-next{ right:8px; }
+  .td-arrow{ width:38px; height:52px; font-size:42px; }
+  .td-dots{ bottom:16px; gap:10px; }
+  .td-dot{ width:10px; height:10px; }
 }
 @media (max-width: 520px){
   .logo{ font-size:1.4rem; }
-  .td-slide{ min-width:100vw !important; }
-  .td-slide img{ width:100vw !important; height:auto !important; aspect-ratio:16 / 9 !important; }
 }
 
 .reveal {
@@ -252,17 +284,30 @@ header{
 <div class="td-wrap" aria-label="Torb District photos">
   <div class="td-slider" id="td-slider">
     <div class="td-track">
-      <div class="td-slide"><img loading="lazy" src="./torb-district1.webp"  alt="Torb District — photo 1"><a href="./torb-district1.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district2.webp"  alt="Torb District — photo 2"><a href="./torb-district2.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district3.webp"  alt="Torb District — photo 3"><a href="./torb-district3.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district4.webp"  alt="Torb District — photo 4"><a href="./torb-district4.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district5.webp"  alt="Torb District — photo 5"><a href="./torb-district5.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district6.webp"  alt="Torb District — photo 6"><a href="./torb-district6.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district7.webp"  alt="Torb District — photo 7"><a href="./torb-district7.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district8.webp"  alt="Torb District — photo 8"><a href="./torb-district8.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district9.webp"  alt="Torb District — photo 9"><a href="./torb-district9.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district10.webp" alt="Torb District — photo 10"><a href="./torb-district10.webp"></a></div>
-      <div class="td-slide"><img loading="lazy" src="./torb-district11.webp" alt="Torb District — photo 11"><a href="./torb-district11.webp"></a></div>
+      <div class="td-slide">
+        <figure class="td-photo"><img loading="lazy" src="./torb-district1.webp" alt="Torb District — photo 1"><a href="./torb-district1.webp" aria-label="Open photo 1"></a></figure>
+        <figure class="td-photo"><img loading="lazy" src="./torb-district2.webp" alt="Torb District — photo 2"><a href="./torb-district2.webp" aria-label="Open photo 2"></a></figure>
+      </div>
+      <div class="td-slide">
+        <figure class="td-photo"><img loading="lazy" src="./torb-district3.webp" alt="Torb District — photo 3"><a href="./torb-district3.webp" aria-label="Open photo 3"></a></figure>
+        <figure class="td-photo"><img loading="lazy" src="./torb-district4.webp" alt="Torb District — photo 4"><a href="./torb-district4.webp" aria-label="Open photo 4"></a></figure>
+      </div>
+      <div class="td-slide">
+        <figure class="td-photo"><img loading="lazy" src="./torb-district5.webp" alt="Torb District — photo 5"><a href="./torb-district5.webp" aria-label="Open photo 5"></a></figure>
+        <figure class="td-photo"><img loading="lazy" src="./torb-district6.webp" alt="Torb District — photo 6"><a href="./torb-district6.webp" aria-label="Open photo 6"></a></figure>
+      </div>
+      <div class="td-slide">
+        <figure class="td-photo"><img loading="lazy" src="./torb-district7.webp" alt="Torb District — photo 7"><a href="./torb-district7.webp" aria-label="Open photo 7"></a></figure>
+        <figure class="td-photo"><img loading="lazy" src="./torb-district8.webp" alt="Torb District — photo 8"><a href="./torb-district8.webp" aria-label="Open photo 8"></a></figure>
+      </div>
+      <div class="td-slide">
+        <figure class="td-photo"><img loading="lazy" src="./torb-district9.webp" alt="Torb District — photo 9"><a href="./torb-district9.webp" aria-label="Open photo 9"></a></figure>
+        <figure class="td-photo"><img loading="lazy" src="./torb-district10.webp" alt="Torb District — photo 10"><a href="./torb-district10.webp" aria-label="Open photo 10"></a></figure>
+      </div>
+      <div class="td-slide">
+        <figure class="td-photo"><img loading="lazy" src="./torb-district11.webp" alt="Torb District — photo 11"><a href="./torb-district11.webp" aria-label="Open photo 11"></a></figure>
+        <figure class="td-photo"><img loading="lazy" src="./torb-district1.webp" alt="Torb District — photo 1"><a href="./torb-district1.webp" aria-label="Open photo 1"></a></figure>
+      </div>
     </div>
 
     <button class="td-arrow td-prev" aria-label="Previous">‹</button>
@@ -376,9 +421,10 @@ slider.addEventListener('touchend', e => {
   if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
 }, {passive:true});
 
+const photoLinks = Array.from(slider.querySelectorAll('.td-photo a'));
+
 /* click to open lightbox */
-slides.forEach((s, i) => {
-  const link = s.querySelector('a');
+photoLinks.forEach((link, i) => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     openLb(i);
@@ -402,7 +448,7 @@ let lbIdx = 0;
 
 function openLb(i){
   lbIdx = i;
-  lbImg.src = slides[lbIdx].querySelector('img').src;
+  lbImg.src = photoLinks[lbIdx].href;
   lb.classList.add('open');
   lb.setAttribute('aria-hidden','false');
   document.body.style.overflow = 'hidden';
@@ -415,8 +461,8 @@ function closeLb(){
   startAutoplay();
 }
 function lbGo(n){
-  lbIdx = (n + slides.length) % slides.length;
-  lbImg.src = slides[lbIdx].querySelector('img').src;
+  lbIdx = (n + photoLinks.length) % photoLinks.length;
+  lbImg.src = photoLinks[lbIdx].href;
 }
 
 lbClose.addEventListener('click', closeLb);
