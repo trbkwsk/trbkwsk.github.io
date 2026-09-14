@@ -11,10 +11,11 @@ from pathlib import Path
 HOST = "0.0.0.0"
 PORT = int(os.getenv("CONTACT_API_PORT", "8443"))
 ENV_PATH = Path(os.getenv("CONTACT_ENV_PATH", "/opt/trbkwsk_site/.env"))
-CERT_PATH = Path(os.getenv("CONTACT_CERT_PATH", "/root/.acme.sh/ultrat0rb.trbkwsk.com_ecc/fullchain.cer"))
-KEY_PATH = Path(os.getenv("CONTACT_KEY_PATH", "/root/.acme.sh/ultrat0rb.trbkwsk.com_ecc/ultrat0rb.trbkwsk.com.key"))
+CERT_PATH = Path(os.getenv("CONTACT_CERT_PATH", "/root/.acme.sh/api.torb.website_ecc/fullchain.cer"))
+KEY_PATH = Path(os.getenv("CONTACT_KEY_PATH", "/root/.acme.sh/api.torb.website_ecc/api.torb.website.key"))
 ALLOWED_ORIGINS = {
-    "https://www.trbkwsk.com",
+    "https://www.torb.website",
+    "https://torb.website",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
 }
