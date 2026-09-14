@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.trbkwsk.com/index.html</loc><priority>1.0</priority></url>
-  <url><loc>https://www.trbkwsk.com/index-ru.html</loc><priority>1.0</priority></url>
-  <url><loc>https://www.trbkwsk.com/sprayfight.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.trbkwsk.com/sprayfight-ru.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.trbkwsk.com/workshops.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.trbkwsk.com/workshops-ru.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.trbkwsk.com/torb-district.html</loc><priority>0.8</priority></url>
-  <url><loc>https://www.trbkwsk.com/torb-district-ru.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.torb.website/index.html</loc><priority>1.0</priority></url>
+  <url><loc>https://www.torb.website/index-ru.html</loc><priority>1.0</priority></url>
+  <url><loc>https://www.torb.website/sprayfight.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.torb.website/sprayfight-ru.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.torb.website/workshops.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.torb.website/workshops-ru.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.torb.website/torb-district.html</loc><priority>0.8</priority></url>
+  <url><loc>https://www.torb.website/torb-district-ru.html</loc><priority>0.8</priority></url>
 </urlset>
