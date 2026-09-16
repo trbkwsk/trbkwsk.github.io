@@ -4,232 +4,15 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Torb District — Арт-пространство от TORB</title>
-<link rel="icon" href="favicon.webp" type="image/png" />
+<link rel="icon" href="favicon.webp" type="image/webp" />
 <link rel="apple-touch-icon" href="favicon.webp">
-<meta name="theme-color" content="#000000" />
+<meta name="theme-color" content="#111310" />
 <meta name="description" content="Torb District — арт-пространство и граффити-территория от TORB." />
 <meta property="og:title" content="Torb District — Арт-пространство от TORB" />
 <meta property="og:description" content="Арт-пространство и граффити-территория от TORB." />
 <meta property="og:image" content="https://www.torb.website/torb-district1.webp" />
 <meta property="og:url" content="https://www.torb.website/torb-district-ru.html" />
 <link rel="canonical" href="https://www.torb.website/torb-district-ru.html" />
-<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
-
-<style>
-:root { --accent:#ffcc00; --line:#333; }
-
-* { box-sizing: border-box; }
-html, body { height:100%; }
-body{
-  margin:0; background:#0d0d0d; color:#fff; font-family:'Inter',sans-serif;
-  overflow-x:hidden; -webkit-text-size-adjust:100%;
-}
-
-/* ===== HEADER (единая шапка) ===== */
-header{
-  position:sticky; top:0; z-index:1000;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 20px; border-bottom:1px solid var(--line);
-  background:rgba(13,13,13,.85); backdrop-filter:blur(6px);
-  gap:16px; flex-wrap:nowrap;
-}
-.header-left{ display:flex; align-items:center; gap:20px; min-width:0; flex:1 1 auto; }
-.logo{ font-family:'Russo One',sans-serif; font-size:2rem; color:#fff; text-decoration:none; white-space:nowrap; }
-.logo:hover{ color:var(--accent); }
-
-.socials{ display:flex; align-items:center; gap:10px; }
-.icon-link{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:38px; height:38px; border-radius:50%;
-  color:#fff; text-decoration:none; transition: color .2s, background-color .2s, transform .12s;
-}
-.icon-link:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
-.icon-link:active{ transform:scale(.96); }
-.icon{
-  width:22px; height:22px; display:inline-block; background-color: currentColor;
-  -webkit-mask: var(--icon) no-repeat center / contain; mask: var(--icon) no-repeat center / contain;
-}
-.socials .text-link{ color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition:color .2s; }
-.socials .text-link:hover{ color:var(--accent); }
-.socials .text-link:visited{ color:#fff; }
-
-.nav-link{
-  font:700 1rem/1 'Inter',sans-serif; color:#fff; text-decoration:none; white-space:nowrap; letter-spacing:.2px; transition:color .2s;
-}
-.nav-link:hover{ color:var(--accent); }
-.nav-link[aria-current="page"]{ color:var(--accent); }
-
-.language-switch{ display:flex; align-items:center; gap:12px; white-space:nowrap; }
-.language-switch a{ color:#fff; text-decoration:none; font-size:1rem; padding:4px 6px; transition:.2s; }
-.language-switch a:hover{ color:var(--accent); }
-
-/* burger + mobile menu */
-.burger{
-  display:none; align-items:center; justify-content:center;
-  width:38px; height:38px; border-radius:8px;
-  background:#111; color:#fff; border:1px solid var(--line);
-  cursor:pointer; transition:transform .15s, background-color .2s, color .2s;
-}
-.burger:active{ transform:scale(.96); }
-.burger[aria-expanded="true"]{ background:#151515; }
-
-.mobile-menu{
-  position: fixed; top: 60px; right:0; left:0;
-  background: rgba(13,13,13,.96); backdrop-filter: blur(8px);
-  border-top:1px solid var(--line);
-  display:flex; flex-direction:column; gap:10px; padding:14px 16px; z-index:1001;
-}
-.mobile-menu[hidden]{ display:none !important; }
-.mobile-menu a{
-  color:#fff; text-decoration:none; font:700 1.05rem/1.3 'Inter',sans-serif;
-  padding:10px 6px; border-radius:6px; transition: color .2s, background-color .2s;
-}
-.mobile-menu a:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
-
-/* ===== SLIDER (two-photo stage) ===== */
-.td-wrap { max-width:none; margin:0; padding:0; }
-.td-slider{
-  position:relative; width:100%; overflow:hidden; border-radius:0;
-  background:#000; border:none;
-}
-.td-track{ display:flex; transition:transform .5s ease; will-change:transform; }
-.td-slide{
-  min-width:100%;
-  height:72vh;
-  min-height:460px;
-  user-select:none;
-  position:relative;
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0, 1fr));
-  gap:20px;
-  padding:24px 22px 64px;
-  background:#000;
-}
-.td-photo{
-  position:relative;
-  overflow:hidden;
-  background:#050505;
-  margin:0;
-}
-.td-photo img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center;
-  display:block;
-  background:#000;
-}
-
-/* arrows (базовый размер) */
-.td-arrow{
-  position:absolute; top:50%; transform:translateY(-50%);
-  width:48px; height:64px; border-radius:0;
-  border:0; background:transparent;
-  display:flex; align-items:center; justify-content:center;
-  color:#fff; cursor:pointer; transition:opacity .2s, transform .08s;
-  z-index:5; line-height:1; font-size:54px; font-weight:300;
-}
-.td-arrow:hover{ opacity:.7; }
-.td-arrow:active{ transform:translateY(-50%) scale(.96); }
-.td-prev{ left:28px; } .td-next{ right:28px; }
-
-/* dots (базовый размер) */
-.td-dots{
-  position:absolute; left:0; right:0; bottom:24px; display:flex; justify-content:center; gap:14px; z-index:4;
-}
-.td-dot{
-  width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,.14); border:none; cursor:pointer;
-  transition:transform .15s, background-color .2s; padding:0;
-}
-.td-dot[aria-current="true"]{ background:#fff; transform:scale(1.08); }
-
-/* click to open */
-.td-photo a{ position:absolute; inset:0; }
-
-/* ===== LIGHTBOX ===== */
-.lb{
-  position:fixed; inset:0; background:rgba(0,0,0,.92);
-  display:none; align-items:center; justify-content:center; z-index:1200;
-}
-.lb.open{ display:flex; }
-.lb img{
-  max-width:90vw; max-height:86vh; width:auto; height:auto; display:block; border:1px solid #222; border-radius:8px;
-}
-.lb-close, .lb-prev, .lb-next{
-  position:absolute; color:#fff; background:rgba(15,15,15,.6); border:1px solid #2a2a2a;
-  width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;
-  transition:background .2s, border-color .2s, transform .08s; z-index:2;
-}
-.lb-close{ top:14px; right:14px; }
-.lb-prev{ left:14px; top:50%; transform:translateY(-50%); }
-.lb-next{ right:14px; top:50%; transform:translateY(-50%); }
-.lb-close:hover, .lb-prev:hover, .lb-next:hover{ background:rgba(15,15,15,.85); border-color:#3a3a3a; }
-.lb-close:active, .lb-prev:active, .lb-next:active{ transform:scale(.96); }
-
-/* ===== TEXT ===== */
-.section{
-  max-width:1000px; margin:24px auto 40px; padding:0 16px; line-height:1.7;
-}
-.section h1{
-  margin:14px 0 8px; font-family:'Russo One',sans-serif; font-size:clamp(26px,5vw,40px);
-}
-.section p{ margin:0 0 12px; font-size:1.05rem; }
-
-.divider{ max-width:1000px; margin:28px auto; padding:0 16px; opacity:.6; border-top:1px solid var(--line); }
-
-/* ===== FOOTER/MOBILE SOCIALS ===== */
-.mobile-socials{
-  display:none; justify-content:center; flex-wrap:wrap; gap:6px 10px;
-  padding:20px; box-sizing:border-box;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 900px){
-  header{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; padding:12px 16px; }
-  .header-left{ gap:12px; }
-  .socials{ display:none !important; } /* соцсети уезжают вниз */
-  .logo{ font-size:1.6rem; }
-  .language-switch{ justify-self:end; }
-  .burger{ display:inline-flex; }
-  .header-left .nav-link{ display:none; } /* пункты меню в бургер */
-  .mobile-socials{ display:flex; }
-
-  .td-slide{
-    min-width:100vw !important;
-    height:auto;
-    min-height:0;
-    grid-template-columns:1fr;
-    gap:10px;
-    padding:12px 12px 46px;
-  }
-  .td-photo{
-    aspect-ratio:16 / 9;
-  }
-  .td-photo img{
-    width:100% !important; height:100% !important;
-    object-fit:cover !important; object-position:center !important;
-    display:block !important;
-  }
-  .td-prev{ left:8px; } .td-next{ right:8px; }
-  .td-arrow{ width:38px; height:52px; font-size:42px; }
-  .td-dots{ bottom:16px; gap:10px; }
-  .td-dot{ width:10px; height:10px; }
-}
-@media (max-width: 520px){
-  .logo{ font-size:1.4rem; }
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-</style>
-<link rel="stylesheet" href="shared.css" />
 
 <link rel="alternate" hreflang="ru" href="https://www.torb.website/torb-district-ru.html" />
 <link rel="alternate" hreflang="en" href="https://www.torb.website/torb-district.html" />
@@ -245,43 +28,21 @@ header{
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/108789136" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+<link rel="stylesheet" href="world.css" />
+<link rel="stylesheet" href="page.css" />
+<script src="contact.js" defer></script>
+<script src="page.js" defer></script>
 </head>
 <body>
-
-<!-- ===== HEADER ===== -->
-<header>
-  <div class="header-left">
-    <button class="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">☰</button>
-    <a href="index-ru.html" class="logo">TORB</a>
-
-    <div class="socials" aria-label="Социальные ссылки">
-      <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span class="icon" style="--icon:url('instagram.svg')"></span></a>
-      <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><span class="icon" style="--icon:url('tiktok.svg')"></span></a>
-      <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" rel="noopener noreferrer" aria-label="X"><span class="icon" style="--icon:url('x.svg')"></span></a>
-      <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span class="icon" style="--icon:url('youtube.svg')"></span></a>
-      <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><span class="icon" style="--icon:url('telegram.svg')"></span></a>
-      <a href="https://streeet.art/@trbkwsk" target="_blank" rel="noopener noreferrer" class="text-link">STREEET.ART</a>
-    </div>
-
-    <a href="torb-district-ru.html" class="nav-link" aria-current="page">Арт Квартал</a>
-    <a href="workshops-ru.html" class="nav-link">Мастер Классы</a>
-    <a href="sprayfight-ru.html" class="nav-link">СпрэйФайт</a>
-  </div>
-
-  <div class="language-switch">
-    <a href="torb-district.html">EN</a>
-    <a href="torb-district-ru.html" aria-current="page">RU</a>
-  </div>
-</header>
-
-<!-- Mobile menu -->
-<nav id="mobile-menu" class="mobile-menu" hidden>
-  <a href="torb-district-ru.html">Арт Квартал</a>
-  <a href="workshops-ru.html">Мастер Классы</a>
-  <a href="sprayfight-ru.html">СпрэйФайт</a>
-</nav>
-
-<!-- ===== SLIDER ===== -->
+  <div class="page-shell">
+    <header class="toolbar">
+      <a class="wordmark" href="index-ru.html" aria-label="TORB WORLD">TORB<span>&reg;</span></a>
+      <span class="system-title">TORB / TORB DISTRICT</span>
+      <div class="controls"><a href="torb-district.html" aria-label="Switch to English">EN</a></div>
+    </header>
+    <nav class="page-nav" aria-label="Разделы сайта"><a href="index-ru.html"><small>01</small>ГЛАВНАЯ</a><a href="torb-district-ru.html" aria-current="page"><small>02</small>Арт Квартал</a><a href="workshops-ru.html"><small>03</small>Мастер Классы</a><a href="sprayfight-ru.html"><small>04</small>СпрэйФайт</a></nav>
+    <main class="window-frame">
+      <div class="window-bar"><span>TORB / TORB DISTRICT</span></div>
 <div class="td-wrap" aria-label="Слайдер фотографий Арт Квартала">
   <div class="td-slider" id="td-slider">
     <div class="td-track">
@@ -310,185 +71,30 @@ header{
         <figure class="td-photo"><img loading="lazy" src="./torb-district1.webp" alt="Арт Квартал TORB — фото 1" decoding="async"><a href="./torb-district1.webp" aria-label="Открыть фото 1"></a></figure>
       </div>
     </div>
-
     <button class="td-arrow td-prev" aria-label="Предыдущая">‹</button>
     <button class="td-arrow td-next" aria-label="Следующая">›</button>
-    <div class="td-dots" role="tablist" aria-label="Навигация по слайдам"></div>
+    <div class="td-dots" data-slide-label="Слайд" role="tablist" aria-label="Навигация по слайдам"></div>
   </div>
 </div>
-
-<!-- ===== DESCRIPTION ===== -->
 <div class="section">
   <h1>Арт Квартал TORB</h1>
   <p>Идея проста — превратить обычную улицу в центре города в пространство, где граффити оживает и делает стены красивее.</p>
   <p>Всё началось с одной работы, а со временем квартал стал открытой галереей. Здесь нет шаблонов: каждый рисунок — часть живого потока.</p>
   <p>Главные герои — утки. За это место давно закрепилось название «Утиные истории». Стены меняются с каждым сезоном — новые буквы, новые лица, новые слои краски.</p>
 </div>
-
-<div class="divider"></div>
-
-<!-- ===== MOBILE SOCIALS ===== -->
-<div class="mobile-socials" aria-label="Социальные ссылки">
-  <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span class="icon" style="--icon:url('instagram.svg')"></span></a>
-  <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><span class="icon" style="--icon:url('tiktok.svg')"></span></a>
-  <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" rel="noopener noreferrer" aria-label="X"><span class="icon" style="--icon:url('x.svg')"></span></a>
-  <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><span class="icon" style="--icon:url('youtube.svg')"></span></a>
-  <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><span class="icon" style="--icon:url('telegram.svg')"></span></a>
-  <a href="https://streeet.art/@trbkwsk" target="_blank" rel="noopener noreferrer" class="text-link">STREEET.ART</a>
-</div>
-
-<!-- ===== LIGHTBOX ===== -->
-<div class="lb" id="lb" aria-hidden="true">
+    </main>
+    <footer class="page-footer">
+      <span>&copy; <span id="year">2026</span> TRBKWSK also known as TORB</span>
+      <div class="socials" aria-label="Social links"><a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><span class="icon" style="--icon:url('instagram.svg')"></span></a><a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><span class="icon" style="--icon:url('tiktok.svg')"></span></a><a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" rel="noopener noreferrer" aria-label="X" title="X"><span class="icon" style="--icon:url('x.svg')"></span></a><a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><span class="icon" style="--icon:url('youtube.svg')"></span></a><a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" rel="noopener noreferrer" aria-label="Telegram" title="Telegram"><span class="icon" style="--icon:url('telegram.svg')"></span></a><a href="https://streeet.art/@trbkwsk" target="_blank" rel="noopener noreferrer" class="text-link">STREEET.ART</a></div>
+      <span class="footer-note">LEAVE YOUR MARK.</span>
+    </footer>
+  </div>
+  <script>document.getElementById("year").textContent=new Date().getFullYear();</script>
+  <div class="lb" id="lb" aria-hidden="true">
   <button class="lb-close" id="lbClose" aria-label="Закрыть">✕</button>
   <button class="lb-prev"  id="lbPrev"  aria-label="Предыдущее">‹</button>
   <img loading="lazy" id="lbImg" src="" alt="Просмотр фото Арт Квартала" />
   <button class="lb-next"  id="lbNext"  aria-label="Следующее">›</button>
 </div>
-
-<script>
-/* burger */
-const burger = document.querySelector('.burger');
-const mobileMenu = document.getElementById('mobile-menu');
-if (burger && mobileMenu) {
-  burger.addEventListener('click', () => {
-    const open = burger.getAttribute('aria-expanded') === 'true';
-    burger.setAttribute('aria-expanded', String(!open));
-    mobileMenu.hidden = open;
-    document.body.style.overflow = open ? '' : 'hidden';
-  });
-  mobileMenu.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') {
-      burger.setAttribute('aria-expanded', 'false');
-      mobileMenu.hidden = true;
-      document.body.style.overflow = '';
-    }
-  });
-}
-
-/* slider */
-const slider = document.getElementById('td-slider');
-const track  = slider.querySelector('.td-track');
-const slides = Array.from(track.children);
-const prevBtn = slider.querySelector('.td-prev');
-const nextBtn = slider.querySelector('.td-next');
-const dotsWrap = slider.querySelector('.td-dots');
-
-let idx = 0;
-let autoTimer = null;
-const AUTOPLAY_MS = 4000; // 4 секунды
-
-/* dots */
-slides.forEach((_, i) => {
-  const b = document.createElement('button');
-  b.className = 'td-dot';
-  b.setAttribute('role','tab');
-  b.setAttribute('aria-label', `Слайд ${i+1}`);
-  b.addEventListener('click', () => goTo(i, true));
-  dotsWrap.appendChild(b);
-});
-const dots = Array.from(dotsWrap.children);
-
-function updateUI(){
-  const offset = -idx * slider.clientWidth;
-  track.style.transform = `translateX(${offset}px)`;
-  dots.forEach((d, i) => d.setAttribute('aria-current', i===idx ? 'true' : 'false'));
-}
-function goTo(n, user=false){
-  idx = (n + slides.length) % slides.length;
-  updateUI();
-  if (user) restartAutoplay();
-}
-function next(){ goTo(idx+1); }
-function prev(){ goTo(idx-1); }
-
-function startAutoplay(){
-  stopAutoplay();
-  autoTimer = setInterval(next, AUTOPLAY_MS);
-}
-function stopAutoplay(){ if (autoTimer) clearInterval(autoTimer); }
-function restartAutoplay(){ stopAutoplay(); startAutoplay(); }
-
-/* удерживаем автоплей: убрали паузу при mouseenter; пауза только на прямое действие */
-slider.addEventListener('pointerdown', stopAutoplay);
-slider.addEventListener('pointerup', startAutoplay);
-slider.addEventListener('pointercancel', startAutoplay);
-
-/* arrows */
-prevBtn.addEventListener('click', () => prev());
-nextBtn.addEventListener('click', () => next());
-
-/* swipe */
-let touchStartX = 0, touchEndX = 0;
-slider.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, {passive:true});
-slider.addEventListener('touchend',   e => {
-  touchEndX = e.changedTouches[0].clientX;
-  const dx = touchEndX - touchStartX;
-  if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
-}, {passive:true});
-
-const photoLinks = Array.from(slider.querySelectorAll('.td-photo a'));
-
-/* click to open lightbox */
-photoLinks.forEach((link, i) => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    openLb(i);
-  });
-});
-
-/* init */
-updateUI();
-startAutoplay();
-
-/* keep position on resize */
-window.addEventListener('resize', updateUI);
-
-/* lightbox */
-const lb = document.getElementById('lb');
-const lbImg = document.getElementById('lbImg');
-const lbClose = document.getElementById('lbClose');
-const lbPrev = document.getElementById('lbPrev');
-const lbNext = document.getElementById('lbNext');
-let lbIdx = 0;
-
-function openLb(i){
-  lbIdx = i;
-  lbImg.src = photoLinks[lbIdx].href;
-  lb.classList.add('open');
-  lb.setAttribute('aria-hidden','false');
-  document.body.style.overflow = 'hidden';
-  stopAutoplay();
-}
-function closeLb(){
-  lb.classList.remove('open');
-  lb.setAttribute('aria-hidden','true');
-  document.body.style.overflow = '';
-  startAutoplay();
-}
-function lbGo(n){
-  lbIdx = (n + photoLinks.length) % photoLinks.length;
-  lbImg.src = photoLinks[lbIdx].href;
-}
-
-lbClose.addEventListener('click', closeLb);
-lbPrev.addEventListener('click', () => lbGo(lbIdx-1));
-lbNext.addEventListener('click', () => lbGo(lbIdx+1));
-lb.addEventListener('click', (e) => { if (e.target === lb) closeLb(); });
-
-/* keyboard */
-window.addEventListener('keydown', (e) => {
-  if (!lb.classList.contains('open')) return;
-  if (e.key === 'Escape') closeLb();
-  if (e.key === 'ArrowLeft') lbGo(lbIdx-1);
-  if (e.key === 'ArrowRight') lbGo(lbIdx+1);
-});
-</script>
-
-<script>
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-}, { threshold: 0.15 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
 </body>
 </html>

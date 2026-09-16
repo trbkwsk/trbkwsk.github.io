@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="robots" content="noindex, follow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TORB — Граффити-артист | Мастер-классы & SprayFight</title>
+<link rel="icon" href="favicon.webp" type="image/png" />
+<link rel="apple-touch-icon" href="favicon.webp">
+<meta name="theme-color" content="#000000" />
+<meta name="google-site-verification" content="ERMoFBb7qqe_GTZfEtqPNpp0pk1r8hO4a1WRg-1dMgc" />
+<meta name="description" content="TORB — граффити-артист. Мастер-классы, фестивали, система SprayFight, Torb District." />
+<meta property="og:title" content="TORB — Граффити-артист" />
+<meta property="og:description" content="Мастер-классы, фестивали, система SprayFight, Torb District." />
+<meta property="og:image" content="https://www.torb.website/festival5.jpg" />
+<meta property="og:url" content="https://www.torb.website/index-ru.html" />
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@300;400;700&display=swap" rel="stylesheet" />
+
+<style>
+:root { --accent:#ffcc00; --line:#333; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #0d0d0d;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ===== HEADER ===== */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+  background: rgba(13,13,13,.85);
+  backdrop-filter: blur(6px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* left cluster: logo + socials + links */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2rem;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.logo:hover { color: var(--accent); }
+
+/* socials */
+.socials {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.socials a.icon-link, .mobile-socials a.icon-link{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:50%;
+  color:#fff; text-decoration:none;
+  transition: color .2s, background-color .2s, transform .1s;
+}
+.socials a.icon-link:hover, .mobile-socials a.icon-link:hover{
+  color:var(--accent); background:rgba(255,204,0,.08);
+}
+.socials a.icon-link:active, .mobile-socials a.icon-link:active{ transform:scale(.96); }
+
+.icon {
+  width:22px; height:22px; display:inline-block;
+  background-color: currentColor;
+  -webkit-mask: var(--icon) no-repeat center / contain;
+          mask: var(--icon) no-repeat center / contain;
+}
+
+.socials a.text-link, .mobile-socials a.text-link{
+  color:#fff; text-decoration:none; font-size:1rem; padding:5px 8px; transition:color .2s;
+}
+.socials a.text-link:hover, .mobile-socials a.text-link:hover{ color:var(--accent); }
+.socials a.text-link:visited, .mobile-socials a.text-link:visited{ color:#fff; }
+
+/* nav links */
+.sprayfight-link{
+  font:700 1rem/1 'Inter',sans-serif;
+  color:#fff; text-decoration:none; letter-spacing:.2px; transition:color .2s;
+  white-space:nowrap;
+}
+.sprayfight-link:hover{ color:var(--accent); }
+
+/* languages */
+.language-switch{ display:flex; align-items:center; gap:12px; white-space:nowrap; }
+.language-switch a{
+  color:#fff; text-decoration:none; font-size:1rem; padding:4px 6px; transition:.2s;
+}
+.language-switch a:hover{ color:var(--accent); }
+
+/* ===== SLIDER ===== */
+.slider-container {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.slide.active { opacity: 1; z-index: 1; }
+
+/* ===== CONTENT ===== */
+.content-section {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 40px;
+  gap: 40px;
+}
+.about { flex: 1 1 400px; font-size: 1.1rem; line-height: 1.6; }
+.about h2 {
+  font-family: 'Russo One', sans-serif; font-size: 2rem; margin: 0 0 20px; color: #fff; text-align: left;
+}
+.contact-form { flex: 1 1 400px; }
+.contact-form input, .contact-form textarea {
+  width: 100%; margin-bottom: 15px; padding: 10px; font-size: 1rem; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;
+  background:#111; color:#fff;
+}
+.contact-form input:focus, .contact-form textarea:focus{ border-color:#777; }
+.contact-form button{
+  padding:12px 20px; background:var(--accent); color:#000; border:none; cursor:pointer; font-weight:700; transition:.2s;
+}
+.contact-form button:hover{ background:#e6b800; }
+
+/* ===== MOBILE ===== */
+.mobile-socials {
+  display: none;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* burger button */
+.burger{
+  display:none; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:8px;
+  background:#111; color:#fff; border:1px solid var(--line);
+  cursor:pointer; transition:transform .15s, background-color .2s, color .2s;
+}
+.burger:active{ transform:scale(.96); }
+.burger[aria-expanded="true"]{ background:#151515; }
+
+/* mobile slide menu */
+.mobile-menu{
+  position: fixed; top: 60px;
+  right: 0; left: 0;
+  background: rgba(13,13,13,.96);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--line);
+  display: flex; flex-direction: column;
+  gap: 10px; padding: 14px 16px; z-index: 1001;
+}
+.mobile-menu[hidden]{ display:none !important; }
+
+.mobile-menu a{
+  color:#fff; text-decoration:none; font:700 1.05rem/1.3 'Inter', sans-serif;
+  padding:10px 6px; border-radius:6px; transition: color .2s, background-color .2s;
+}
+.mobile-menu a:hover{ color:var(--accent); background:rgba(255,204,0,.08); }
+
+@media (max-width: 900px) {
+  .slider-container { height: 400px; }
+  .content-section { flex-direction: column; padding: 24px; gap: 24px; }
+  .mobile-socials { display: flex; }
+  .socials { display: none; }
+
+  .burger{ display:inline-flex; }
+  .header-left .sprayfight-link{ display:none; }
+  .header-left{ gap:12px; }
+  .logo{ order:1; }
+  .burger{ order:0; }
+  .language-switch{ display:flex; }
+}
+@media (max-width: 500px) {
+  .slider-container { height: 300px; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+<link rel="stylesheet" href="shared.css" />
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108789136', 'ym');
+    ym(108789136, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/108789136" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<script>
+if (!sessionStorage.getItem('lang-checked')) {
+  sessionStorage.setItem('lang-checked', '1');
+  fetch('https://ipapi.co/country/')
+    .then(r => r.text())
+    .then(country => {
+      if (country.trim() !== 'RU') {
+        window.location.href = '/index.html';
+      }
+    })
+    .catch(() => {});
+}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <button class="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">☰</button>
+    <a href="index-classic-ru.html" class="logo">TORB</a>
+
+    <div class="socials" aria-label="Социальные ссылки">
+      <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <span class="icon" style="--icon: url('instagram.svg');"></span>
+      </a>
+      <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+        <span class="icon" style="--icon: url('tiktok.svg');"></span>
+      </a>
+      <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" rel="noopener noreferrer" aria-label="X">
+        <span class="icon" style="--icon: url('x.svg');"></span>
+      </a>
+      <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <span class="icon" style="--icon: url('youtube.svg');"></span>
+      </a>
+      <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+        <span class="icon" style="--icon: url('telegram.svg');"></span>
+      </a>
+      <a href="https://streeet.art/@trbkwsk" target="_blank" rel="noopener noreferrer" class="text-link">STREEET.ART</a>
+    </div>
+
+    <!-- новые разделы -->
+    <a href="torb-district-ru.html" class="sprayfight-link">Арт Квартал</a>
+    <a href="workshops-ru.html" class="sprayfight-link">Мастер Классы</a>
+    <a href="sprayfight-ru.html" class="sprayfight-link">СпрэйФайт</a>
+  </div>
+
+  <div class="language-switch">
+    <!-- EN RU порядок, RU активен -->
+  <a href="index-classic.html">EN</a>
+  <a href="index-classic-ru.html" aria-current="page">RU</a>
+</div>
+</header>
+
+<!-- Мобильное меню -->
+<nav id="mobile-menu" class="mobile-menu" hidden>
+  <a href="torb-district-ru.html">Арт Квартал</a>
+  <a href="workshops-ru.html">Мастер Классы</a>
+  <a href="sprayfight-ru.html">СпрэйФайт</a>
+</nav>
+
+<!-- Слайдер -->
+<div class="slider-container">
+  <div class="slide active" style="background-image: url('festival5.jpg');"></div>
+  <div class="slide" style="background-image: url('festival6.jpg');"></div>
+  <div class="slide" style="background-image: url('festival7.jpg'); background-position: center 85%;"></div>
+</div>
+
+<!-- О себе и Контакты -->
+<div class="content-section reveal">
+ <div class="about reveal">
+  <h2>Обо мне</h2>
+  <p>Создаю граффити, сосредоточенное на стиле и визуальном повествовании.</p>
+  <p>Провожу мастер-классы, организую фестивали, джемы и культурные события.</p>
+  <p>Раскрашиваю стены, создаю арт-пространства и участвую в международных проектах.</p>
+</div>
+
+  <form class="contact-form" id="contact" data-contact-form data-endpoint="https://api.torb.website:8443/api/contact" data-sending-text="Отправка..." data-required-text="Заполните все поля" data-success-text="Сообщение отправлено. Я скоро отвечу." data-error-text="Не удалось отправить сообщение. Напишите в Telegram или Instagram.">
+    <input type="text" name="name" placeholder="Ваше имя" autocomplete="name" required>
+    <input type="email" name="email" placeholder="Ваш Email" autocomplete="email" required>
+    <textarea name="message" rows="5" placeholder="Ваше сообщение" required></textarea>
+    <button type="submit">Отправить</button>
+    <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+  </form>
+</div>
+
+<!-- Мобильные соцсети -->
+<div class="mobile-socials" aria-label="Социальные ссылки">
+  <a class="icon-link" href="https://www.instagram.com/trbkwsk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+    <span class="icon" style="--icon: url('instagram.svg');"></span>
+  </a>
+  <a class="icon-link" href="https://www.tiktok.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+    <span class="icon" style="--icon: url('tiktok.svg');"></span>
+  </a>
+  <a class="icon-link" href="https://x.com/trbkwsk?s=21" target="_blank" rel="noopener noreferrer" aria-label="X">
+    <span class="icon" style="--icon: url('x.svg');"></span>
+  </a>
+  <a class="icon-link" href="https://youtube.com/@trbkwsk" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+    <span class="icon" style="--icon: url('youtube.svg');"></span>
+  </a>
+  <a class="icon-link" href="https://t.me/trbkwskalsoknownastorb" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+    <span class="icon" style="--icon: url('telegram.svg');"></span>
+  </a>
+  <a href="https://streeet.art/@trbkwsk" target="_blank" rel="noopener noreferrer" class="text-link">STREEET.ART</a>
+</div>
+
+<script>
+/* слайдер */
+const slides = document.querySelectorAll('.slide');
+let index = 0;
+setInterval(() => {
+  slides.forEach(s => s.classList.remove('active'));
+  index = (index + 1) % slides.length;
+  slides[index].classList.add('active');
+}, 5000);
+
+/* бургер меню */
+const burger = document.querySelector('.burger');
+const mobileMenu = document.getElementById('mobile-menu');
+
+if (burger && mobileMenu) {
+  burger.addEventListener('click', () => {
+    const open = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!open));
+    mobileMenu.hidden = open;
+    document.body.style.overflow = open ? '' : 'hidden';
+  });
+
+  mobileMenu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      burger.setAttribute('aria-expanded', 'false');
+      mobileMenu.hidden = true;
+      document.body.style.overflow = '';
+    }
+  });
+}
+</script>
+
+<script src="contact.js"></script>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+/* Внутренние страницы в теме TORB WORLD. Тема и токены — в world.css. */
+
+.page-shell{max-width:1680px;margin:auto;padding:0 40px}
+.page-nav{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-top:0}
+.page-nav a{border-right:1px solid var(--border);background:#1a1c17;padding:16px 14px;display:flex;gap:12px;align-items:center;font-size:14px}
+.page-nav a:last-child{border-right:0}
+.page-nav a:hover{background:#2b3021}
+.page-nav a small{color:#828a75;font-size:12px}
+.page-nav a[aria-current=page]{background:#242a1c;color:var(--lime)}
+.page-nav a[aria-current=page] small{color:var(--lime)}
+
+/* Оконная рамка вокруг содержимого — как модалки на главной */
+.window-frame{border:1px solid #cad0b9;background:#171a13;margin:26px 0;box-shadow:8px 8px 0 #0009}
+.window-frame > .window-bar{position:sticky;top:0;z-index:3}
+.content-section{padding:34px 38px 42px}
+.page-title{margin-bottom:26px}
+.page-title h1{font-family:'Russo One',sans-serif;font-size:clamp(32px,5vw,58px);font-weight:400;line-height:1.05;letter-spacing:-1px;margin:0 0 10px}
+.page-title p em{font-style:normal;font-family:var(--font);color:var(--lime);font-size:13px;letter-spacing:2px;text-transform:uppercase}
+.content-section h2{font-family:'Russo One',sans-serif;font-weight:400;font-size:clamp(20px,2.4vw,28px);letter-spacing:-.5px;margin:34px 0 14px}
+.content-section p,.content-section li{font-family:Arial,sans-serif;font-size:18px;line-height:1.65;color:#d1d5c8;max-width:760px}
+.content-section ul{padding-left:20px}
+.content-section li{margin:8px 0}
+.content-section li::marker{color:var(--lime)}
+.content-section strong{color:#f0f1e9}
+.sep{border:0;border-top:1px solid #414736;margin:30px 0}
+.section{padding:34px 38px 42px}
+.section h1{font-family:'Russo One',sans-serif;font-size:clamp(32px,5vw,58px);font-weight:400;letter-spacing:-1px;margin:0 0 20px}
+.section p{font-family:Arial,sans-serif;font-size:18px;line-height:1.65;color:#d1d5c8;max-width:760px}
+
+/* Слайдеры и медиа */
+.td-wrap,.ws-wrap{margin-top:26px}
+.td-slider,.ws-slider{position:relative;overflow:hidden;border:1px solid #65685b;background:#171a15;box-shadow:0 0 0 5px #20231c,0 0 0 6px #373b31}
+.td-track,.ws-track{display:flex;transition:transform .45s ease}
+.td-slide,.ws-slide{min-width:100%;display:flex;gap:2px}
+.td-photo{position:relative;margin:0;flex:1 1 50%}
+.td-photo img,.ws-slide img{display:block;width:100%;height:clamp(240px,42vw,560px);object-fit:cover}
+.td-photo a{position:absolute;inset:0;cursor:zoom-in}
+.td-photo a:hover{box-shadow:inset 0 0 0 3px var(--lime)}
+.td-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:44px;height:52px;border:1px solid #b5b8a4;background:#13170feb;color:#f0f1e9;font-size:26px;line-height:1}
+.td-arrow:hover{background:var(--lime);color:#12140d;border-color:var(--lime)}
+.td-prev{left:14px}.td-next{right:14px}
+.td-dots{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:8px;z-index:2}
+.td-dot{width:12px;height:12px;padding:0;border:1px solid #cdd2bf;background:#13170fcc}
+.td-dot[aria-current=true]{background:var(--lime);border-color:var(--lime)}
+.hero-image{border:1px solid #65685b;box-shadow:0 0 0 5px #20231c,0 0 0 6px #373b31;background:#0d0f0b;margin-top:26px}
+.hero-video{display:block;width:100%;max-height:70vh;object-fit:cover}
+.content-overlap{padding-top:34px}
+.bottom-brand{display:flex;justify-content:center;padding:34px 0 10px}
+.bottom-brand img{max-width:240px;height:auto}
+.divider{border-top:1px solid var(--border);margin:8px 0}
+
+/* Лайтбокс */
+.lb{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#050805e6;backdrop-filter:blur(7px)}
+.lb.open{display:flex}
+.lb img{max-width:min(1200px,92vw);max-height:86vh;border:1px solid #cad0b9;box-shadow:8px 8px 0 #0009}
+.lb button{position:absolute;border:1px solid #454c39;background:#e2e5d9;color:#111;font-size:22px;width:46px;height:44px}
+.lb button:hover{background:var(--lime)}
+.lb-close{top:22px;right:22px}
+.lb-prev{left:22px;top:50%;transform:translateY(-50%)}
+.lb-next{right:22px;top:50%;transform:translateY(-50%)}
+
+/* Подвал: соцсети иконками */
+.page-footer{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;padding:26px 0;font-size:12px;color:#92988a;border-top:1px solid var(--border);margin-top:26px}
+.page-footer .socials{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.icon-link{display:inline-flex;width:22px;height:22px}
+.icon-link .icon{width:100%;height:100%;background:currentColor;-webkit-mask:var(--icon) no-repeat center/contain;mask:var(--icon) no-repeat center/contain}
+.icon-link:hover{color:var(--lime)}
+.page-footer .text-link{font-size:12px;letter-spacing:1px}
+
+/* Форма записи */
+.workshop-contact-cta{border:1px solid #636e51;padding:28px;margin-top:38px;background:#141810}
+.workshop-contact-cta h2{margin-top:0}
+
+@media(max-width:1000px){
+  .page-shell{padding:0 22px}
+  .page-nav{grid-template-columns:repeat(2,1fr)}
+  .page-nav a:nth-child(even){border-right:0}
+  .page-nav a:nth-child(-n+2){border-bottom:1px solid var(--border)}
+  .content-section,.section{padding:28px 24px 34px}
+}
+@media(max-width:600px){
+  .page-shell{padding:0 14px}
+  .window-frame{margin:18px 0;box-shadow:5px 5px 0 #0009}
+  .content-section,.section{padding:22px 18px 28px}
+  .content-section p,.content-section li,.section p{font-size:17px}
+  .td-slide{gap:0}
+  .td-photo:nth-child(2){display:none}
+  .td-arrow{width:38px;height:44px;font-size:22px}
+  .td-prev{left:8px}.td-next{right:8px}
+  .workshop-contact-cta{padding:20px 16px}
+  .page-footer{flex-direction:column;align-items:flex-start;gap:14px}
+}
+
+/* В шапке внутренних страниц переключатель языка — ссылка, а не кнопка */
+.toolbar .controls a{font-size:14px;padding:12px 0;letter-spacing:1px}
+.toolbar .controls a:hover{color:var(--lime)}

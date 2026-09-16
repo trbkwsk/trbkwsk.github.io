@@ -1,42 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 — TORB</title>
-  <link rel="icon" href="favicon.webp" type="image/png" />
-  <link rel="apple-touch-icon" href="favicon.webp">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root { --accent: #ffcc00; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #000; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
-    h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(8rem, 20vw, 16rem); color: var(--accent); line-height: 1; }
-    p { font-size: 1.1rem; color: #aaa; margin: 1rem 0 2rem; }
-    a { display: inline-block; padding: 12px 32px; background: var(--accent); color: #000; font-weight: 700; text-decoration: none; border-radius: 4px; letter-spacing: 1px; }
-    a:hover { opacity: 0.85; }
-  
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>404 — TORB</title>
+<link rel="icon" href="favicon.webp" type="image/webp" />
+<link rel="apple-touch-icon" href="favicon.webp" />
+<meta name="theme-color" content="#111310" />
+<meta name="robots" content="noindex, follow" />
+<link rel="stylesheet" href="world.css" />
+<link rel="stylesheet" href="page.css" />
 </head>
 <body>
-  <h1>404</h1>
-  <p>Страница не найдена — но граффити здесь точно было.</p>
-  <a href="/">На главную</a>
-
-<script>
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-}, { threshold: 0.15 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
+  <div class="page-shell">
+    <header class="toolbar">
+      <a class="wordmark" href="index-ru.html" aria-label="TORB WORLD">TORB<span>&reg;</span></a>
+      <span class="system-title">ERROR <span class="version">/ 404</span></span>
+    </header>
+    <nav class="page-nav" aria-label="Разделы сайта"><a href="index-ru.html"><small>01</small>ГЛАВНАЯ</a><a href="torb-district-ru.html"><small>02</small>Арт Квартал</a><a href="workshops-ru.html"><small>03</small>Мастер Классы</a><a href="sprayfight-ru.html"><small>04</small>СпрэйФайт</a></nav>
+    <main class="window-frame">
+      <div class="window-bar"><span>TORB / 404</span></div>
+      <div class="content-section">
+        <div class="page-title">
+          <h1>404</h1>
+          <p><em>Page not found</em></p>
+        </div>
+        <p>Страница не найдена — но граффити здесь точно было.</p>
+        <p>The page is gone — but a piece was definitely here.</p>
+        <a class="action" href="index-ru.html">НА ГЛАВНУЮ &rarr;</a>
+        <a class="action" href="index.html" style="margin-left:10px">BACK HOME &rarr;</a>
+      </div>
+    </main>
+    <footer class="page-footer">
+      <span>&copy; <span id="year">2026</span> TRBKWSK also known as TORB</span>
+      <span class="footer-note">LEAVE YOUR MARK.</span>
+    </footer>
+  </div>
+  <script>document.getElementById("year").textContent=new Date().getFullYear();</script>
 </body>
 </html>
