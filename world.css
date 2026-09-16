@@ -16,3 +16,17 @@
 .form-status.error{color:#ff8b6b}
 .contact-links{margin-top:26px}
 @media(max-width:600px){.contact-form button{justify-self:stretch;text-align:center}}
+
+/* Мобильная сцена: плитки не должны закрывать арт, а быстрая навигация под сценой
+   дублировала те же шесть пунктов — на узком экране остаются только плитки. */
+@media(max-width:600px){
+  .scene{aspect-ratio:1/1.25}
+  .scene-art{object-position:50% 42%}
+  .scene-shade{background:linear-gradient(180deg,#0006,transparent 28%,#000a 62%,#000d)}
+  .hotspots{inset:auto 10px 12px;grid-template-rows:repeat(3,auto);gap:8px;align-content:end}
+  .hotspot .target{display:none}
+  .hot-label{background:#0f140ab8;border-color:#93a07f;backdrop-filter:blur(2px);min-height:44px;padding:10px 6px;letter-spacing:.5px}
+  .works .hot-label{background:#141b0ccc}
+  .quick-nav{display:none}
+  .statusbar{padding:14px 0 16px}
+}
