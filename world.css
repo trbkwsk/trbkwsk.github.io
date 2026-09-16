@@ -30,3 +30,6 @@
   .quick-nav{display:none}
   .statusbar{padding:14px 0 16px}
 }
+
+/* Длинная подпись в подвале окна не должна ломать строку на узких экранах */
+.window-footer{flex-wrap:wrap;gap:8px 16px}
