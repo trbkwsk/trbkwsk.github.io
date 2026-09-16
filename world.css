@@ -40,7 +40,8 @@
 .about-lead p{margin:0;font-size:19px;line-height:1.6}
 .window-body h3{font-family:'Russo One',sans-serif;font-weight:400;font-size:clamp(18px,2.2vw,24px);letter-spacing:-.5px;margin:26px 0 10px;color:#f0f1e9}
 .window-body h3+p{margin-top:0}
-.about-sign{margin-top:30px}
+.about-closing{color:var(--lime);font-family:var(--font);font-size:15px;letter-spacing:.5px;margin-top:26px}
+.about-sign{margin-top:22px}
 @media(max-width:600px){
   .about-lead{grid-template-columns:1fr;gap:16px}
   .about-photo{height:220px}
