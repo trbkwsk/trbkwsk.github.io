@@ -50,13 +50,21 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('[data-contact-form]').forEach(function (form) {
+  function bindForms(root) {
+    (root || document).querySelectorAll('[data-contact-form]').forEach(function (form) {
+      if (form.dataset.bound) return;
+      form.dataset.bound = '1';
       form.dataset.defaultText = form.querySelector('button[type="submit"]').textContent;
       form.addEventListener('submit', function (event) {
         event.preventDefault();
         submitContact(form);
       });
     });
+  }
+
+  // Формы, отрисованные после загрузки (модалка на главной), биндятся вызовом bind().
+  window.TorbContact = { bind: bindForms };
+  document.addEventListener('DOMContentLoaded', function () {
+    bindForms(document);
   });
 })();
