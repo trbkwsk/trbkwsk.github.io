@@ -33,3 +33,16 @@
 
 /* Длинная подпись в подвале окна не должна ломать строку на узких экранах */
 .window-footer{flex-wrap:wrap;gap:8px 16px}
+
+/* «Обо мне»: текст ведёт, фото сопровождает */
+.about-lead{display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:start;margin:8px 0 26px}
+.about-photo{width:100%;height:260px;object-fit:cover;border:1px solid #515b42}
+.about-lead p{margin:0;font-size:19px;line-height:1.6}
+.window-body h3{font-family:'Russo One',sans-serif;font-weight:400;font-size:clamp(18px,2.2vw,24px);letter-spacing:-.5px;margin:26px 0 10px;color:#f0f1e9}
+.window-body h3+p{margin-top:0}
+.about-sign{margin-top:30px}
+@media(max-width:600px){
+  .about-lead{grid-template-columns:1fr;gap:16px}
+  .about-photo{height:220px}
+  .about-lead p{font-size:17px}
+}
