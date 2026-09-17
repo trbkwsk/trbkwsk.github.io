@@ -47,3 +47,11 @@
   .about-photo{height:220px}
   .about-lead p{font-size:17px}
 }
+
+/* Кнопки PLAY / ПРАВИЛА в окне SprayFight */
+.action-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.action-row .action{margin-top:0}
+.action-row .action:first-child{padding:14px 28px;font-size:16px;letter-spacing:1px;box-shadow:3px 3px 0 #000a}
+.action-row .action:not(:first-child){background:transparent;color:var(--lime)}
+.action-row .action:not(:first-child):hover{background:var(--lime);color:#151b0c}
+@media(max-width:600px){.action-row{flex-direction:column}.action-row .action{width:100%;text-align:center;justify-content:center}}
