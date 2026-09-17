@@ -38,6 +38,17 @@
     <div class="objective" id="objective">APPROACHING THE WALL</div>
     <div class="crosshair" id="crosshair" aria-hidden="true"><i></i></div>
 
+    <div class="touch-controls" id="touchControls" aria-hidden="true">
+      <button type="button" class="touch-enter" id="enterTagBtn">TAP TO TAG</button>
+      <div class="joystick" id="joystick" aria-label="Move">
+        <div class="joystick-stick" id="joystickStick"></div>
+      </div>
+      <div class="touch-actions">
+        <button type="button" class="touch-btn" id="reachBtn">REACH</button>
+        <button type="button" class="touch-btn" id="crouchBtn">CROUCH</button>
+      </div>
+    </div>
+
     <section class="hud-bottom" aria-label="Painting controls">
       <div class="pressure">
         <div><span>PRESSURE</span><b id="pressureNumber">100</b></div>
@@ -57,7 +68,8 @@
         <div class="facts"><span>2 WRITERS</span><span>1 WORD</span><span>90 SECONDS</span></div>
         <p>INDUSTRIAL THIRD-PERSON PROTOTYPE / BUILD 03</p>
         <button class="action" id="start" type="button">ENTER</button>
-        <small>Move the mouse over your wall · Hold to spray · 1 / 2 change cap · Space shakes the can</small>
+        <small class="hint-desktop">Move the mouse over your wall · Hold to spray · 1 / 2 change cap · Space shakes the can</small>
+        <small class="hint-touch">Left stick to move · Drag the wall to spray · Tap FAT CAP/SKINNY and SHAKE below</small>
       </div>
     </section>
 

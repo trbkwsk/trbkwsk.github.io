@@ -231,3 +231,60 @@ button small { display:block; margin-top:3px; font-size:7px; opacity:.7; }
   position:absolute; left:50%; top:26px; transform:translateX(-50%);
   font:10px/1 var(--mono, monospace); letter-spacing:1px; color:#ff6a3d; white-space:nowrap;
 }
+
+/* ===== Touch controls (phones/tablets) ===== */
+.hint-touch { display:none; }
+.game.touch-input .hint-desktop { display:none; }
+.game.touch-input .hint-touch { display:block; }
+
+.touch-controls {
+  position:absolute; inset:0; z-index:30;
+  pointer-events:none; display:none;
+}
+.game.touch-input .touch-controls { display:block; }
+
+.joystick {
+  position:absolute; left:22px; bottom:26px;
+  width:112px; height:112px; border-radius:50%;
+  background:#0a0d08b3; border:1px solid #4c5540;
+  pointer-events:auto; touch-action:none;
+}
+.joystick-stick {
+  position:absolute; left:50%; top:50%; width:48px; height:48px;
+  margin:-24px 0 0 -24px; border-radius:50%;
+  background:#c6ff3dcc; border:1px solid #101410;
+  transition:transform .05s linear;
+}
+.joystick.is-active .joystick-stick { background:#c6ff3d; }
+
+.touch-actions {
+  position:absolute; right:18px; bottom:26px;
+  display:flex; flex-direction:column; gap:10px;
+  pointer-events:auto;
+}
+.touch-btn {
+  width:78px; height:56px; border-radius:10px;
+  background:#0a0d08b3; border:1px solid #4c5540; color:#e7ecdc;
+  font:700 11px/1 var(--mono, monospace); letter-spacing:1px;
+  touch-action:none;
+}
+.touch-btn:active, .touch-btn.is-active { background:#c6ff3d; color:#101410; border-color:#c6ff3d; }
+
+.touch-enter {
+  position:absolute; left:50%; bottom:150px; transform:translateX(-50%);
+  display:none;
+  padding:14px 26px; border-radius:8px;
+  background:#c6ff3d; color:#101410; border:1px solid #c6ff3d;
+  font:800 14px/1 var(--mono, monospace); letter-spacing:2px;
+  pointer-events:auto; touch-action:none;
+  box-shadow:0 4px 18px #000a;
+}
+.game.touch-input.can-tag .touch-enter { display:block; }
+
+@media (max-width:520px) {
+  .joystick { width:96px; height:96px; left:14px; bottom:118px; }
+  .joystick-stick { width:42px; height:42px; margin:-21px 0 0 -21px; }
+  .touch-actions { right:14px; bottom:118px; }
+  .touch-btn { width:66px; height:48px; font-size:10px; }
+  .touch-enter { bottom:210px; }
+}

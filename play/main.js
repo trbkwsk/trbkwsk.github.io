@@ -19,7 +19,9 @@ const ui = {
   pressure: $('#pressureBar'), pressureNumber: $('#pressureNumber'), clean: $('#clean'), drips: $('#drips'), shake: $('#shake'),
   startModal: $('#startModal'), start: $('#start'), countdown: $('#countdown'), countdownText: $('#countdown b'),
   resultModal: $('#resultModal'), resultCard: $('.result-card'), resultTitle: $('#resultTitle'), playerScore: $('#playerScore'),
-  aiScore: $('#aiScore'), playerMeta: $('#playerMeta'), aiMeta: $('#aiMeta'), restart: $('#restart'), crosshair: $('#crosshair')
+  aiScore: $('#aiScore'), playerMeta: $('#playerMeta'), aiMeta: $('#aiMeta'), restart: $('#restart'), crosshair: $('#crosshair'),
+  touchControls: $('#touchControls'), joystick: $('#joystick'), joystickStick: $('#joystickStick'),
+  reachBtn: $('#reachBtn'), crouchBtn: $('#crouchBtn'), enterTagBtn: $('#enterTagBtn')
 };
 
 const state = {
@@ -1111,6 +1113,7 @@ function updateApproach(now,dt){
 function enterTagging(){
   if(state.phase!=='approach'||!state.nearWall)return;
   state.standZ=Math.min(state.standZ,1.35);
+  ui.game.classList.remove('can-tag'); // иначе кнопка TAP TO TAG виснет и во время раунда
   beginCountdown();
 }
 
@@ -1374,6 +1377,62 @@ window.addEventListener('blur',()=>{state.keys={};});
 ui.sound.addEventListener('click',()=>{state.sound=!state.sound;ui.sound.textContent=state.sound?'SOUND ON':'SOUND OFF';ui.sound.setAttribute('aria-pressed',String(state.sound));if(!state.sound)spraySound(false);});
 ui.start.addEventListener('click',start);ui.restart.addEventListener('click',start);
 window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight,false);renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.75));});
+
+// ===== Touch controls: телефон/планшет без клавиатуры =====
+// Джойстик и кнопки не заводят новую логику движения — они просто выставляют
+// те же state.keys.KeyW/A/S/D/C/ShiftLeft, которые уже читают updateApproach()
+// и updateTagMovement(). Так исключён риск разойтись с логикой Codex.
+const touchCapable = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+if (touchCapable) ui.game.classList.add('touch-input');
+
+(function setupJoystick(){
+  const base = ui.joystick, stick = ui.joystickStick;
+  const RADIUS = 40, DEAD = .28; // мёртвая зона от центра, доля радиуса
+  let activeId = null, originX = 0, originY = 0;
+
+  const setDirection = (dx, dy) => {
+    state.keys.KeyD = dx > DEAD; state.keys.KeyA = dx < -DEAD;
+    state.keys.KeyS = dy > DEAD; state.keys.KeyW = dy < -DEAD;
+  };
+  const clearDirection = () => { state.keys.KeyW = state.keys.KeyA = state.keys.KeyS = state.keys.KeyD = false; };
+
+  base.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    activeId = e.pointerId; base.setPointerCapture(activeId);
+    const rect = base.getBoundingClientRect();
+    originX = rect.left + rect.width / 2; originY = rect.top + rect.height / 2;
+    base.classList.add('is-active');
+  });
+  base.addEventListener('pointermove', (e) => {
+    if (e.pointerId !== activeId) return;
+    let dx = (e.clientX - originX) / RADIUS, dy = (e.clientY - originY) / RADIUS;
+    const len = Math.hypot(dx, dy);
+    if (len > 1) { dx /= len; dy /= len; }
+    stick.style.transform = `translate(${dx * RADIUS}px, ${dy * RADIUS}px)`;
+    setDirection(dx, dy);
+  });
+  const releaseStick = (e) => {
+    if (e.pointerId !== activeId) return;
+    activeId = null; base.classList.remove('is-active');
+    stick.style.transform = 'translate(0,0)'; clearDirection();
+  };
+  base.addEventListener('pointerup', releaseStick);
+  base.addEventListener('pointercancel', releaseStick);
+})();
+
+// Присед и вытягивание руки — как удержание клавиш C и Shift, только пальцем
+function bindHoldButton(button, code){
+  const press = (e) => { e.preventDefault(); state.keys[code] = true; button.classList.add('is-active'); };
+  const release = () => { state.keys[code] = false; button.classList.remove('is-active'); };
+  button.addEventListener('pointerdown', press);
+  button.addEventListener('pointerup', release);
+  button.addEventListener('pointercancel', release);
+  button.addEventListener('pointerleave', release);
+}
+bindHoldButton(ui.crouchBtn, 'KeyC');
+bindHoldButton(ui.reachBtn, 'ShiftLeft');
+
+ui.enterTagBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); enterTagging(); });
 
 window.SF = { state, reset, start, clampToReach, reachCenter, player, opponent, THREE,
   diag:()=>({
