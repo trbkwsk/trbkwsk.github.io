@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#b6ff00" />
+  <title>SprayFight — 3D Prototype</title>
+  <meta name="description" content="SprayFight browser 3D gameplay prototype by TORB" />
+  <link rel="icon" type="image/png" href="assets/SF_LOGO.png?v=green-1" />
+  <link rel="apple-touch-icon" href="assets/SF_LOGO.png?v=green-1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="game" class="game" aria-label="SprayFight 3D prototype">
+    <canvas id="scene" aria-label="Industrial SprayFight arena"></canvas>
+
+    <header class="hud-top">
+      <img src="assets/sprayfight_green.png" alt="SprayFight" />
+      <div class="word">WORD <b>SPRAY</b></div>
+      <div class="clock" id="clock">01:30</div>
+      <button id="sound" class="plain-button" type="button" aria-pressed="true">SOUND ON</button>
+    </header>
+
+    <section class="fighter fighter-player" aria-label="Player progress">
+      <span>WRITER 01</span>
+      <strong>YOU</strong>
+      <div class="progress"><i id="playerProgress"></i></div>
+      <b><span id="playerCoverage">0</span>%</b>
+    </section>
+
+    <section class="fighter fighter-ai" aria-label="Opponent progress">
+      <span>WRITER 02</span>
+      <strong>OPPONENT</strong>
+      <div class="progress"><i id="aiProgress"></i></div>
+      <b><span id="aiCoverage">0</span>%</b>
+    </section>
+
+    <div class="objective" id="objective">APPROACHING THE WALL</div>
+    <div class="crosshair" id="crosshair" aria-hidden="true"><i></i></div>
+
+    <section class="hud-bottom" aria-label="Painting controls">
+      <div class="pressure">
+        <div><span>PRESSURE</span><b id="pressureNumber">100</b></div>
+        <div class="bar"><i id="pressureBar"></i></div>
+      </div>
+      <div class="caps" role="group" aria-label="Cap selection">
+        <button class="cap is-active" type="button" data-cap="fat">FAT CAP <small>1</small></button>
+        <button class="cap" type="button" data-cap="skinny">SKINNY <small>2</small></button>
+      </div>
+      <button class="shake" id="shake" type="button">SHAKE <small>SPACE</small></button>
+      <div class="quality"><span>CLEAN</span><b><span id="clean">100</span>%</b><em><span id="drips">0</span> DRIPS</em></div>
+    </section>
+
+    <section class="modal is-visible" id="startModal" role="dialog" aria-modal="true">
+      <div class="start-card">
+        <img src="assets/sprayfight_green.png" alt="SprayFight" />
+        <div class="facts"><span>2 WRITERS</span><span>1 WORD</span><span>90 SECONDS</span></div>
+        <p>INDUSTRIAL THIRD-PERSON PROTOTYPE / BUILD 03</p>
+        <button class="action" id="start" type="button">ENTER</button>
+        <small>Move the mouse over your wall · Hold to spray · 1 / 2 change cap · Space shakes the can</small>
+      </div>
+    </section>
+
+    <section class="countdown" id="countdown" aria-hidden="true"><b>3</b></section>
+
+    <section class="modal" id="resultModal" role="dialog" aria-modal="true">
+      <div class="result-card">
+        <span>SPRAYFIGHT / RESULT</span>
+        <h1 id="resultTitle">YOU WIN</h1>
+        <div class="scores">
+          <div><span>YOU</span><strong id="playerScore">0</strong><small id="playerMeta">0% / 0 DRIPS</small></div>
+          <div><span>OPPONENT</span><strong id="aiScore">0</strong><small id="aiMeta">0% / 0 DRIPS</small></div>
+        </div>
+        <button class="action" id="restart" type="button">RESTART</button>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="main.js?v=grip-15"></script>
+</body>
+</html>
