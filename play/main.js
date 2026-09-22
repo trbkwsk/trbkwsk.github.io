@@ -5,6 +5,7 @@ const ROUND_SECONDS = 90;
 const TEX_W = 1024;
 const TEX_H = 390;
 const TARGET_COVERAGE = 92;
+// Значения по умолчанию для стены; конкретная стена может их переопределить.
 const PANEL_W = 5.12;
 const PANEL_H = 1.95;
 const PANEL_Y = 1.38;
@@ -25,6 +26,8 @@ const ui = {
 };
 
 const state = {
+  // mode: 'roam' — ходим и рисуем без таймера и счёта; 'battle' — прежний раунд.
+  mode: 'roam', surface: null, panel: null, nearRival: false, talking: false,
   phase: 'idle', phaseStarted: 0, running: false, finished: false, pointerDown: false, shaking: false,
   pointerNdc: new THREE.Vector2(0, 0), pointerUv: new THREE.Vector2(.5, .5), lastUv: new THREE.Vector2(.5, .5),
   cap: 'fat', pressure: 100, drips: 0, clean: 100, coverage: 0, aiCoverage: 0, aiClean: 96, aiDrips: 0,
@@ -40,6 +43,16 @@ const state = {
 
 const PLAYER_CENTER = -4.05;
 const RIVAL_CENTER = 4.05;
+// Свободный режим: райтер ходит по всей локации и достаёт обе панели.
+// Прежние PLAYER_CENTER±3.3 запирали его у собственной стены.
+const ROAM_X_MIN = PLAYER_CENTER - 3.3;
+const ROAM_X_MAX = RIVAL_CENTER + 3.3;
+const ROAM_Z_MAX = 7.4;
+const TALK_RANGE = 1.9;       // с какого расстояния можно заговорить с соперником
+// В свободном режиме соперник НЕ стоит у своей панели, иначе к ней не подойти
+// порисовать — вместо этого он ждёт посреди локации как обычный NPC.
+const RIVAL_IDLE_X = 0;
+const RIVAL_IDLE_Z = WALL_Z + .34 + 4.6;
 
 // Постановочные точки камеры: общий план на отсчёте и на результате
 const WIDE_POS = new THREE.Vector3(0, 4.15, 3.2);
@@ -53,6 +66,17 @@ const WALL_STAND_MAX = 2.9;   // дальше — стена вне досяга
 const REACH_X = 1.15;         // сколько рука достаёт вбок, в метрах
 const REACH_UP = 2.5;        // предел вытянутой руки по высоте
 const REACH_DOWN = .55;
+const TAG_STEP_X = .52;       // один законченный шаг вдоль стены
+const TAG_STEP_Z = .24;       // один шаг к стене / от стены
+const TAG_STEP_TIME = .56;    // совпадает с ускоренным strafe-клипом
+// Соотношение бег/шаг взято из оригинальных BNM Getting Up: TR_Run проносит корень
+// на 206.46 ед за 47 кадров (4.393 ед/кадр), TR_Walk — на 90.91 за 59 (1.541 ед/кадр),
+// то есть бег ровно в 2.85 раза быстрее шага. Прежние 4.6/2.85 давали лишь 1.61x,
+// из-за чего режимы почти не различались. Понижаем шаг, а не повышаем бег: арена
+// всего ~6.6 м в ширину, на 8.1 м/с её проскакивало бы меньше чем за секунду.
+const WALK_SPEED = 1.61;      // м/с
+const RUN_SPEED = 4.6;        // м/с — 2.85x от шага
+const CLIP_WALK_SPEED = 2.85; // скорость, при которой клип ходьбы шёл с timeScale 1
 
 const renderer = new THREE.WebGLRenderer({ canvas: ui.scene, antialias: true, alpha: false, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
@@ -217,9 +241,17 @@ const newCanvas = () => {
 };
 
 class PaintSurface {
-  constructor(centerX, accent) {
-    this.centerX = centerX;
-    this.accent = accent;
+  // spec: {id, x, y, z, w, h, accent}. Всё, кроме id и accent, необязательно —
+  // недостающее берётся из констант локации по умолчанию. Так новая стена
+  // добавляется одной строкой в WALLS, а не правкой математики по всему файлу.
+  constructor(spec) {
+    this.id = spec.id;
+    this.x = this.centerX = spec.x;
+    this.y = spec.y ?? PANEL_Y;
+    this.z = spec.z ?? WALL_Z;
+    this.w = spec.w ?? PANEL_W;
+    this.h = spec.h ?? PANEL_H;
+    this.accent = spec.accent;
     this.final = newCanvas();
     this.mask = newCanvas();
     this.mist = newCanvas();
@@ -234,9 +266,9 @@ class PaintSurface {
       map: this.texture, roughness: .82, metalness: .04,
       transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2
     });
-    this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(PANEL_W, PANEL_H), panelMat);
+    this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(this.w, this.h), panelMat);
     // вплотную к бетону: доски больше нет, краска ложится на саму стену
-    this.mesh.position.set(centerX, PANEL_Y, WALL_Z + .045);
+    this.mesh.position.set(this.x, this.y, this.z + .045);
     this.mesh.receiveShadow = false;
     this.mesh.renderOrder = 1;
     scene.add(this.mesh);
@@ -378,8 +410,17 @@ class PaintSurface {
   }
 }
 
-const playerSurface = new PaintSurface(-4.05, [182,255,0]);
-const aiSurface = new PaintSurface(4.05, [137,144,125]);
+// ===== Стены локации =====
+// Каждая запись — самостоятельная поверхность со своими координатами и размером.
+// Чтобы добавить стену в локацию, достаточно дописать сюда строку.
+const WALLS = [
+  { id:'player', x:PLAYER_CENTER, accent:[182,255,0] },
+  { id:'rival',  x:RIVAL_CENTER,  accent:[137,144,125] }
+];
+const surfaces = WALLS.map(spec => new PaintSurface(spec));
+const surfaceById = id => surfaces.find(s => s.id === id);
+const playerSurface = surfaceById('player');
+const aiSurface = surfaceById('rival');
 
 function segment(material, radius, taper = .82) {
   const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radius * taper, radius, 1, 18), material);
@@ -405,6 +446,11 @@ class Mannequin {
     this.rigModel = null;
     this.rigBones = {};
     this.rigBase = {};
+    this.motion = { mode:'idle', speed:0, desiredYaw:0, until:0 };
+    this.tagMove = { active:false, fromX:x, fromZ:0, toX:x, toZ:0, started:0, duration:TAG_STEP_TIME };
+    this.tagPose = new THREE.Vector2(x, 1.62);
+    this.paintBlend = 0;
+    this.paintPoseCache = {};
     const primary = new THREE.MeshStandardMaterial({ color, roughness:.82 });
     const trouser = new THREE.MeshStandardMaterial({ color:rival?0x20231f:0x101210, roughness:.92 });
     this.primary = primary;
@@ -583,6 +629,16 @@ class Mannequin {
         mesh.geometry.computeBoundingBox();
         this.canMesh = mesh;
         this.canRestCenter = mesh.geometry.boundingBox.getCenter(new THREE.Vector3());
+        // The prop is skinned: its object origin does not follow the nozzle.
+        mesh.updateWorldMatrix(true,false);
+        mesh.skeleton.update();
+        let highest=-Infinity;
+        const vertices=mesh.geometry.attributes.position;
+        for(let i=0;i<vertices.count;i++){
+          const point=mesh.applyBoneTransform(i,new THREE.Vector3().fromBufferAttribute(vertices,i));
+          mesh.localToWorld(point);
+          if(point.y>highest){highest=point.y;this.nozzleVertex=i;}
+        }
       }
     } else {
       console.warn('SprayFight: узел SprayCan не найден в модели — остаётся примитив.');
@@ -592,19 +648,117 @@ class Mannequin {
 
 
   // Клипы из Mixamo: idle / walk / run / crouch. Нет клипа — работает прежняя процедурная поза.
-  playClip(name, fade = .25) {
+  playClip(name, fade = .25, options = {}) {
     if (!this.mixer) return false;
     const action = this.actions[name];
     if (!action) return false;
-    if (this.currentClip === name) return true;
+    const { once = false, timeScale = 1, restart = false } = options;
+    action.timeScale = timeScale;
+    action.clampWhenFinished = once;
+    action.setLoop(once ? THREE.LoopOnce : THREE.LoopRepeat, once ? 1 : Infinity);
+    if (this.currentClip === name && !restart) return true;
     const previous = this.currentClip && this.actions[this.currentClip];
     action.reset().setEffectiveWeight(1).fadeIn(fade).play();
-    if (previous) previous.fadeOut(fade);
+    if (previous && previous !== action) previous.fadeOut(fade);
     this.currentClip = name;
     return true;
   }
 
   updateMixer(dt) { if (this.mixer) this.mixer.update(dt); }
+
+  resetMotion() {
+    this.paintBlend=0;
+    this.paintPoseCache={};
+    this.armTarget=null;
+    if(this.rigModel)this.rigModel.position.y=0;
+    Object.assign(this.motion,{mode:'idle',speed:0,desiredYaw:0,until:0});
+    Object.assign(this.tagMove,{active:false,fromX:this.root.position.x,fromZ:this.root.position.z,toX:this.root.position.x,toZ:this.root.position.z,started:0,duration:TAG_STEP_TIME});
+    this.tagPose.set(this.root.position.x,1.62);
+  }
+
+  // Input only selects a movement state and desired direction. Translation is
+  // accelerated in the phase of the selected clip instead of snapping directly
+  // to a target coordinate, matching Getting Up's state/root-motion structure.
+  updateLocomotion(inputX, inputZ, running, now, dt, xMin, xMax, zMin, zMax) {
+    const input = new THREE.Vector2(inputX,inputZ);
+    const moving = input.lengthSq() > .001;
+    if (moving) input.normalize();
+    const targetSpeed = moving ? (running ? RUN_SPEED : WALK_SPEED) : 0;
+
+    if (moving) {
+      const desiredYaw = Math.atan2(-input.x,-input.y);
+      let yawDelta = Math.atan2(Math.sin(desiredYaw-this.root.rotation.y),Math.cos(desiredYaw-this.root.rotation.y));
+      if (Math.abs(yawDelta)>2.45 && this.motion.speed>.65 && this.motion.mode!=='turn') {
+        this.motion.mode='turn'; this.motion.until=now+650;
+        this.playClip('turn_180',.12,{once:true,timeScale:1.65,restart:true});
+      } else if (this.motion.mode==='idle'||this.motion.mode==='stop') {
+        this.motion.mode='start'; this.motion.until=now+520;
+        this.playClip('walk_start',.16,{once:true,timeScale:(this.actions.walk_start?.getClip().duration || .52)/.52,restart:true});
+      } else if (now>=this.motion.until && (this.motion.mode==='start'||this.motion.mode==='turn')) {
+        this.motion.mode=running?'run':'walk';
+      } else if (this.motion.mode==='walk'||this.motion.mode==='run') {
+        this.motion.mode=running?'run':'walk';
+      }
+      this.motion.desiredYaw=desiredYaw;
+      const turnRate=this.motion.mode==='turn'?8.5:5.8;
+      this.root.rotation.y+=yawDelta*(1-Math.exp(-turnRate*dt));
+      if (this.motion.mode==='walk'||this.motion.mode==='run') {
+        // Клип крутится пропорционально реальной скорости, иначе тело замедлили,
+        // а ноги продолжают перебирать в прежнем темпе — ровно то проскальзывание,
+        // ради устранения которого и делался BUILD 04.
+        this.playClip('walk',.18,{timeScale:(running?RUN_SPEED:WALK_SPEED)/CLIP_WALK_SPEED});
+      }
+    } else if (!['idle','stop'].includes(this.motion.mode)) {
+      this.motion.mode='stop'; this.motion.until=now+560;
+      this.playClip('walk_stop',.14,{once:true,timeScale:(this.actions.walk_stop?.getClip().duration || .56)/.56,restart:true});
+    } else if (this.motion.mode==='stop' && now>=this.motion.until) {
+      this.motion.mode='idle'; this.playClip('idle',.24);
+    } else if (this.motion.mode==='idle') {
+      this.playClip('idle',.24);
+    }
+
+    // Старт по оригиналу НЕ медленнее ходьбы. В BNM Getting Up TR_IdleToWalk проходит
+    // 32 ед за 19 кадров = 1.684 ед/кадр, тогда как установившийся TR_Walk — 1.525.
+    // То есть стартовый клип слегка ОБГОНЯЕТ ровный шаг (толчок с места), а прежние
+    // .68 делали трогание вялым. Отношение 1.684/1.525 = 1.104.
+    const phaseScale=this.motion.mode==='start'?1.104:this.motion.mode==='turn'?.2:1;
+    this.motion.speed=THREE.MathUtils.damp(this.motion.speed,targetSpeed*phaseScale,moving?5.2:7.5,dt);
+    if (moving) {
+      this.root.position.x=THREE.MathUtils.clamp(this.root.position.x+input.x*this.motion.speed*dt,xMin,xMax);
+      this.root.position.z=THREE.MathUtils.clamp(this.root.position.z+input.y*this.motion.speed*dt,zMin,zMax);
+    }
+    this.root.position.y=THREE.MathUtils.damp(this.root.position.y,groundHeight(this.root.position.z),12,dt);
+    return moving;
+  }
+
+  beginTagMove(targetX,targetZ,now) {
+    if (this.tagMove.active) return false;
+    const dx=targetX-this.root.position.x, dz=targetZ-this.root.position.z;
+    if (Math.hypot(dx,dz)<.035) return false;
+    // One locomotion cycle per committed step; longer approaches take longer.
+    const duration=TAG_STEP_TIME*Math.max(1,Math.abs(dx)/TAG_STEP_X,Math.abs(dz)/TAG_STEP_Z);
+    Object.assign(this.tagMove,{active:true,fromX:this.root.position.x,fromZ:this.root.position.z,toX:targetX,toZ:targetZ,started:now,duration});
+    let clip='walk';
+    if (Math.abs(dx)>=Math.abs(dz)) clip=dx<0?'strafe_left':'strafe_right';
+    else if (dz>0) clip='walk_back';
+    const clipDuration=this.actions[clip]?.getClip().duration || duration;
+    const cycles=Math.max(1,Math.round(duration/TAG_STEP_TIME));
+    this.playClip(clip,.1,{once:cycles===1,timeScale:clipDuration*cycles/duration,restart:true});
+    return true;
+  }
+
+  updateTagMove(now) {
+    if (!this.tagMove.active) return false;
+    const raw=THREE.MathUtils.clamp((now-this.tagMove.started)/(this.tagMove.duration*1000),0,1);
+    const t=smoothstep(raw);
+    this.root.position.x=THREE.MathUtils.lerp(this.tagMove.fromX,this.tagMove.toX,t);
+    this.root.position.z=THREE.MathUtils.lerp(this.tagMove.fromZ,this.tagMove.toZ,t);
+    if (raw>=1) {
+      this.tagMove.active=false;
+      this.playClip('idle',.16);
+    }
+    return true;
+  }
 
   applyCanGrip() {
     const hand = this.rigBones?.['hand.R'];
@@ -694,26 +848,39 @@ class Mannequin {
     const hand = this.rigBones['hand.R'];
     if (!upper || !fore || !hand) return false;
 
-    const shoulder = new THREE.Vector3();
-    const handPos = new THREE.Vector3();
-    const parentQuat = new THREE.Quaternion();
-    const delta = new THREE.Quaternion();
-
-    for (const bone of [upper, fore]) {
-      bone.updateWorldMatrix(true, false);
-      const pivot = bone.getWorldPosition(shoulder.clone());
-      hand.updateWorldMatrix(true, false);
-      hand.getWorldPosition(handPos);
-      const current = handPos.clone().sub(pivot);
-      const wanted = targetWorld.clone().sub(pivot);
-      if (current.lengthSq() < 1e-6 || wanted.lengthSq() < 1e-6) continue;
-      delta.setFromUnitVectors(current.normalize(), wanted.normalize());
-      const world = bone.getWorldQuaternion(new THREE.Quaternion()).premultiply(delta);
-      bone.parent.getWorldQuaternion(parentQuat).invert();
-      const local = parentQuat.multiply(world);
-      bone.quaternion.slerp(local, THREE.MathUtils.clamp(weight * (1 - Math.exp(-14 * dt)), 0, 1));
-      bone.updateWorldMatrix(false, true);
-    }
+    upper.updateWorldMatrix(true,true);
+    const shoulder=upper.getWorldPosition(new THREE.Vector3());
+    const elbow=fore.getWorldPosition(new THREE.Vector3());
+    const wrist=hand.getWorldPosition(new THREE.Vector3());
+    const a=shoulder.distanceTo(elbow),b=elbow.distanceTo(wrist);
+    if(a<1e-5||b<1e-5)return false;
+    this.armTarget ||= wrist.clone();
+    this.armTarget.lerp(targetWorld,1-Math.exp(-12*dt));
+    const direction=this.armTarget.clone().sub(shoulder);
+    if(direction.lengthSq()<1e-8)return false;
+    // Solve the actual two-bone triangle. Keep a slight elbow bend at full
+    // reach, and never scale bones to reach a point outside the arm radius.
+    const distance=THREE.MathUtils.clamp(direction.length(),Math.abs(a-b)+.001,(a+b)*.97);
+    direction.normalize();
+    const target=shoulder.clone().addScaledVector(direction,distance);
+    const pole=new THREE.Vector3(.75,-1,.3).applyQuaternion(this.root.getWorldQuaternion(new THREE.Quaternion()));
+    pole.addScaledVector(direction,-pole.dot(direction));
+    if(pole.lengthSq()<1e-6){pole.set(0,0,1);pole.addScaledVector(direction,-pole.dot(direction));}
+    pole.normalize();
+    const along=(a*a-b*b+distance*distance)/(2*distance);
+    const elbowTarget=shoulder.clone().addScaledVector(direction,along).addScaledVector(pole,Math.sqrt(Math.max(0,a*a-along*along)));
+    const aim=(bone,child,point)=>{
+      bone.updateWorldMatrix(true,true);
+      const pivot=bone.getWorldPosition(new THREE.Vector3());
+      const current=child.getWorldPosition(new THREE.Vector3()).sub(pivot).normalize();
+      const desired=point.clone().sub(pivot).normalize();
+      const world=bone.getWorldQuaternion(new THREE.Quaternion()).premultiply(new THREE.Quaternion().setFromUnitVectors(current,desired));
+      const local=bone.parent.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(world);
+      bone.quaternion.slerp(local,THREE.MathUtils.clamp(weight,0,1));
+      bone.updateWorldMatrix(false,true);
+    };
+    aim(upper,fore,elbowTarget);
+    aim(fore,hand,target);
     return true;
   }
 
@@ -756,19 +923,20 @@ class Mannequin {
 
   animateRigPaint(wallY, targetX, spraying, dt) {
     if (!this.rigModel) return;
+    this.paintBlend=THREE.MathUtils.damp(this.paintBlend,this.tagMove.active?.22:1,7,dt);
     const height = THREE.MathUtils.clamp((wallY - 2.45) / 1.45, -1, 1);
     const reach = THREE.MathUtils.clamp(targetX / 3, -1, 1);
     const crouch = Math.max(0, -height) * .11;
     const pulse = spraying ? Math.sin(performance.now() * .045) * .025 : 0;
-    this.rigModel.position.y = -crouch;
-    this.poseRig({
+    this.rigModel.position.y = THREE.MathUtils.damp(this.rigModel.position.y,this.tagMove.active?0:-crouch,10,dt);
+    const pose = {
       hips: [.05 + crouch * .7, reach * .05, -reach * .035],
       spine: [-.09, -reach * .08, reach * .045],
       chest: [-.12 + height * .045, -reach * .12, reach * .07],
       neck: [.05, reach * .11, -reach * .03],
       head: [.02 - height * .08, reach * .18, -reach * .045],
-      'upper_arm.L': [-.12, 0, -1.02],
-      'forearm.L': [.12, 0, -.42],
+      // Keep the free arm in the authored idle/step clip. The old offsets
+      // were for the mannequin axes and held this Mixamo arm out sideways.
       'upper_arm.R': [-.72 - height * .38, -.22 - reach * .2, .34 + reach * .12],
       'forearm.R': [-.62 + height * .18, -.08, .18 + pulse],
       'hand.R': [0, 0, pulse * 1.8],
@@ -776,7 +944,26 @@ class Mannequin {
       'shin.L': [-crouch * 2.4, 0, 0],
       'thigh.R': [-crouch * 1.2, 0, .08],
       'shin.R': [-crouch * 1.9, 0, 0]
-    }, dt, spraying ? 17 : 10);
+    };
+    // A committed tag step owns the pelvis and legs. The procedural spray
+    // pose only keeps the torso, aiming arm and grip on target until the step
+    // clip finishes; otherwise the step animation is flattened into a slide.
+    if (this.tagMove.active) {
+      delete pose.hips;
+      delete pose['thigh.L']; delete pose['shin.L'];
+      delete pose['thigh.R']; delete pose['shin.R'];
+    }
+    // Keep a persistent pose across mixer updates: damping from the freshly
+    // reset idle every frame never actually completes the raising motion.
+    const alpha=1-Math.exp(-10*dt);
+    for(const [name,angles] of Object.entries(pose)){
+      const bone=this.rigBones[name],base=this.rigBase[name];
+      if(!bone||!base)continue;
+      const target=base.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(...angles)));
+      const cached=this.paintPoseCache[name] ||= bone.quaternion.clone();
+      cached.slerp(target,alpha);
+      bone.quaternion.slerp(cached,this.paintBlend);
+    }
   }
 
   body(drop=0, lean=0) {
@@ -814,20 +1001,20 @@ class Mannequin {
     this.animateRigWalk(t);
   }
 
-  paint(uv, centerX, spraying, dt, autoMove = true) {
+  paint(uv, panel, spraying, dt, autoMove = true) {
+    const centerX = panel.x;
     this.root.position.y = THREE.MathUtils.damp(this.root.position.y, groundHeight(this.root.position.z), 12, dt);
-    const wallX = centerX + (uv.x - .5) * PANEL_W;
-    const wallY = PANEL_Y + (uv.y - .5) * PANEL_H;
+    const wallX = centerX + (uv.x - .5) * panel.w;
+    const wallY = panel.y + (uv.y - .5) * panel.h;
+    this.updateTagMove(performance.now());
     if (autoMove) {
-      // Rival repositions deliberately between strokes; no fast sliding into
-      // the wall. The player is still moved only by keyboard input.
+      // The rival uses the same complete step clips as the player. It cannot
+      // slide continuously after the cursor/path target.
       const desiredX = THREE.MathUtils.clamp(wallX - .42, centerX - 2.8, centerX + 2.8);
-      const repositioning = Math.abs(this.root.position.x - desiredX) > .09;
-      this.root.position.x = THREE.MathUtils.damp(this.root.position.x, desiredX, 1.65, dt);
-      this.root.position.z = THREE.MathUtils.damp(this.root.position.z, WALL_Z+.34+1.35, 1.8, dt);
-      if (this.rival) {
-        this.playClip(repositioning ? 'walk' : 'idle', .32);
-        if (this.actions.walk) this.actions.walk.timeScale = .38;
+      const desiredZ=WALL_Z+.34+1.35;
+      if (!this.tagMove.active && Math.abs(this.root.position.x-desiredX)>.38) {
+        const stepX=THREE.MathUtils.clamp(desiredX-this.root.position.x,-TAG_STEP_X,TAG_STEP_X);
+        this.beginTagMove(this.root.position.x+stepX,desiredZ,performance.now());
       }
     }
     const localHand = new THREE.Vector3(wallX - this.root.position.x, wallY, -1.12);
@@ -854,13 +1041,35 @@ class Mannequin {
     this.setExtremities(handL,this.targetLocal,footL,footR);
     this.torso.rotation.z = (this.targetLocal.x-.3)*-.055;
     this.head.rotation.y = THREE.MathUtils.clamp((this.targetLocal.x)/3,-.35,.35);
-    this.root.rotation.y=THREE.MathUtils.damp(this.root.rotation.y,(this.targetLocal.x>0?.08:-.08),5,dt);
+    // Interaction root stays square to the wall. Reach is carried by authored
+    // torso/arm poses and never rotates the whole player away from the plane.
+    this.root.rotation.y=THREE.MathUtils.damp(this.root.rotation.y,0,8,dt);
     if (spraying) this.can.rotation.z = Math.sin(performance.now()*.04)*.018;
-    const aimWorld = new THREE.Vector3(wallX, wallY, WALL_Z + .42);
-    if (!this.aimArmAt(aimWorld, dt, spraying ? 1 : .75)) this.animateRigPaint(wallY, this.targetLocal.x, spraying, dt);
+    // Getting Up uses a 3x3 pose grid per stance. Snap the authored body pose
+    // to a row/column, then allow only a small IK correction to the live point.
+    const column=THREE.MathUtils.clamp(Math.round((wallX-this.root.position.x)/.72),-1,1);
+    const poseY=wallY<1.18?.9:(wallY>2.03?2.34:1.62);
+    const poseX=this.root.position.x+column*.72;
+    this.tagPose.x=THREE.MathUtils.damp(this.tagPose.x,poseX,11,dt);
+    this.tagPose.y=THREE.MathUtils.damp(this.tagPose.y,poseY,11,dt);
+    this.animateRigPaint(this.tagPose.y,this.tagPose.x-this.root.position.x,spraying,dt);
+    const aimWorld = new THREE.Vector3(
+      THREE.MathUtils.lerp(this.tagPose.x,wallX,.36),
+      THREE.MathUtils.lerp(this.tagPose.y,wallY,.36),
+      // Leave space between nozzle and wall instead of extending the wrist
+      // all the way into the concrete.
+      WALL_Z + .70
+    );
+    this.aimArmAt(aimWorld,dt,this.paintBlend);
   }
 
   nozzleWorld() {
+    if(this.canMesh&&this.nozzleVertex!==undefined){
+      this.canMesh.updateWorldMatrix(true,false);
+      this.canMesh.skeleton.update();
+      const point=new THREE.Vector3().fromBufferAttribute(this.canMesh.geometry.attributes.position,this.nozzleVertex);
+      return this.canMesh.localToWorld(this.canMesh.applyBoneTransform(this.nozzleVertex,point));
+    }
     if (this.canModel) return this.canModel.localToWorld(new THREE.Vector3(0, .11, 0));
     return this.root.localToWorld(this.can.position.clone().add(new THREE.Vector3(0,-.15,0)));
   }
@@ -936,26 +1145,27 @@ function updateSprayParticles(points,start,end,visible) {
   points.geometry.attributes.position.needsUpdate=true;
 }
 
-function worldToUv(x,y,centerX){ return new THREE.Vector2((x-centerX)/PANEL_W+.5,(y-PANEL_Y)/PANEL_H+.5); }
+function worldToUv(x,y,panel){ return new THREE.Vector2((x-panel.x)/panel.w+.5,(y-panel.y)/panel.h+.5); }
 
 // Центр зоны досягаемости: где сейчас стоит райтер и на какой высоте держит баллон
 function reachCenter(){
   const handY=THREE.MathUtils.clamp(1.42-state.crouch*.5+state.tiptoe*.34,REACH_DOWN,REACH_UP);
   const standingX=(typeof player!=='undefined'&&player.root)?player.root.position.x:state.walkX;
-  return worldToUv(standingX,handY,PLAYER_CENTER);
+  return worldToUv(standingX,handY,state.panel||playerSurface);
 }
 
 // Прицел ограничен вытянутой рукой: до остального нужно дойти или присесть
 function clampToReach(uv){
   const center=reachCenter();
-  const dx=(uv.x-center.x)*PANEL_W, dy=(uv.y-center.y)*PANEL_H;
+  const panel=state.panel||playerSurface;
+  const dx=(uv.x-center.x)*panel.w, dy=(uv.y-center.y)*panel.h;
   const rx=REACH_X, ry=1.02+state.tiptoe*.22;
   const k=Math.hypot(dx/rx,dy/ry);
   if(k<=1) return uv.clone();
-  return new THREE.Vector2(center.x+(dx/k)/PANEL_W,center.y+(dy/k)/PANEL_H);
+  return new THREE.Vector2(center.x+(dx/k)/panel.w,center.y+(dy/k)/panel.h);
 }
 
-function uvToWorld(uv,centerX){ return new THREE.Vector3(centerX+(uv.x-.5)*PANEL_W,PANEL_Y+(uv.y-.5)*PANEL_H,WALL_Z+.34); }
+function uvToWorld(uv,panel){ return new THREE.Vector3(panel.x+(uv.x-.5)*panel.w,panel.y+(uv.y-.5)*panel.h,panel.z+.34); }
 
 let audio=null;
 function ensureAudio(){
@@ -1005,12 +1215,17 @@ async function loadArt(){
 function setCap(cap){ state.cap=cap; $$('.cap').forEach(b=>b.classList.toggle('is-active',b.dataset.cap===cap)); ui.game.classList.toggle('skinny',cap==='skinny'); }
 
 function reset(){
-  playerSurface.reset(); aiSurface.reset();
+  surfaces.forEach(s=>s.reset());
   Object.assign(state,{phase:'idle',running:false,finished:false,pointerDown:false,shaking:false,cap:'fat',pressure:100,drips:0,clean:100,coverage:0,aiCoverage:0,aiClean:96,aiDrips:0,remaining:ROUND_SECONDS,stationary:0,lastDrip:0,aiIndex:0,aiUv:new THREE.Vector2(.5,.5),aiPauseUntil:0,aiPressure:100,aiShaking:false,aiStationary:0,aiLastDrip:0,aiWander:new THREE.Vector2(0,0),aiApproachX:RIVAL_CENTER,aiNextStep:0,aiBurstUntil:0,aiRestUntil:0,beat:null,beatsDone:{},camShake:0});
-  player.root.position.set(PLAYER_CENTER,0,3.6); opponent.root.position.set(RIVAL_CENTER,0,WALL_Z+.34+1.5);
-  Object.assign(state,{keys:{},walkX:PLAYER_CENTER,standZ:5.2,crouch:0,tiptoe:0,nearWall:false,canUp:false});
+  player.root.position.set(PLAYER_CENTER,0,WALL_Z+.34+7.2); opponent.root.position.set(RIVAL_IDLE_X,0,RIVAL_IDLE_Z);
+  player.root.rotation.y=0; opponent.root.rotation.y=Math.PI;  // повёрнут к игроку
+  player.resetMotion(); opponent.resetMotion();
+  state.aiApproachX=RIVAL_IDLE_X;
+  Object.assign(state,{keys:{},walkX:PLAYER_CENTER,standZ:7.2,crouch:0,tiptoe:0,nearWall:false,canUp:false,
+    mode:'roam',panel:null,nearRival:false,talking:false});
   state.aimUv.set(.5,.5); state.reachUv.set(.5,.5);
-  ui.game.classList.remove('can-tag','out-of-reach');
+  ui.game.classList.remove('can-tag','can-talk','out-of-reach');
+  ui.game.classList.add('roam-mode');
   camera.position.set(-1.25,3.55,9.2);
   ui.clock.classList.remove('critical'); ui.game.classList.remove('paint-mode','spraying','skinny');
   ui.resultModal.classList.remove('is-visible'); ui.resultCard.classList.remove('loss');
@@ -1021,7 +1236,7 @@ async function start(){
   try { reset(); } catch (error) { console.error('SprayFight reset failed; starting with current state.', error); }
   ui.startModal.classList.remove('is-visible');
   try { ensureAudio(); } catch (error) { console.warn('Audio unavailable; continuing silently.', error); }
-  state.phase='approach'; state.phaseStarted=performance.now(); ui.objective.textContent='APPROACHING THE WALL';
+  state.phase='approach'; state.phaseStarted=performance.now(); ui.objective.textContent='WALK — W A S D · SHIFT TO RUN';
 }
 
 async function beginCountdown(){
@@ -1073,57 +1288,110 @@ function updateApproach(now,dt){
   const k=state.keys;
   const speedX=(k.KeyD?1:0)-(k.KeyA?1:0);
   const speedZ=(k.KeyS?1:0)-(k.KeyW?1:0);
-  const walk=(k.ShiftLeft||k.ShiftRight)?4.6:2.85;
-  state.walkX=THREE.MathUtils.clamp(state.walkX+speedX*walk*dt,PLAYER_CENTER-3.3,PLAYER_CENTER+3.3);
-  state.standZ=THREE.MathUtils.clamp(state.standZ+speedZ*walk*dt,WALL_STAND_MIN,7.4);
-  const moving=Math.abs(speedX)+Math.abs(speedZ)>0;
-  const z=WALL_Z+.34+state.standZ;
-  player.root.position.x=THREE.MathUtils.damp(player.root.position.x,state.walkX,9,dt);
-  player.root.position.y=THREE.MathUtils.damp(player.root.position.y,groundHeight(z),12,dt);
-  const clip=moving?(walk>4&&player.actions&&player.actions.run?'run':'walk'):'idle';
-  if(player.actions&&player.actions.walk&&clip==='walk')player.actions.walk.timeScale=walk>4?1.55:1;
-  if(!player.playClip(clip)) player.walk(moving?now/1000*(walk>4?1.7:1.15):0,z);
-  else player.root.position.z=THREE.MathUtils.damp(player.root.position.z,z,9,dt);
+  const running=!!(k.ShiftLeft||k.ShiftRight);
+  const moving=player.updateLocomotion(
+    speedX,speedZ,running,now,dt,
+    ROAM_X_MIN,ROAM_X_MAX,
+    WALL_Z+.34+WALL_STAND_MIN,WALL_Z+.34+ROAM_Z_MAX
+  );
+  state.walkX=player.root.position.x;
+  state.standZ=player.root.position.z-(WALL_Z+.34);
   // The rival is already at his panel. He waits, shifts his weight and only
   // occasionally takes one or two slow lateral steps instead of marching
   // straight into the wall.
   if(now>=state.aiNextStep){
     const takeStep=Math.random()<.58;
+    const home=state.mode==='battle'?RIVAL_CENTER:RIVAL_IDLE_X;
     state.aiApproachX=takeStep
-      ? THREE.MathUtils.clamp(RIVAL_CENTER+(Math.random()-.5)*1.1,RIVAL_CENTER-.75,RIVAL_CENTER+.75)
+      ? THREE.MathUtils.clamp(home+(Math.random()-.5)*1.1,home-.75,home+.75)
       : opponent.root.position.x;
     state.aiNextStep=now+1800+Math.random()*3200;
   }
-  const rivalMoving=Math.abs(opponent.root.position.x-state.aiApproachX)>.035;
-  opponent.root.position.x=THREE.MathUtils.damp(opponent.root.position.x,state.aiApproachX,1.25,dt);
-  opponent.root.position.z=THREE.MathUtils.damp(opponent.root.position.z,WALL_Z+.34+1.5,2,dt);
-  opponent.playClip(rivalMoving?'walk':'idle',.35);
-  if(opponent.actions.walk)opponent.actions.walk.timeScale=.42;
+  if(!opponent.tagMove.active&&Math.abs(opponent.root.position.x-state.aiApproachX)>.12){
+    const dx=THREE.MathUtils.clamp(state.aiApproachX-opponent.root.position.x,-TAG_STEP_X,TAG_STEP_X);
+    opponent.beginTagMove(opponent.root.position.x+dx,state.mode==='battle'?WALL_Z+.34+1.5:RIVAL_IDLE_Z,now);
+  }
+  const rivalMoving=opponent.updateTagMove(now);
+  if(!rivalMoving)opponent.playClip('idle',.35);
 
-  state.nearWall=state.standZ<=WALL_STAND_MAX;
-  ui.objective.textContent=state.nearWall?'PRESS E TO START TAGGING':'WALK TO THE WALL — W A S D';
-  ui.game.classList.toggle('can-tag',state.nearWall);
+  // Рядом ли хоть одна стена локации (раньше проверялся только отход по Z
+  // от единственной панели, из-за чего вторая стена была «недостижима»).
+  state.nearWall=nearestPanel().distance<=WALL_STAND_MAX;
+  // Подошёл к сопернику — можно заговорить; это единственный вход в батл.
+  state.nearRival=player.root.position.distanceTo(opponent.root.position)<TALK_RANGE;
+  ui.game.classList.toggle('can-talk',state.nearRival&&state.mode==='roam');
+  ui.game.classList.toggle('can-tag',state.nearWall&&!state.nearRival);
+  ui.objective.textContent=
+      state.nearRival ? 'PRESS E TO TALK'
+    : state.nearWall  ? 'PRESS E TO TAG THIS WALL'
+    : 'WALK — W A S D · SHIFT TO RUN';
+  // Подпись тач-кнопки следует за тем же выбором
+  ui.enterTagBtn.textContent=state.nearRival?'TALK':'TAP TO TAG';
 
   // Камера через плечо
+  const z=player.root.position.z;
   const target=new THREE.Vector3(state.walkX-.35,2.05,z+3.15);
   camera.position.lerp(target,Math.min(1,dt*3.4));
   state.cameraLook=new THREE.Vector3(state.walkX,1.85,z-1.4);
 }
 
+// Ближайшая стена локации. Перебирается весь список WALLS, расстояние — по
+// горизонтали до центра панели плюс отход от её плоскости, поэтому добавление
+// новой стены ничего здесь менять не требует.
+function panelDistance(surface){
+  const pos=player.root.position;
+  const dx=Math.max(0,Math.abs(pos.x-surface.x)-surface.w/2);
+  const dz=Math.abs(pos.z-surface.z);
+  return Math.hypot(dx,dz);
+}
+function nearestPanel(){
+  let best=surfaces[0],bestD=Infinity;
+  for(const surface of surfaces){
+    const d=panelDistance(surface);
+    if(d<bestD){bestD=d;best=surface;}
+  }
+  return {surface:best,distance:bestD};
+}
+
 function enterTagging(){
-  if(state.phase!=='approach'||!state.nearWall)return;
+  if(state.phase!=='approach'||!state.nearWall||state.nearRival)return;
+  state.panel=nearestPanel().surface;
   state.standZ=Math.min(state.standZ,1.35);
-  ui.game.classList.remove('can-tag'); // иначе кнопка TAP TO TAG виснет и во время раунда
-  beginCountdown();
+  ui.game.classList.remove('can-tag'); // иначе кнопка TAP TO TAG виснет и во время рисования
+  player.root.rotation.y=0;
+  player.beginTagMove(player.root.position.x,WALL_Z+.34+state.standZ,performance.now());
+  state.aimUv.set(.5,.5); state.reachUv.set(.5,.5); state.lastUv.copy(state.reachUv);
+  if(state.mode==='battle'){ beginCountdown(); return; }
+  // Свободный режим: рисуем сразу, без отсчёта, таймера и счёта.
+  state.phase='paint'; state.running=true; state.roundStarted=performance.now(); state.lastMetric=state.roundStarted;
+  ui.game.classList.add('paint-mode'); ui.enterTagBtn.textContent='STEP BACK';
+  ui.objective.textContent='A/D STEP · W/S DISTANCE · C CROUCH · HOLD TO SPRAY · E TO STEP BACK';
+}
+
+// Отойти от стены и вернуться к свободному перемещению
+function exitTagging(){
+  if(state.phase!=='paint'||state.mode==='battle')return;
+  state.phase='approach'; state.running=false; state.pointerDown=false; state.shaking=false;
+  spraySound(false); playerSpray.visible=false;
+  ui.game.classList.remove('paint-mode','spraying','out-of-reach');
+  player.beginTagMove(player.root.position.x,WALL_Z+.34+2.6,performance.now());
 }
 
 // Шаги вдоль стены и приседание уже во время раунда
-function updateTagMovement(dt){
+function updateTagMovement(now,dt){
   const k=state.keys;
   const strafe=(k.KeyD?1:0)-(k.KeyA?1:0);
   const depth=(k.KeyS?1:0)-(k.KeyW?1:0);
-  state.walkX=THREE.MathUtils.clamp(state.walkX+strafe*2.25*dt,PLAYER_CENTER-PANEL_W/2+.5,PLAYER_CENTER+PANEL_W/2-.5);
-  state.standZ=THREE.MathUtils.clamp(state.standZ+depth*1.5*dt,WALL_STAND_MIN,2.15);
+  player.updateTagMove(now);
+  if(!player.tagMove.active&&(strafe||depth)){
+    const nextX=THREE.MathUtils.clamp(player.root.position.x+strafe*TAG_STEP_X,(state.panel||playerSurface).x-(state.panel||playerSurface).w/2+.5,(state.panel||playerSurface).x+(state.panel||playerSurface).w/2-.5);
+    const currentStand=player.root.position.z-(WALL_Z+.34);
+    const nextStand=THREE.MathUtils.clamp(currentStand+depth*TAG_STEP_Z,WALL_STAND_MIN,2.15);
+    player.beginTagMove(nextX,WALL_Z+.34+nextStand,now);
+  }
+  // Reach and spray width follow the actual body, not the pending step target.
+  state.walkX=player.root.position.x;
+  state.standZ=player.root.position.z-(WALL_Z+.34);
   const wantCrouch=k.KeyC||k.ControlLeft?1:0;
   const wantTiptoe=(k.ShiftLeft||k.ShiftRight)?1:0;
   state.crouch=THREE.MathUtils.damp(state.crouch,wantCrouch,9,dt);
@@ -1200,10 +1468,10 @@ function stepAi(now,dt){
 }
 
 function stepPlayer(now,dt){
-  const spraying=state.pointerDown&&!state.shaking&&state.pressure>1;
+  const spraying=state.pointerDown&&!state.shaking&&state.pressure>1&&!player.tagMove.active&&player.paintBlend>.92;
   ui.game.classList.toggle('spraying',spraying); spraySound(spraying);
   if(state.shaking&&!state.pointerDown){ state.pressure=Math.min(100,state.pressure+43*dt); if(audio&&now-audio.lastShake>(75+Math.random()*40)){audio.lastShake=now;rattle();} }
-  if(!spraying){ state.stationary=Math.max(0,state.stationary-dt*2); return false; }
+  if(!spraying){ state.stationary=Math.max(0,state.stationary-dt*2); state.lastUv.copy(state.reachUv); return false; }
   state.pressure=Math.max(0,state.pressure-(state.cap==='fat'?7:4.6)*dt);
 
   // Дистанция до стены: вплотную — узкая плотная линия, издалека — широкий мягкий факел
@@ -1221,12 +1489,12 @@ function stepPlayer(now,dt){
   const point=new THREE.Vector2();
   for(let i=1;i<=steps;i++){
     point.copy(state.lastUv).lerp(state.reachUv,i/steps);
-    playerSurface.spray(point,radius,strength/Math.sqrt(steps));
+    (state.panel||playerSurface).spray(point,radius,strength/Math.sqrt(steps));
   }
 
   // Течёт и от залипания на месте, и от работы вплотную к стене
   const dripAfter=.95-(1-near)*.3;
-  if(state.stationary>dripAfter&&now-state.lastDrip>900){ state.drips+=1; state.lastDrip=now; playerSurface.drip(state.reachUv); hit(60); state.camShake=.22; }
+  if(state.stationary>dripAfter&&now-state.lastDrip>900){ state.drips+=1; state.lastDrip=now; (state.panel||playerSurface).drip(state.reachUv); hit(60); state.camShake=.22; }
   state.lastUv.copy(state.reachUv);
   return true;
 }
@@ -1235,36 +1503,64 @@ function updateMetrics(){
   const p=playerSurface.metrics(),a=aiSurface.metrics();
   state.coverage=p.coverage; state.aiCoverage=a.coverage; state.clean=Math.max(0,100-state.drips*3.2-p.outside*.12); state.aiClean=Math.max(0,98-state.aiDrips*3.2-a.outside*.1);
   updateHud();
+  if(state.mode!=='battle')return;   // в свободном режиме никто не побеждает
   if(state.coverage>=TARGET_COVERAGE&&state.clean>=70)finish('player');
   else if(state.aiCoverage>=TARGET_COVERAGE&&state.aiClean>=70)finish('ai');
 }
 
 function updatePaint(now,dt){
-  state.remaining=Math.max(0,ROUND_SECONDS-(now-state.roundStarted)/1000);
-  updateTagMovement(dt);
+  const battle=state.mode==='battle';
+  if(battle)state.remaining=Math.max(0,ROUND_SECONDS-(now-state.roundStarted)/1000);
+  updateTagMovement(now,dt);
   state.reachUv.copy(clampToReach(state.aimUv));
   state.canUp=state.aimUv.distanceTo(state.reachUv)>.004;
   ui.game.classList.toggle('out-of-reach',state.canUp);
-  const playerActive=stepPlayer(now,dt),aiActive=stepAi(now,dt);
-  const strafing=Math.abs((state.keys.KeyD?1:0)-(state.keys.KeyA?1:0))>0;
-  player.playClip(state.crouch>.5?'crouch':(strafing?'walk':'idle'),.2);
-  if(player.actions.crouch)player.actions.crouch.timeScale=strafing?1:.12;
-  if(player.actions.walk)player.actions.walk.timeScale=1;
-  opponent.playClip('idle',.2);
-  player.root.position.x=THREE.MathUtils.damp(player.root.position.x,state.walkX,9,dt);
-  player.root.position.z=THREE.MathUtils.damp(player.root.position.z,WALL_Z+.34+state.standZ,9,dt);
-  player.paint(state.reachUv,PLAYER_CENTER,playerActive,dt,false); opponent.paint(state.aiUv,4.05,aiActive,dt);
-  const playerTarget=uvToWorld(state.reachUv,PLAYER_CENTER),aiTarget=uvToWorld(state.aiUv,4.05);
+  const playerActive=stepPlayer(now,dt),aiActive=battle?stepAi(now,dt):false;
+  if(!player.tagMove.active)player.playClip(state.crouch>.5?'crouch':'idle',.2,{timeScale:state.crouch>.5?.22:1});
+  if(!opponent.tagMove.active)opponent.playClip('idle',.2);
+  player.paint(state.reachUv,state.panel||playerSurface,playerActive,dt,false);
+  if(state.mode==='battle')opponent.paint(state.aiUv,aiSurface,aiActive,dt);
+  const playerTarget=uvToWorld(state.reachUv,state.panel||playerSurface),aiTarget=uvToWorld(state.aiUv,aiSurface);
   updateSprayParticles(playerSpray,player.nozzleWorld(),playerTarget,playerActive);
   updateSprayParticles(aiSpray,opponent.nozzleWorld(),aiTarget,aiActive);
-  if(playerActive||state.shaking)playerSurface.update();
+  if(playerActive||state.shaking)(state.panel||playerSurface).update();
   if(aiActive)aiSurface.update();
   if(now-state.lastMetric>430){state.lastMetric=now;updateMetrics();}
-  if(state.aiCoverage>state.coverage+8&&state.coverage>4)triggerBeat('rivalLead',now);
-  if(state.coverage>=50)triggerBeat('halfway',now);
-  if(state.remaining<=10)triggerBeat('finalTen',now);
-  if(state.remaining<=0)finish('time');
-  updateTimer();
+  if(battle){
+    if(state.aiCoverage>state.coverage+8&&state.coverage>4)triggerBeat('rivalLead',now);
+    if(state.coverage>=50)triggerBeat('halfway',now);
+    if(state.remaining<=10)triggerBeat('finalTen',now);
+    if(state.remaining<=0)finish('time');
+    updateTimer();
+  }
+}
+
+// Разговор с соперником — единственный вход в соревнование.
+// Пока это заглушка на одну реплику; сюда встанет нормальная диалоговая система.
+async function talkToRival(){
+  if(state.talking||state.mode!=='roam'||!state.nearRival)return;
+  state.talking=true;
+  const lines=['— Ты кто такой?','— Хочешь стену? Забирай. Если возьмёшь.','— Тогда батл. Погнали.'];
+  for(const line of lines){
+    ui.objective.textContent=line;
+    await new Promise(r=>setTimeout(r,1500));
+  }
+  state.talking=false;
+  startBattle();
+}
+
+// Переход из песочницы в прежний соревновательный раунд
+function startBattle(){
+  state.mode='battle';
+  surfaces.forEach(s=>s.reset());
+  Object.assign(state,{coverage:0,aiCoverage:0,clean:100,aiClean:96,drips:0,aiDrips:0,
+    pressure:100,aiPressure:100,remaining:ROUND_SECONDS,finished:false,beatsDone:{},beat:null});
+  ui.game.classList.remove('can-talk','roam-mode');
+  state.panel=playerSurface;
+  player.root.position.x=THREE.MathUtils.clamp(player.root.position.x,PLAYER_CENTER-2.2,PLAYER_CENTER+2.2);
+  opponent.root.position.set(RIVAL_CENTER,0,WALL_Z+.34+1.5);
+  state.nearWall=true; state.nearRival=false;
+  enterTagging();
 }
 
 function updateTimer(){ const seconds=Math.ceil(state.remaining); ui.clock.textContent=`0${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`; ui.clock.classList.toggle('critical',seconds<=10&&state.running); }
@@ -1284,7 +1580,7 @@ function updatePointer(event){
   if(hit?.uv){
     state.pointerUv.copy(hit.uv); state.aimUv.copy(hit.uv);
     const reachable=clampToReach(state.aimUv);
-    const world=uvToWorld(reachable,PLAYER_CENTER).project(camera);
+    const world=uvToWorld(reachable,state.panel||playerSurface).project(camera);
     ui.crosshair.style.left=`${(world.x*.5+.5)*window.innerWidth}px`;
     ui.crosshair.style.top=`${(-world.y*.5+.5)*window.innerHeight}px`;
   }
@@ -1296,9 +1592,10 @@ function animate(){
   if(state.phase==='idle'){ if(!player.playClip('idle'))player.walk(now/1000,3.6); if(!opponent.playClip('idle'))opponent.walk(now/1000+.4,3.6); }
   else if(state.phase==='approach')updateApproach(now,dt);
   else if(state.phase==='countdown'){
-    player.playClip('idle');opponent.playClip('idle');
-    player.paint(new THREE.Vector2(.5,.5),PLAYER_CENTER,false,dt,false);
-    opponent.paint(new THREE.Vector2(.5,.5),RIVAL_CENTER,false,dt);
+    if(!player.tagMove.active)player.playClip('idle');
+    if(!opponent.tagMove.active)opponent.playClip('idle');
+    player.paint(new THREE.Vector2(.5,.5),state.panel||playerSurface,false,dt,false);
+    opponent.paint(new THREE.Vector2(.5,.5),aiSurface,false,dt);
     // пролёт от общего плана к рабочей позиции за плечом
     const t=smoothstep(Math.min(1,(now-state.phaseStarted)/2600));
     const shoulder=new THREE.Vector3(state.walkX+1.15,2.05,WALL_Z+.34+state.standZ+2.1);
@@ -1329,7 +1626,7 @@ function animate(){
   if(state.phase==='paint'&&!state.beat){
     // взгляд между точкой краски и серединой между двумя стенами — соперник остаётся сбоку
     const between=new THREE.Vector3(state.walkX+1.1,PANEL_Y,WALL_Z+.3);
-    state.cameraLook=uvToWorld(state.reachUv,PLAYER_CENTER).lerp(between,.5);
+    state.cameraLook=uvToWorld(state.reachUv,state.panel||playerSurface).lerp(between,.5);
   }
 
   // AnimationMixer rewrites the finger transforms every frame, so apply the
@@ -1368,7 +1665,12 @@ window.addEventListener('keydown',(e)=>{
   state.keys[e.code]=true;
   if(e.code==='Digit1')setCap('fat');
   if(e.code==='Digit2')setCap('skinny');
-  if(e.code==='KeyE')enterTagging();
+  if(e.code==='KeyE'){
+    if(state.phase==='paint')exitTagging();
+    else if(state.nearRival)talkToRival();
+    else enterTagging();
+  }
+  if(e.code==='Escape')exitTagging();
   if(['KeyW','KeyA','KeyS','KeyD','KeyC'].includes(e.code))e.preventDefault();
   if(e.code==='Space'&&state.running){e.preventDefault();state.pointerDown=false;state.shaking=true;}
 });
@@ -1432,7 +1734,12 @@ function bindHoldButton(button, code){
 bindHoldButton(ui.crouchBtn, 'KeyC');
 bindHoldButton(ui.reachBtn, 'ShiftLeft');
 
-ui.enterTagBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); enterTagging(); });
+ui.enterTagBtn.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  if(state.phase==='paint')exitTagging();
+  else if(state.nearRival)talkToRival();
+  else enterTagging();
+});
 
 window.SF = { state, reset, start, clampToReach, reachCenter, player, opponent, THREE,
   diag:()=>({

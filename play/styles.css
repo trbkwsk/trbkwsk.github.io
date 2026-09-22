@@ -288,3 +288,15 @@ button small { display:block; margin-top:3px; font-size:7px; opacity:.7; }
   .touch-btn { width:66px; height:48px; font-size:10px; }
   .touch-enter { bottom:210px; }
 }
+
+/* ===== Свободный режим (roam): соревновательного HUD нет ===== */
+/* Таймер и полоса соперника появляются только в батле. */
+.game.roam-mode .clock,
+.game.roam-mode .fighter-ai { display:none; }
+
+/* Подсказка «поговорить» читается иначе, чем «рисовать» */
+.game.can-talk .objective { color:#101410; background:#c6ff3d; border-color:#c6ff3d; }
+
+/* Тач-кнопка нужна в трёх случаях: у стены, у соперника и чтобы отойти */
+.game.touch-input.can-talk .touch-enter,
+.game.touch-input.paint-mode .touch-enter { display:block; }
