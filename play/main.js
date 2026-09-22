@@ -1,10 +1,12 @@
 import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
+import { STAGES, timeForGrid, stageProgress, DRIP_MAPS, DripTracker, dripShape } from './paint-rules.mjs';
 
-const ROUND_SECONDS = 90;
+const DEFAULT_GRID = {columns:4,rows:2};
+const ROUND_SECONDS = timeForGrid(DEFAULT_GRID);
 const TEX_W = 1024;
 const TEX_H = 390;
-const TARGET_COVERAGE = 92;
+const TARGET_COVERAGE = 100;
 // Значения по умолчанию для стены; конкретная стена может их переопределить.
 const PANEL_W = 5.12;
 const PANEL_H = 1.95;
@@ -31,7 +33,7 @@ const state = {
   phase: 'idle', phaseStarted: 0, running: false, finished: false, pointerDown: false, shaking: false,
   pointerNdc: new THREE.Vector2(0, 0), pointerUv: new THREE.Vector2(.5, .5), lastUv: new THREE.Vector2(.5, .5),
   cap: 'fat', pressure: 100, drips: 0, clean: 100, coverage: 0, aiCoverage: 0, aiClean: 96, aiDrips: 0,
-  remaining: ROUND_SECONDS, roundStarted: 0, lastFrame: 0, lastMetric: 0, stationary: 0, lastDrip: 0,
+  remaining: ROUND_SECONDS, roundSeconds:ROUND_SECONDS, roundStarted: 0, lastFrame: 0, lastMetric: 0, stationary: 0, lastDrip: 0,
   aiRoute: [], aiIndex: 0, aiUv: new THREE.Vector2(.5, .5), aiPauseUntil: 0, sound: true,
   aiPressure: 100, aiShaking: false, aiStationary: 0, aiLastDrip: 0, aiWander: new THREE.Vector2(0, 0),
   aiApproachX: 4.05, aiNextStep: 0, aiBurstUntil: 0, aiRestUntil: 0,
@@ -252,8 +254,16 @@ class PaintSurface {
     this.w = spec.w ?? PANEL_W;
     this.h = spec.h ?? PANEL_H;
     this.accent = spec.accent;
+    this.grid=spec.grid ?? DEFAULT_GRID;
+    this.roundSeconds=timeForGrid(this.grid);
+    this.dripPalette=spec.dripPalette ?? ['#719e00','#415b05'];
+    this.drips=new DripTracker(DRIP_MAPS[`${this.grid.columns}x${this.grid.rows}`] ?? []);
+    this.stage=0;this.complete=false;this.progress=0;this.outside=0;
+    this.layerMasks=[newCanvas(),newCanvas(),newCanvas()];
+    this.layerTargets=[];
+    this.dripCanvas=newCanvas();
     this.final = newCanvas();
-    this.mask = newCanvas();
+    this.mask = this.layerMasks[0];
     this.mist = newCanvas();
     this.display = newCanvas();
     this.reveal = newCanvas();
@@ -287,6 +297,9 @@ class PaintSurface {
     images.forEach((asset) => ctx.drawImage(asset, x, y, w, h));
     this.targetData = ctx.getImageData(0, 0, TEX_W, TEX_H).data;
     this.makeOutline();
+    this.layerTargets=[ctx2d(this.outline).getImageData(0,0,TEX_W,TEX_H).data,
+      ctx2d(this.outline).getImageData(0,0,TEX_W,TEX_H).data,this.targetData];
+    this.layerTotals=this.layerTargets.map(data=>{let count=0;for(let i=3;i<data.length;i+=4)if(data[i]>32)count++;return count;});
     this.update();
   }
 
@@ -312,12 +325,16 @@ class PaintSurface {
   }
 
   reset() {
-    ctx2d(this.mask).clearRect(0, 0, TEX_W, TEX_H);
+    this.layerMasks.forEach(mask=>ctx2d(mask).clearRect(0,0,TEX_W,TEX_H));
+    this.stage=0;this.complete=false;this.progress=0;this.outside=0;
+    this.mask=this.layerMasks[0];this.drips.reset();this.settledDrips=0;
+    ctx2d(this.dripCanvas).clearRect(0,0,TEX_W,TEX_H);
     ctx2d(this.mist).clearRect(0, 0, TEX_W, TEX_H);
     this.update();
   }
 
   spray(uv, radius, strength = 1) {
+    if(this.complete)return;
     const x = uv.x * TEX_W;
     const y = (1 - uv.y) * TEX_H;
     const maskCtx = ctx2d(this.mask);
@@ -338,20 +355,25 @@ class PaintSurface {
     mistCtx.beginPath(); mistCtx.arc(x, y, radius * 1.15, 0, Math.PI * 2); mistCtx.fill();
   }
 
-  drip(uv) {
-    const x = uv.x * TEX_W;
-    const y = (1 - uv.y) * TEX_H;
-    const ctx = ctx2d(this.mist);
-    const length = 38 + Math.random() * 70;
-    const [r,g,b] = this.accent;
-    const gradient = ctx.createLinearGradient(x, y, x, y + length);
-    gradient.addColorStop(0, `rgba(${r},${g},${b},.92)`);
-    gradient.addColorStop(1, `rgba(${r},${g},${b},0)`);
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = 3 + Math.random() * 3;
-    ctx.beginPath(); ctx.moveTo(x,y); ctx.bezierCurveTo(x-3,y+20,x+4,y+length*.7,x,y+length); ctx.stroke();
-    ctx.fillStyle = `rgb(${r},${g},${b})`;
-    ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
+  holdDrip(uv,dt,now){
+    return !this.complete&&this.drips.hold(uv.x*TEX_W,(1-uv.y)*TEX_H,dt,now,TEX_W,TEX_H);
+  }
+
+  animateDrips(now){
+    if(!this.drips.events.length)return;
+    const signature=this.drips.events.length;
+    if(this.settledDrips===signature)return;
+    const ctx=ctx2d(this.dripCanvas);
+    ctx.clearRect(0,0,TEX_W,TEX_H);
+    for(const event of this.drips.events){
+      const shape=dripShape((now-event.started)/1000);
+      ctx.fillStyle=ctx.strokeStyle=this.dripPalette[event.index%this.dripPalette.length];
+      ctx.lineWidth=shape.width;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(event.x,event.y);ctx.lineTo(event.x,event.y+shape.length);ctx.stroke();
+      ctx.beginPath();ctx.arc(event.x,event.y,shape.size/2,0,Math.PI*2);ctx.fill();
+    }
+    if(this.drips.events.every(event=>now-event.started>=3350))this.settledDrips=signature;
+    this.update();
   }
 
   update() {
@@ -360,47 +382,64 @@ class PaintSurface {
     ctx.save();
     ctx.globalAlpha = .05;
     ctx.drawImage(this.final, 0, 0);
-    ctx.globalAlpha = .82;
+    ctx.globalAlpha = .16;
     ctx.drawImage(this.outline, 0, 0);
     ctx.restore();
     ctx.save();
     ctx.globalAlpha = .88;
     ctx.drawImage(this.mist, 0, 0);
     ctx.restore();
-    const revealCtx = ctx2d(this.reveal);
-    revealCtx.clearRect(0, 0, TEX_W, TEX_H);
-    revealCtx.globalCompositeOperation = 'source-over';
-    // маска мягкая — накладываем её трижды, чтобы проявленная краска была плотной,
-    // а не полупрозрачной дымкой
-    revealCtx.drawImage(this.mask, 0, 0);
-    revealCtx.drawImage(this.mask, 0, 0);
-    revealCtx.drawImage(this.mask, 0, 0);
-    revealCtx.globalCompositeOperation = 'source-in';
-    revealCtx.drawImage(this.final, 0, 0);
-    ctx.drawImage(this.reveal, 0, 0);
+    for(let layer=0;layer<=this.stage;layer++){
+      const art=layer===2?this.final:this.outline;
+      ctx.save();ctx.globalAlpha=layer===0?.4:1;
+      if(layer<this.stage||this.complete)ctx.drawImage(art,0,0);
+      else {
+        const revealCtx=ctx2d(this.reveal);
+        revealCtx.globalCompositeOperation='source-over';
+        revealCtx.clearRect(0,0,TEX_W,TEX_H);
+        for(let pass=0;pass<3;pass++)revealCtx.drawImage(this.layerMasks[layer],0,0);
+        revealCtx.globalCompositeOperation='source-in';revealCtx.drawImage(art,0,0);
+        ctx.drawImage(this.reveal,0,0);
+      }
+      ctx.restore();
+    }
+    ctx.drawImage(this.dripCanvas,0,0);
     this.texture.needsUpdate = true;
   }
 
   metrics() {
+    if(!this.layerTargets.length)return {coverage:0,outside:0};
+    if(this.complete)return {coverage:100,outside:this.outside};
     const mask = ctx2d(this.mask).getImageData(0, 0, TEX_W, TEX_H).data;
+    const data=this.layerTargets[this.stage];
     let total = 0, covered = 0, outside = 0;
-    for (let i = 3; i < mask.length; i += 20) {
-      const target = this.targetData[i] > 32;
+    for (let i = 3; i < mask.length; i += 4) {
+      const target = data[i] > 32;
       if (target) {
         total += 1;
         if (mask[i] > 35) covered += 1;
-      } else if (mask[i] > 80) outside += 1;
+      } else if (this.targetData[i]<=32 && mask[i] > 80) outside += 1;
     }
-    return { coverage: total ? covered / total * 100 : 0, outside: total ? outside / total * 100 : 0 };
+    const fraction=total?covered/total:0;
+    this.progress=stageProgress(this.stage,fraction);
+    this.outside=Math.max(this.outside,outside/Math.max(1,this.layerTotals[2])*100);
+    if(total&&fraction>=STAGES[this.stage].threshold){
+      if(this.stage===2){this.complete=true;this.progress=100;}
+      else {this.stage++;this.mask=this.layerMasks[this.stage];}
+      this.update();
+    }
+    return {coverage:this.progress,outside:this.outside};
   }
 
   route() {
     const points = [];
     let row = 0;
-    for (let y = 24; y < TEX_H - 18; y += 19) {
+    const spacing=this.stage<2?6:19;
+    for (let y = 18; y < TEX_H - 18; y += spacing) {
       const line = [];
-      for (let x = 22; x < TEX_W - 18; x += 22) {
-        if (this.targetData[(y * TEX_W + x) * 4 + 3] > 35) line.push(new THREE.Vector2(x / TEX_W, 1 - y / TEX_H));
+      for (let x = 18; x < TEX_W - 18; x += spacing) {
+        const data=this.layerTargets[this.stage]||this.targetData;
+        if (data[(y * TEX_W + x) * 4 + 3] > 35) line.push(new THREE.Vector2(x / TEX_W, 1 - y / TEX_H));
       }
       if (row % 2) line.reverse();
       points.push(...line);
@@ -414,8 +453,8 @@ class PaintSurface {
 // Каждая запись — самостоятельная поверхность со своими координатами и размером.
 // Чтобы добавить стену в локацию, достаточно дописать сюда строку.
 const WALLS = [
-  { id:'player', x:PLAYER_CENTER, accent:[182,255,0] },
-  { id:'rival',  x:RIVAL_CENTER,  accent:[137,144,125] }
+  { id:'player', x:PLAYER_CENTER, grid:{columns:4,rows:2}, accent:[182,255,0],dripPalette:['#719e00','#415b05'] },
+  { id:'rival',  x:RIVAL_CENTER, grid:{columns:4,rows:2}, accent:[137,144,125],dripPalette:['#656c58','#464e3d'] }
 ];
 const surfaces = WALLS.map(spec => new PaintSurface(spec));
 const surfaceById = id => surfaces.find(s => s.id === id);
@@ -1229,7 +1268,9 @@ function reset(){
   camera.position.set(-1.25,3.55,9.2);
   ui.clock.classList.remove('critical'); ui.game.classList.remove('paint-mode','spraying','skinny');
   ui.resultModal.classList.remove('is-visible'); ui.resultCard.classList.remove('loss');
-  setCap('fat'); updateHud();
+  state.aiRoute=aiSurface.route();state.roundSeconds=playerSurface.roundSeconds;
+  state.remaining=state.roundSeconds;
+  setCap('fat'); updateHud();updateTimer();
 }
 
 async function start(){
@@ -1399,13 +1440,14 @@ function updateTagMovement(now,dt){
 }
 
 function stepAi(now,dt){
-  if(!state.aiRoute.length)return false;
+  if(!state.aiRoute.length||aiSurface.complete)return false;
 
   // Short painting bursts separated by observation pauses make the rival read
   // as another writer, not a path-following machine.
-  if(now<state.aiRestUntil)return false;
+  if(now<state.aiRestUntil){aiSurface.drips.release();return false;}
   if(!state.aiBurstUntil)state.aiBurstUntil=now+1100+Math.random()*1500;
   if(now>=state.aiBurstUntil){
+    aiSurface.drips.release();
     state.aiRestUntil=now+420+Math.random()*1050;
     state.aiBurstUntil=state.aiRestUntil+900+Math.random()*1800;
     return false;
@@ -1413,6 +1455,7 @@ function stepAi(now,dt){
 
   // Пауза: соперник трясёт баллон, пока не наберёт давление
   if(now<state.aiPauseUntil){
+    aiSurface.drips.release();
     state.aiShaking=true;
     state.aiPressure=Math.min(100,state.aiPressure+46*dt);
     return false;
@@ -1454,10 +1497,7 @@ function stepAi(now,dt){
 
   // Залипание на месте — потёк, как и у игрока
   state.aiStationary=moved<.004?state.aiStationary+dt:Math.max(0,state.aiStationary-dt*3);
-  if(state.aiStationary>.85&&now-state.aiLastDrip>1100){
-    state.aiDrips+=1; state.aiLastDrip=now; state.aiStationary=0;
-    aiSurface.drip(state.aiUv);
-  }
+  if(aiSurface.holdDrip(state.aiUv,dt,now))state.aiDrips+=1;
 
   if(state.aiUv.distanceTo(aim)<.015){
     state.aiIndex+=1;
@@ -1468,10 +1508,11 @@ function stepAi(now,dt){
 }
 
 function stepPlayer(now,dt){
-  const spraying=state.pointerDown&&!state.shaking&&state.pressure>1&&!player.tagMove.active&&player.paintBlend>.92;
+  const surface=state.panel||playerSurface;
+  const spraying=state.pointerDown&&!state.shaking&&state.pressure>1&&!player.tagMove.active&&player.paintBlend>.92&&!surface.complete;
   ui.game.classList.toggle('spraying',spraying); spraySound(spraying);
   if(state.shaking&&!state.pointerDown){ state.pressure=Math.min(100,state.pressure+43*dt); if(audio&&now-audio.lastShake>(75+Math.random()*40)){audio.lastShake=now;rattle();} }
-  if(!spraying){ state.stationary=Math.max(0,state.stationary-dt*2); state.lastUv.copy(state.reachUv); return false; }
+  if(!spraying){ surface.drips.release(); state.stationary=0; state.lastUv.copy(state.reachUv); return false; }
   state.pressure=Math.max(0,state.pressure-(state.cap==='fat'?7:4.6)*dt);
 
   // Дистанция до стены: вплотную — узкая плотная линия, издалека — широкий мягкий факел
@@ -1492,15 +1533,16 @@ function stepPlayer(now,dt){
     (state.panel||playerSurface).spray(point,radius,strength/Math.sqrt(steps));
   }
 
-  // Течёт и от залипания на месте, и от работы вплотную к стене
-  const dripAfter=.95-(1-near)*.3;
-  if(state.stationary>dripAfter&&now-state.lastDrip>900){ state.drips+=1; state.lastDrip=now; (state.panel||playerSurface).drip(state.reachUv); hit(60); state.camShake=.22; }
+  // Continuous dwell selects a fixed point from this wall's original DripMap.
+  if(surface.holdDrip(state.reachUv,dt,now)){state.drips+=1;hit(60);state.camShake=.22;}
   state.lastUv.copy(state.reachUv);
   return true;
 }
 
 function updateMetrics(){
-  const p=playerSurface.metrics(),a=aiSurface.metrics();
+  const previousStage=aiSurface.stage;
+  const p=(state.mode==='battle'?playerSurface:(state.panel||playerSurface)).metrics(),a=aiSurface.metrics();
+  if(aiSurface.stage!==previousStage){state.aiRoute=aiSurface.route();state.aiIndex=0;}
   state.coverage=p.coverage; state.aiCoverage=a.coverage; state.clean=Math.max(0,100-state.drips*3.2-p.outside*.12); state.aiClean=Math.max(0,98-state.aiDrips*3.2-a.outside*.1);
   updateHud();
   if(state.mode!=='battle')return;   // в свободном режиме никто не побеждает
@@ -1510,7 +1552,7 @@ function updateMetrics(){
 
 function updatePaint(now,dt){
   const battle=state.mode==='battle';
-  if(battle)state.remaining=Math.max(0,ROUND_SECONDS-(now-state.roundStarted)/1000);
+  if(battle)state.remaining=Math.max(0,state.roundSeconds-(now-state.roundStarted)/1000);
   updateTagMovement(now,dt);
   state.reachUv.copy(clampToReach(state.aimUv));
   state.canUp=state.aimUv.distanceTo(state.reachUv)>.004;
@@ -1554,7 +1596,10 @@ function startBattle(){
   state.mode='battle';
   surfaces.forEach(s=>s.reset());
   Object.assign(state,{coverage:0,aiCoverage:0,clean:100,aiClean:96,drips:0,aiDrips:0,
-    pressure:100,aiPressure:100,remaining:ROUND_SECONDS,finished:false,beatsDone:{},beat:null});
+    pressure:100,aiPressure:100,roundSeconds:playerSurface.roundSeconds,remaining:playerSurface.roundSeconds,finished:false,beatsDone:{},beat:null});
+  state.aiRoute=aiSurface.route();state.aiIndex=0;
+  state.aiRestUntil=state.aiBurstUntil=state.aiPauseUntil=0;
+  updateTimer();
   ui.game.classList.remove('can-talk','roam-mode');
   state.panel=playerSurface;
   player.root.position.x=THREE.MathUtils.clamp(player.root.position.x,PLAYER_CENTER-2.2,PLAYER_CENTER+2.2);
@@ -1563,20 +1608,27 @@ function startBattle(){
   enterTagging();
 }
 
-function updateTimer(){ const seconds=Math.ceil(state.remaining); ui.clock.textContent=`0${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`; ui.clock.classList.toggle('critical',seconds<=10&&state.running); }
-function updateHud(){ ui.playerCoverage.textContent=Math.floor(state.coverage); ui.aiCoverage.textContent=Math.floor(state.aiCoverage); ui.playerProgress.style.width=`${Math.min(100,state.coverage)}%`; ui.aiProgress.style.width=`${Math.min(100,state.aiCoverage)}%`; ui.pressure.style.width=`${state.pressure}%`; ui.pressure.classList.toggle('low',state.pressure<25); ui.pressureNumber.textContent=Math.round(state.pressure); ui.clean.textContent=Math.round(state.clean); ui.drips.textContent=state.drips; ui.shake.classList.toggle('active',state.shaking); }
+function updateTimer(){ const seconds=Math.ceil(state.remaining); ui.clock.textContent=`${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`; ui.clock.classList.toggle('critical',seconds<=10&&state.running); }
+function updateHud(){
+  const panel=state.panel||playerSurface;
+  $('#playerLayer').textContent=panel.complete?'COMPLETE':STAGES[panel.stage].name;
+  $('#aiLayer').textContent=aiSurface.complete?'COMPLETE':STAGES[aiSurface.stage].name;
+  $('#battleTime').textContent=`${playerSurface.roundSeconds} SECONDS / BATTLE`;
+  ui.playerCoverage.textContent=Math.floor(state.coverage); ui.aiCoverage.textContent=Math.floor(state.aiCoverage); ui.playerProgress.style.width=`${Math.min(100,state.coverage)}%`; ui.aiProgress.style.width=`${Math.min(100,state.aiCoverage)}%`; ui.pressure.style.width=`${state.pressure}%`; ui.pressure.classList.toggle('low',state.pressure<25); ui.pressureNumber.textContent=Math.round(state.pressure); ui.clean.textContent=Math.round(state.clean); ui.drips.textContent=state.drips; ui.shake.classList.toggle('active',state.shaking);
+}
 function score(coverage,clean,drips,bonus=0){return Math.max(0,Math.round(coverage*.58+clean*.32-drips*1.4+bonus));}
 
 function finish(reason){
   if(state.finished)return; state.finished=true; state.running=false; state.pointerDown=false; state.shaking=false; state.phase='result'; spraySound(false); playerSpray.visible=false; aiSpray.visible=false; updateMetrics();
-  const ps=score(state.coverage,state.clean,state.drips,reason==='player'?Math.min(10,state.remaining/9):0); const as=score(state.aiCoverage,state.aiClean,state.aiDrips,reason==='ai'?Math.min(10,state.remaining/9):0);
+  const timeBonus=Math.min(10,10*state.remaining/state.roundSeconds);
+  const ps=score(state.coverage,state.clean,state.drips,reason==='player'?timeBonus:0); const as=score(state.aiCoverage,state.aiClean,state.aiDrips,reason==='ai'?timeBonus:0);
   const win=reason==='player'||(reason==='time'&&ps>=as); ui.resultTitle.textContent=win?'YOU WIN':'OPPONENT WINS'; ui.resultCard.classList.toggle('loss',!win); ui.playerScore.textContent=ps; ui.aiScore.textContent=as; ui.playerMeta.textContent=`${Math.floor(state.coverage)}% / ${state.drips} DRIPS`; ui.aiMeta.textContent=`${Math.floor(state.aiCoverage)}% / ${state.aiDrips} DRIPS`;
   setTimeout(()=>ui.resultModal.classList.add('is-visible'),600); hit(win?260:75);
 }
 
 function updatePointer(event){
   const rect=ui.scene.getBoundingClientRect(); state.pointerNdc.x=((event.clientX-rect.left)/rect.width)*2-1; state.pointerNdc.y=-((event.clientY-rect.top)/rect.height)*2+1;
-  raycaster.setFromCamera(state.pointerNdc,camera); const hit=raycaster.intersectObject(playerSurface.mesh,false)[0];
+  raycaster.setFromCamera(state.pointerNdc,camera); const hit=raycaster.intersectObject((state.panel||playerSurface).mesh,false)[0];
   if(hit?.uv){
     state.pointerUv.copy(hit.uv); state.aimUv.copy(hit.uv);
     const reachable=clampToReach(state.aimUv);
@@ -1650,6 +1702,7 @@ function animate(){
       state.aiCoverage.toFixed(1), state.aiDrips);
   }
   camera.lookAt(look);
+  for(const surface of surfaces)surface.animateDrips(now);
   renderer.render(scene,camera);
 }
 
@@ -1741,7 +1794,7 @@ ui.enterTagBtn.addEventListener('pointerdown', (e) => {
   else enterTagging();
 });
 
-window.SF = { state, reset, start, clampToReach, reachCenter, player, opponent, THREE,
+window.SF = { state, reset, start, startBattle, surfaces, clampToReach, reachCenter, player, opponent, THREE,
   diag:()=>({
     баллонИгрока: !!player.canModel,
     баллонСоперника: !!opponent.canModel,

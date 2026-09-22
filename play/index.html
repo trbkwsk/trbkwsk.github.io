@@ -17,13 +17,14 @@
     <header class="hud-top">
       <img src="assets/sprayfight_green.png" alt="SprayFight" />
       <div class="word">WORD <b>SPRAY</b></div>
-      <div class="clock" id="clock">01:30</div>
+      <div class="clock" id="clock">00:36</div>
       <button id="sound" class="plain-button" type="button" aria-pressed="true">SOUND ON</button>
     </header>
 
     <section class="fighter fighter-player" aria-label="Player progress">
       <span>WRITER 01</span>
       <strong>YOU</strong>
+      <small id="playerLayer">SKETCH</small>
       <div class="progress"><i id="playerProgress"></i></div>
       <b><span id="playerCoverage">0</span>%</b>
     </section>
@@ -31,6 +32,7 @@
     <section class="fighter fighter-ai" aria-label="Opponent progress">
       <span>WRITER 02</span>
       <strong>OPPONENT</strong>
+      <small id="aiLayer">SKETCH</small>
       <div class="progress"><i id="aiProgress"></i></div>
       <b><span id="aiCoverage">0</span>%</b>
     </section>
@@ -65,7 +67,7 @@
     <section class="modal is-visible" id="startModal" role="dialog" aria-modal="true">
       <div class="start-card">
         <img src="assets/sprayfight_green.png" alt="SprayFight" />
-        <div class="facts"><span>2 WRITERS</span><span>1 WORD</span><span>90 SECONDS</span></div>
+        <div class="facts"><span>2 WRITERS</span><span>1 WORD</span><span id="battleTime">36 SECONDS / BATTLE</span></div>
         <p>INDUSTRIAL THIRD-PERSON PROTOTYPE / BUILD 04 · TRANE MOTION</p>
         <button class="action" id="start" type="button">ENTER</button>
         <small class="hint-desktop">Move the mouse over your wall · Hold to spray · 1 / 2 change cap · Space shakes the can</small>
@@ -88,6 +90,6 @@
     </section>
   </div>
 
-  <script type="module" src="main.js?v=walls-1"></script>
+  <script type="module" src="main.js?v=area-layers-drips-1"></script>
 </body>
 </html>

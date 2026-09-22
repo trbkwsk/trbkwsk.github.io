@@ -1,0 +1,45 @@
+<!doctype html><meta charset="utf-8"><title>SprayFight browser regression</title>
+<style>body{background:#171917;color:#c8ff32;font:14px monospace}iframe{width:100%;height:600px;border:0}img{width:31%;border:1px solid #777}pre{white-space:pre-wrap}</style>
+<button id="run">Run checks</button><pre id="log">Waiting</pre><div id="layers"></div>
+<iframe src="../play/index.html"></iframe>
+<script>
+const frame=document.querySelector('iframe'),log=document.querySelector('#log');
+function check(value,message){if(!value)throw Error(message);log.textContent+='\nPASS '+message;}
+document.querySelector('#run').onclick=async()=>{
+  log.textContent='Running';
+  try{
+    const sf=frame.contentWindow.SF,doc=frame.contentDocument;
+    check(sf&&!doc.querySelector('#start').disabled,'assets loaded');
+    sf.reset();const surface=sf.surfaces[0],other=sf.surfaces[1];
+    check(sf.state.mode==='roam'&&sf.state.remaining===36,'roam default and area budget');
+    check(surface.layerTotals.every(n=>n>0),'all layer masks have targets');
+    document.querySelector('#layers').replaceChildren();
+    const shot=()=>{const img=new Image();img.src=surface.display.toDataURL();document.querySelector('#layers').append(img);};
+    surface.spray(new sf.THREE.Vector2(.5,.5),18);surface.metrics();
+    check(!surface.complete,'one spray cannot complete a wall');
+    surface.reset();
+    for(let stage=0;stage<3;stage++){
+      check(surface.stage===stage,'stage '+stage+' active');
+      const ctx=surface.mask.getContext('2d');ctx.fillStyle='white';ctx.fillRect(0,0,1024,390);
+      const result=surface.metrics();shot();
+      check(result.coverage===[50,85,100][stage],'stage '+stage+' threshold progress');
+      if(stage<2)check(surface.mask.getContext('2d').getImageData(0,0,1024,390).data.every(x=>x===0),'next mask starts empty');
+    }
+    check(surface.complete&&!other.complete,'walls progress independently');
+    surface.reset();
+    const point=surface.drips.points[0],uv=new sf.THREE.Vector2(point[0],1-point[1]);
+    check(!surface.holdDrip(uv,.99,0),'no drip before one second');
+    check(surface.holdDrip(uv,.02,1000),'drip triggered at fixed point');
+    surface.animateDrips(4350);
+    check(surface.drips.events.length===1&&surface.settledDrips===1,'drip finishes after releasing spray');
+    check(surface.metrics().coverage===0,'drips do not score as paint');
+    sf.reset();sf.state.phase='approach';sf.startBattle();
+    check(sf.state.remaining===36&&sf.state.roundSeconds===36,'battle uses grid budget');
+    await new Promise(resolve=>setTimeout(resolve,3700));
+    check(sf.state.phase==='paint'&&sf.state.remaining<36&&sf.state.remaining>32,'countdown excluded from budget');
+    check(surface.stage===0&&!surface.complete&&surface.drips.events.length===0,'battle resets layers and drips');
+    check(['joystick','joystickStick','reachBtn','crouchBtn','enterTagBtn'].every(id=>doc.getElementById(id)),'touch controls retained');
+    sf.reset();log.textContent+='\nALL CHECKS PASSED';
+  }catch(error){log.textContent+='\nFAIL '+error.stack;}
+};
+</script>
