@@ -26,3 +26,15 @@ assert.equal(dripShape(3.35).length,25);
 assert.equal(dripShape(3.35).settled,true);
 assert.equal(DRIP_MAPS['4x2'].length,24);
 console.log('PASS: grid time, stage thresholds, deterministic drips, dwell/release, animation timing');
+
+// Раскладка потёков для ЛЮБОЙ сетки: до этого карта была только для 4x2,
+// и стена другого размера молча оставалась без потёков вовсе.
+import {dripMapFor,dripCountFor} from '../play/paint-rules.mjs';
+assert.equal(dripMapFor({columns:4,rows:2}).length,24);           // ручная раскладка уцелела
+for(const g of [{columns:2,rows:1},{columns:6,rows:3},{columns:1,rows:2},{columns:6,rows:6}]){
+  const m=dripMapFor(g);
+  assert.equal(m.length,dripCountFor(g));
+  assert.equal(m.length>=8,true,'у любой сетки есть точки');
+  assert.equal(m.every(([u,v])=>u>.05&&u<.95&&v>.10&&v<.90),true,'точки не липнут к кромке');
+  assert.equal(JSON.stringify(m),JSON.stringify(dripMapFor(g)),'раскладка детерминирована');
+}

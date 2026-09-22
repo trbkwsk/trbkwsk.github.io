@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
-import { STAGES, timeForGrid, stageProgress, DRIP_MAPS, DripTracker, dripShape } from './paint-rules.mjs';
+import { STAGES, timeForGrid, stageProgress, dripMapFor, DripTracker, dripShape } from './paint-rules.mjs';
 
 const DEFAULT_GRID = {columns:4,rows:2};
 const ROUND_SECONDS = timeForGrid(DEFAULT_GRID);
@@ -257,7 +257,7 @@ class PaintSurface {
     this.grid=spec.grid ?? DEFAULT_GRID;
     this.roundSeconds=timeForGrid(this.grid);
     this.dripPalette=spec.dripPalette ?? ['#719e00','#415b05'];
-    this.drips=new DripTracker(DRIP_MAPS[`${this.grid.columns}x${this.grid.rows}`] ?? []);
+    this.drips=new DripTracker(dripMapFor(this.grid));
     this.stage=0;this.complete=false;this.progress=0;this.outside=0;
     this.layerMasks=[newCanvas(),newCanvas(),newCanvas()];
     this.layerTargets=[];
