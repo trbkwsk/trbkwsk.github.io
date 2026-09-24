@@ -1,10 +1,21 @@
 // Verified reference constants; stage mapping and drip positions are SprayFight design.
 export const SECONDS_PER_QUAD = 4.5;
+// Четыре стадии отрисовки, как в оригинале. Первые три — реальные слои рисунка,
+// COMPLETING — терминальное состояние: слои дописаны, работа коммитится.
+// Собственной маски у неё нет, поэтому прогресс уже 100.
 export const STAGES = [
   {name:'SKETCH', threshold:.50, from:0, to:50},
   {name:'OUTLINE', threshold:.85, from:50, to:85},
-  {name:'FILL', threshold:.85, from:85, to:100}
+  {name:'FILL', threshold:.85, from:85, to:100},
+  {name:'COMPLETING', threshold:1, from:100, to:100}
 ];
+// Последняя стадия, у которой есть слой рисунка.
+export const LAST_PAINT_STAGE = 2;
+// Сколько длится коммит работы, мс.
+export const COMPLETING_MS = 900;
+// Шаг эмиссии краски. В оригинале баллон выпускает краску фиксированными
+// порциями 1/30 с, а не раз в кадр — иначе на быстром мониторе красится быстрее.
+export const EMIT_STEP = 1/30;
 export function timeForGrid({columns,rows}) {
   if(!Number.isInteger(columns)||!Number.isInteger(rows)||columns<1||rows<1)throw new Error('Invalid paint grid');
   return columns*rows*SECONDS_PER_QUAD;
@@ -90,4 +101,71 @@ export class DripTracker {
     this.used.add(selected);this.held=0;
     return true;
   }
+}
+
+// ===== Палитра =====
+// Восемь цветов ровно как в <FreeFormColors> оригинала. Фиксированный набор
+// держит стиль: произвольный цвет быстро превращает стену в кашу.
+export const PALETTE = [
+  [254,244,248], [0,0,0],       [255,128,0],   [98,185,214],
+  [7,2,252],     [57,181,74],   [123,97,191],  [255,232,185]
+];
+
+// У потёков в оригинале СВОЯ палитра, а не затемнённый основной цвет
+// (<DripPalette> у каждой зоны). Берём соседний по кругу оттенок и гасим его —
+// потёк читается как другая краска, а не как тень основной.
+export function dripColorsFor(index){
+  const a=PALETTE[(index+3)%PALETTE.length], b=PALETTE[(index+6)%PALETTE.length];
+  const hex=(c,k)=>'#'+c.map(v=>Math.round(v*k).toString(16).padStart(2,'0')).join('');
+  return [hex(a,.62), hex(b,.44)];
+}
+
+// ===== Очки =====
+// Схема оригинала (<Scoring>): база 10 и бонусы РОВНО ПО 5 за риск, а не формула
+// от покрытия. Площадь влияет на ВРЕМЯ, а не на награду — поэтому крупная работа
+// не выгоднее мелкой сама по себе, выгоднее уложиться и не насажать потёков.
+export const SCORE = { base:10, bonus:5 };
+
+/**
+ * @param {{coverage:number, drips:number, seconds:number, allowed:number,
+ *          goBig:boolean, goOver:boolean, heaven:boolean}} r
+ */
+export function scoreRun(r){
+  const done = r.coverage>=85;
+  if(!done) return { total:0, parts:[], done:false };
+  const parts=[['BASE',SCORE.base]];
+  if(r.drips===0)               parts.push(['NO DRIPS',SCORE.bonus]);
+  if(r.seconds<=r.allowed*.6)   parts.push(['FAST TIME',SCORE.bonus]);
+  if(r.goBig)                   parts.push(['GO BIG',SCORE.bonus]);
+  if(r.goOver)                  parts.push(['GO OVER',SCORE.bonus]);
+  if(r.heaven)                  parts.push(['HEAVEN SPOT',SCORE.bonus]);
+  return { total:parts.reduce((s,[,v])=>s+v,0), parts, done:true };
+}
+
+// Записанные дуги въезда камеры (§122). В оригинале это четыре файла .cin по
+// 84 кадра = 2.8 с при 30 к/с; вариант выбирается по взаимной ориентации игрока
+// и стены, все стартуют со смещением только по глубине. Ниже — начало и конец
+// каждой дуги в метрах, как они лежат в файлах.
+// Оговорка: соответствие осей движка нашим НЕ установлено, поэтому отсюда взяты
+// длина и форма пути, а не точная ориентация. Наш игрок всегда подходит к стене
+// спереди, поэтому из четырёх вариантов применимы только FL и FR — по стороне,
+// с которой он встал к центру стены.
+export const SPRAY_CAM_ARCS = {
+  FL: { from:[0,0,-1.35], to:[-1.23,-2.60,-0.12] },
+  FR: { from:[0,0,-2.81], to:[-0.61, 0.70,-2.55] }
+};
+export const SPRAY_CAM_FRAMES = 84;          // длина дуги в кадрах
+export const SPRAY_CAM_MS = SPRAY_CAM_FRAMES/30*1000;   // 2.8 с при 30 к/с
+export const SPRAY_CAM_EASEIN = 5/SPRAY_CAM_FRAMES;     // EASEIN=5 кадров из CC_Ins_Spray.csv
+
+// Разгон за первые пять кадров, дальше ровный ход. Хвост слегка замедлен: в
+// исходных данных концовка записана покадрово, у нас её нет, а резкая остановка
+// читается как рывок.
+export function sprayCamEase(t){
+  if(t<=0)return 0; if(t>=1)return 1;
+  const e=SPRAY_CAM_EASEIN;
+  const head=t<e ? (t*t)/(2*e) : t-e/2;   // непрерывно по значению и по скорости
+  const span=1-e/2;
+  const u=head/span;
+  return u*u*(3-2*u)*.25+u*.75;
 }

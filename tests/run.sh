@@ -14,7 +14,8 @@ const eq=(a,b,m)=>{n++;if(!Object.is(a,b)&&JSON.stringify(a)!==JSON.stringify(b)
   throw new Error(`FAIL #${n}: ${m||''} получено ${a}, ожидалось ${b}`);};
 const thr=(f,m)=>{n++;let ok=false;try{f()}catch(e){ok=true}
   if(!ok)throw new Error(`FAIL #${n}: ${m||''} исключения не было`);};
-export default {equal:eq,throws:thr,get count(){return n}};
+const ok=(v,m)=>{n++;if(!v)throw new Error(`FAIL #${n}: ${m||''} ожидалось истинное значение`);};
+export default {equal:eq,throws:thr,ok,get count(){return n}};
 JS
 sed "s#\.\./play/paint-rules\.mjs#./paint-rules.mjs#g;s#node:assert/strict#./assert.mjs#;s#console\.log#print#g" \
   "$DIR/sprayfight-rules.mjs" > "$TMP/run.mjs"

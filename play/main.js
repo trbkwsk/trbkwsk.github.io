@@ -1,6 +1,8 @@
 import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
-import { STAGES, timeForGrid, stageProgress, dripMapFor, DripTracker, dripShape } from './paint-rules.mjs';
+import { SPRAY_CAM_ARCS, SPRAY_CAM_MS, sprayCamEase,
+  STAGES, LAST_PAINT_STAGE, COMPLETING_MS, EMIT_STEP, timeForGrid, stageProgress, dripMapFor, DripTracker, dripShape,
+         PALETTE, dripColorsFor, scoreRun } from './paint-rules.mjs';
 
 const DEFAULT_GRID = {columns:4,rows:2};
 const ROUND_SECONDS = timeForGrid(DEFAULT_GRID);
@@ -261,10 +263,13 @@ class PaintSurface {
     this.z = spec.z ?? WALL_Z;
     this.w = spec.w ?? PANEL_W;
     this.h = spec.h ?? PANEL_H;
-    this.accent = spec.accent;
+    this.colorIndex = spec.color ?? 0;
+    this.accent = spec.accent ?? PALETTE[this.colorIndex];
+    this.pieceLimit = spec.pieceLimit ?? 1;
+    this.pieces = 0;                       // сколько работ уже оставлено
     this.grid=spec.grid ?? DEFAULT_GRID;
     this.roundSeconds=timeForGrid(this.grid);
-    this.dripPalette=spec.dripPalette ?? ['#719e00','#415b05'];
+    this.dripPalette=spec.dripPalette ?? dripColorsFor(this.colorIndex);
     this.drips=new DripTracker(dripMapFor(this.grid));
     this.stage=0;this.complete=false;this.progress=0;this.outside=0;
     this.layerMasks=[newCanvas(),newCanvas(),newCanvas()];
@@ -397,10 +402,11 @@ class PaintSurface {
     ctx.globalAlpha = .88;
     ctx.drawImage(this.mist, 0, 0);
     ctx.restore();
-    for(let layer=0;layer<=this.stage;layer++){
+    const topLayer=Math.min(this.stage,LAST_PAINT_STAGE);
+    for(let layer=0;layer<=topLayer;layer++){
       const art=layer===2?this.final:this.outline;
       ctx.save();ctx.globalAlpha=layer===0?.4:1;
-      if(layer<this.stage||this.complete)ctx.drawImage(art,0,0);
+      if(layer<topLayer||this.complete||this.stage>LAST_PAINT_STAGE)ctx.drawImage(art,0,0);
       else {
         const revealCtx=ctx2d(this.reveal);
         revealCtx.globalCompositeOperation='source-over';
@@ -418,6 +424,11 @@ class PaintSurface {
   metrics() {
     if(!this.layerTargets.length)return {coverage:0,outside:0};
     if(this.complete)return {coverage:100,outside:this.outside};
+    if(this.stage>LAST_PAINT_STAGE){
+      // COMPLETING: слоя с маской нет, считать нечего — только дожидаемся коммита.
+      if(performance.now()>=this.completingUntil){this.complete=true;this.update();}
+      return {coverage:100,outside:this.outside};
+    }
     const mask = ctx2d(this.mask).getImageData(0, 0, TEX_W, TEX_H).data;
     const data=this.layerTargets[this.stage];
     let total = 0, covered = 0, outside = 0;
@@ -432,8 +443,11 @@ class PaintSurface {
     this.progress=stageProgress(this.stage,fraction);
     this.outside=Math.max(this.outside,outside/Math.max(1,this.layerTotals[2])*100);
     if(total&&fraction>=STAGES[this.stage].threshold){
-      if(this.stage===2){this.complete=true;this.progress=100;}
-      else {this.stage++;this.mask=this.layerMasks[this.stage];}
+      if(this.stage===LAST_PAINT_STAGE){
+        // Слои дописаны — уходим в COMPLETING, а не сразу в complete.
+        this.stage=LAST_PAINT_STAGE+1; this.progress=100;
+        this.completingUntil=performance.now()+COMPLETING_MS;
+      } else {this.stage++;this.mask=this.layerMasks[this.stage];}
       this.update();
     }
     return {coverage:this.progress,outside:this.outside};
@@ -460,9 +474,14 @@ class PaintSurface {
 // ===== Стены локации =====
 // Каждая запись — самостоятельная поверхность со своими координатами и размером.
 // Чтобы добавить стену в локацию, достаточно дописать сюда строку.
+// Цвет берётся из восьми фиксированных (paint-rules.PALETTE) по индексу, а не
+// задаётся числом: так вся игра держится одного набора, как <FreeFormColors>.
+// pieceLimit — сколько работ разрешено на стене. В оригинале у 121 зоны из 177
+// стоит ровно одна (<IFreeFormBound Piece Limit>), и это не даёт городу
+// превратиться в ковёр из тегов.
 const WALLS = [
-  { id:'player', x:PLAYER_CENTER, grid:{columns:4,rows:2}, accent:[182,255,0],dripPalette:['#719e00','#415b05'] },
-  { id:'rival',  x:RIVAL_CENTER, grid:{columns:4,rows:2}, accent:[137,144,125],dripPalette:['#656c58','#464e3d'] }
+  { id:'player', x:PLAYER_CENTER, grid:{columns:4,rows:2}, color:5, pieceLimit:1 },
+  { id:'rival',  x:RIVAL_CENTER,  grid:{columns:4,rows:2}, color:1, pieceLimit:1 }
 ];
 const surfaces = WALLS.map(spec => new PaintSurface(spec));
 const surfaceById = id => surfaces.find(s => s.id === id);
@@ -1269,7 +1288,7 @@ function reset(){
   player.resetMotion(); opponent.resetMotion();
   state.aiApproachX=RIVAL_IDLE_X;
   Object.assign(state,{keys:{},walkX:PLAYER_CENTER,standZ:7.2,crouch:0,tiptoe:0,nearWall:false,canUp:false,
-    mode:'roam',panel:null,nearRival:false,talking:false});
+    mode:'roam',panel:null,nearRival:false,talking:false,paintCam:null,paintArc:null,emitAcc:0});
   state.aimUv.set(.5,.5); state.reachUv.set(.5,.5);
   ui.game.classList.remove('can-tag','can-talk','out-of-reach');
   ui.game.classList.add('roam-mode');
@@ -1354,7 +1373,9 @@ function updateApproach(now,dt){
     state.aiApproachX=takeStep
       ? THREE.MathUtils.clamp(home+(Math.random()-.5)*1.1,home-.75,home+.75)
       : opponent.root.position.x;
-    state.aiNextStep=now+1800+Math.random()*3200;
+    // Пауза как у патрульных узлов оригинала: Min pause 2–5 с, Max 5–10 с
+    // (IPatrolNode). Прежние 1.8–5.0 с были заметно суетливее эталона.
+    state.aiNextStep=now+2000+Math.random()*8000;
   }
   if(!opponent.tagMove.active&&Math.abs(opponent.root.position.x-state.aiApproachX)>.12){
     const dx=THREE.MathUtils.clamp(state.aiApproachX-opponent.root.position.x,-TAG_STEP_X,TAG_STEP_X);
@@ -1410,6 +1431,23 @@ function enterTagging(){
   player.root.rotation.y=0;
   player.beginTagMove(player.root.position.x,WALL_Z+.34+state.standZ,performance.now());
   state.aimUv.set(.5,.5); state.reachUv.set(.5,.5); state.lastUv.copy(state.reachUv);
+  // Камера рисования — НЕПОДВИЖНАЯ ТОЧКА. В оригинале все 14 камер с именем
+  // ICameraControl_GRAFF имеют Preset=Point и Type=None: при подходе к стене
+  // камера встаёт и дальше стоит. У нас она ехала за игроком каждый кадр, из-за
+  // чего шаги вдоль стены не читались — двигался весь кадр, а не персонаж.
+  // Якорь ставится здесь один раз, по позиции входа.
+  state.paintCam=new THREE.Vector3(
+    player.root.position.x+1.55,
+    2.15,
+    WALL_Z+.34+state.standZ+2.75);
+  // Камера не телепортируется в эту точку, а въезжает в неё по записанной дуге.
+  // Вариант — по стороне, с которой игрок встал к центру стены.
+  const arc=SPRAY_CAM_ARCS[player.root.position.x<state.panel.x?'FL':'FR'];
+  state.paintArc={
+    t0:performance.now(),
+    // Смещение старта относительно конца — это и есть форма проезда.
+    offset:new THREE.Vector3(arc.from[0]-arc.to[0],arc.from[1]-arc.to[1],arc.from[2]-arc.to[2])
+  };
   if(state.mode==='battle'){ beginCountdown(); return; }
   // Свободный режим: рисуем сразу, без отсчёта, таймера и счёта.
   state.phase='paint'; state.running=true; state.roundStarted=performance.now(); state.lastMetric=state.roundStarted;
@@ -1420,6 +1458,7 @@ function enterTagging(){
 // Отойти от стены и вернуться к свободному перемещению
 function exitTagging(){
   if(state.phase!=='paint'||state.mode==='battle')return;
+  state.paintCam=null; state.paintArc=null;
   state.phase='approach'; state.running=false; state.pointerDown=false; state.shaking=false;
   spraySound(false); playerSpray.visible=false;
   ui.game.classList.remove('paint-mode','spraying','out-of-reach');
@@ -1532,13 +1571,26 @@ function stepPlayer(now,dt){
   const distance=state.reachUv.distanceTo(state.lastUv);
   state.stationary=distance<.012?state.stationary+dt:Math.max(0,state.stationary-dt*3);
 
+  // Краска выходит порциями по EMIT_STEP, а не раз в кадр: сколько бы кадров
+  // ни успел нарисовать монитор, за секунду ложится ровно 30 порций.
+  state.emitAcc=(state.emitAcc||0)+dt;
+  const ticks=Math.floor(state.emitAcc/EMIT_STEP);
+  if(ticks<1){
+    // Порция ещё не набралась. lastUv НЕ трогаем — пройденный путь копится и
+    // войдёт в следующий мазок целиком, без разрывов линии.
+    if(surface.holdDrip(state.reachUv,dt,now)){state.drips+=1;hit(60);state.camShake=.22;}
+    return true;
+  }
+  state.emitAcc-=ticks*EMIT_STEP;
+  const dose=Math.min(ticks,4);
+
   // Непрерывная линия вместо отпечатков: шаг по следу — четверть радиуса факела
   const stepUv=(radius*.25)/TEX_W;
   const steps=Math.min(24,Math.max(1,Math.ceil(distance/Math.max(stepUv,1e-4))));
   const point=new THREE.Vector2();
   for(let i=1;i<=steps;i++){
     point.copy(state.lastUv).lerp(state.reachUv,i/steps);
-    (state.panel||playerSurface).spray(point,radius,strength/Math.sqrt(steps));
+    (state.panel||playerSurface).spray(point,radius,strength*dose/Math.sqrt(steps));
   }
 
   // Continuous dwell selects a fixed point from this wall's original DripMap.
@@ -1678,10 +1730,23 @@ function animate(){
   }
   if(state.phase==='paint'&&!state.beat){
     const handheldX=Math.sin(now*.0017)*.035,handheldY=Math.sin(now*.0023)*.025;
-    // держим соперника в кадре: камера смещена в сторону его стены и отведена назад
-    camera.position.x=THREE.MathUtils.damp(camera.position.x,state.walkX+1.55+handheldX,3.2,dt);
-    camera.position.y=THREE.MathUtils.damp(camera.position.y,2.15-state.crouch*.4+handheldY,3,dt);
-    camera.position.z=THREE.MathUtils.damp(camera.position.z,WALL_Z+.34+state.standZ+2.75,2.8,dt);
+    // Едем к ЗАФИКСИРОВАННОМУ якорю, а не за игроком. Лёгкое покачивание
+    // оставлено — оно от дрожания рук, а не от слежения.
+    const anchor=state.paintCam||new THREE.Vector3(state.walkX+1.55,2.15,WALL_Z+.34+state.standZ+2.75);
+    // Пока дуга играет — идём по ней, после неё просто стоим в якоре.
+    // LOCKGAMEPLAY=0: управление во время проезда не отбирается, красить можно.
+    let ax=anchor.x,ay=anchor.y,az=anchor.z;
+    if(state.paintArc){
+      const t=(now-state.paintArc.t0)/SPRAY_CAM_MS;
+      if(t>=1)state.paintArc=null;
+      else{
+        const k=1-sprayCamEase(t),o=state.paintArc.offset;
+        ax+=o.x*k; ay+=o.y*k; az+=o.z*k;
+      }
+    }
+    camera.position.x=THREE.MathUtils.damp(camera.position.x,ax+handheldX,3.2,dt);
+    camera.position.y=THREE.MathUtils.damp(camera.position.y,ay-state.crouch*.4+handheldY,3,dt);
+    camera.position.z=THREE.MathUtils.damp(camera.position.z,az,2.8,dt);
   }
   if(state.phase==='paint'&&!state.beat){
     // взгляд между точкой краски и серединой между двумя стенами — соперник остаётся сбоку
