@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {decideWinner,bell,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
+import {decideWinner,bell,BELL6_PEAK,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
 assert.equal(timeForGrid({columns:4,rows:2}),36);
 assert.equal(timeForGrid({columns:2,rows:1}),9);
 assert.equal(timeForGrid({columns:6,rows:3}),81);
@@ -245,20 +245,25 @@ assert.equal(HAND_DRAWN_CURVES.length,7);
 // --- Жизнь частицы и колокол ---
 // Скорость ядра факела: 250 дюймов/с из слота 3.
 assert.ok(Math.abs(SPRAY_SPEED-6.35)<1e-9);
-// Колокол: гаснет на обоих концах, ярче всего посередине, симметричен.
+// Колокол взят из bell6.mod оригинала, а не приближён синусом.
+// Он НЕсимметричный: быстрый разгон и долгий спад.
 assert.equal(bell(0),0);
 assert.equal(bell(1),0);
 assert.equal(bell(-1),0);
 assert.equal(bell(2),0);
-assert.ok(Math.abs(bell(.5)-1)<1e-12);
-for(let i=1;i<20;i++){
-  const t=i/40;
-  assert.ok(Math.abs(bell(t)-bell(1-t))<1e-12,'колокол несимметричен');
-  assert.ok(bell(t)>0&&bell(t)<=1);
-}
-// Возрастает до середины и убывает после.
-for(let i=1;i<20;i++)assert.ok(bell(i/40)>bell((i-1)/40));
-for(let i=21;i<40;i++)assert.ok(bell(i/40)<bell((i-1)/40));
+// Пик сильно раньше середины.
+assert.ok(Math.abs(BELL6_PEAK-0.175)<0.02,`пик на ${BELL6_PEAK}`);
+assert.ok(BELL6_PEAK<.3);
+// В пике почти единица.
+assert.ok(bell(BELL6_PEAK)>.99);
+// Значения в пределах отрезка.
+for(let i=1;i<64;i++)assert.ok(bell(i/64)>=0&&bell(i/64)<=1);
+// Несимметричен: в начале ярче, чем на зеркальной позиции в конце.
+assert.ok(bell(.2)>bell(.8),'колокол обязан быть несимметричным');
+assert.ok(bell(.25)>bell(.75));
+// Растёт до пика и падает после.
+for(let i=1;i<10;i++)assert.ok(bell(i/64)>bell((i-1)/64),'не растёт до пика');
+for(let i=20;i<60;i++)assert.ok(bell(i/64)<bell((i-1)/64),'не падает после пика');
 // Срок жизни: полметра на скорости факела — примерно восьмая доля секунды,
 // а не три секунды, как можно было бы прочесть слот 27.
 assert.ok(Math.abs(particleLife(.5)-.5/SPRAY_SPEED)<1e-12);
