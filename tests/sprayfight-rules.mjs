@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {REPUTATION_PER_PIECE,APPROACH_ANGLE_DEG,facingWall,toolsAllowed,decideWinner,bell,BELL6_PEAK,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
+import {CAMERA_DISTANCE,CAMERA_FOCUS_OFFSET,CAMERA_BLEND_SECONDS,CAMERA_DRIFT,REPUTATION_PER_PIECE,APPROACH_ANGLE_DEG,facingWall,toolsAllowed,decideWinner,bell,BELL6_PEAK,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
 assert.equal(timeForGrid({columns:4,rows:2}),36);
 assert.equal(timeForGrid({columns:2,rows:1}),9);
 assert.equal(timeForGrid({columns:6,rows:3}),81);
@@ -139,8 +139,28 @@ assert.equal(scoreRun({coverage:99,drips:1,seconds:99,allowed:100}).done,false);
 assert.equal(scoreRun({coverage:100,drips:1,seconds:99,allowed:100}).done,true);
 assert.equal(scoreRun({coverage:100,drips:1,seconds:99,allowed:100}).total,10);
 
-assert.equal(CAMERA_CONE_DEG,30);
+// Конус взгляда — 60°, из GameInfo/camera/graffiti.xml (GlanceSideAngle).
+// Прежние 30 брались с расставленных на уровнях сценарных камер.
+assert.equal(CAMERA_CONE_DEG,60);
 assert.equal(CAMERA_TURN_RATE,50);
+// CameraDistance = 75 дюймов, самая близкая камера в игре.
+assert.ok(Math.abs(CAMERA_DISTANCE-1.905)<1e-9);
+// Точка взгляда: 25 и 60 дюймов от игрока.
+assert.ok(Math.abs(CAMERA_FOCUS_OFFSET[0]-0.635)<1e-9);
+assert.ok(Math.abs(CAMERA_FOCUS_OFFSET[1]-1.524)<1e-9);
+assert.equal(CAMERA_FOCUS_OFFSET[2],0);
+// Камера граффити встаёт впятеро быстрее прочих: 0.2 с против 1.0.
+assert.equal(CAMERA_BLEND_SECONDS,0.2);
+// Дрейфы: периоды измеряются секундами и все дольше секунды, размахи малы.
+for(const [name,d] of Object.entries(CAMERA_DRIFT)){
+  assert.ok(d.period>0,`${name}: период`);
+  assert.ok(d.amount>0,`${name}: размах`);
+}
+assert.equal(CAMERA_DRIFT.roll.amount,1.25);
+assert.equal(CAMERA_DRIFT.yaw.period,10);
+// Крен мельче рыскания, и оба медленные — это дыхание кадра, а не тряска.
+assert.ok(CAMERA_DRIFT.roll.amount<CAMERA_DRIFT.yaw.amount);
+assert.ok(CAMERA_DRIFT.roll.period>=1&&CAMERA_DRIFT.yaw.period>=1);
 // Приведение угла: границы и обороты.
 assert.equal(wrapDeg(0),0);
 assert.equal(wrapDeg(180),180);
@@ -153,11 +173,12 @@ assert.equal(wrapDeg(720+45),45);
 assert.equal(clampCone(0),0);
 assert.equal(clampCone(29),29);
 assert.equal(clampCone(-29),-29);
-assert.equal(clampCone(45),30);
-assert.equal(clampCone(-45),-30);
+assert.equal(clampCone(59),59);
+assert.equal(clampCone(90),60);
+assert.equal(clampCone(-90),-60);
 // Отклонение больше 180° разворачивается коротким путём, а не упирается в +30.
 assert.equal(clampCone(350),-10);
-assert.equal(clampCone(200),-30);
+assert.equal(clampCone(200),-60);
 for(let a=-720;a<=720;a+=7)assert.ok(Math.abs(clampCone(a))<=CAMERA_CONE_DEG);
 // Довор: за секунду не больше скорости, цель не перелетается.
 assert.equal(turnToward(0,10,1,50),10);

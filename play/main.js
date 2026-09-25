@@ -1,7 +1,8 @@
 import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 import { SPRAY_CAM_ARCS, SPRAY_CAM_MS, sprayCamEase,
-  CAMERA_CONE_DEG, clampCone, turnToward, dripWarning, CURVES, bell, particleLife,
+  CAMERA_CONE_DEG, CAMERA_DISTANCE, CAMERA_FOCUS_OFFSET, CAMERA_DRIFT,
+  clampCone, turnToward, dripWarning, CURVES, bell, particleLife,
   STAGES, LAST_PAINT_STAGE, COMPLETING_MS, EMIT_STEP, timeForGrid, stageProgress, dripMapFor, DripTracker, dripShape,
          PALETTE, dripColorsFor, scoreRun, decideWinner,
          TOOLS, toolRadiusRatio, fillRate, toolsAllowed, goBigSize, timeForGrid as timeFor,
@@ -1687,10 +1688,13 @@ function enterTagging(){
   // камера встаёт и дальше стоит. У нас она ехала за игроком каждый кадр, из-за
   // чего шаги вдоль стены не читались — двигался весь кадр, а не персонаж.
   // Якорь ставится здесь один раз, по позиции входа.
+  // `CameraDistance` = 75 дюймов = 1.905 м. Раньше здесь стояло 2.75 м,
+  // то есть камера была отодвинута почти на метр дальше, чем в оригинале.
+  // Высота и боковой сдвиг — из `FocalPoint Offset` (25, 60, 0) дюймов.
   state.paintCam=new THREE.Vector3(
-    player.root.position.x+1.55,
-    2.15,
-    WALL_Z+.34+state.standZ+2.75);
+    player.root.position.x+CAMERA_FOCUS_OFFSET[0],
+    CAMERA_FOCUS_OFFSET[1]+.6,
+    WALL_Z+.34+state.standZ+CAMERA_DISTANCE);
   // Камера не телепортируется в эту точку, а въезжает в неё по записанной дуге.
   // Вариант — по стороне, с которой игрок встал к центру стены.
   // Базовое направление конуса обзора — от якоря на центр стены. Довор камеры
@@ -2030,7 +2034,16 @@ function animate(){
     }
   }
   if(state.phase==='paint'&&!state.beat){
-    const handheldX=Math.sin(now*.0017)*.035,handheldY=Math.sin(now*.0023)*.025;
+    // Дрейфы камеры рисования из ComponentGraffiti: крен 1.25° с периодом 5 с,
+    // рыскание 10° с периодом 10 с, наплыв 0.25 с периодом 8 с. Раньше здесь
+    // было выдуманное дрожание рук с периодом меньше секунды — размах близкий,
+    // а характер совсем другой: в оригинале это медленное дыхание кадра.
+    const t=now/1000;
+    const driftYaw=Math.sin(t*2*Math.PI/CAMERA_DRIFT.yaw.period)*CAMERA_DRIFT.yaw.amount;
+    const driftRoll=Math.sin(t*2*Math.PI/CAMERA_DRIFT.roll.period)*CAMERA_DRIFT.roll.amount;
+    const driftZoom=Math.sin(t*2*Math.PI/CAMERA_DRIFT.zoom.period)*CAMERA_DRIFT.zoom.amount;
+    const handheldX=Math.sin(t*2*Math.PI/CAMERA_DRIFT.yaw.period)*.03;
+    const handheldY=Math.sin(t*2*Math.PI/CAMERA_DRIFT.roll.period)*.02;
     // Едем к ЗАФИКСИРОВАННОМУ якорю, а не за игроком. Лёгкое покачивание
     // оставлено — оно от дрожания рук, а не от слежения.
     const anchor=state.paintCam||new THREE.Vector3(state.walkX+1.55,2.15,WALL_Z+.34+state.standZ+2.75);
@@ -2047,7 +2060,9 @@ function animate(){
     }
     camera.position.x=THREE.MathUtils.damp(camera.position.x,ax+handheldX,3.2,dt);
     camera.position.y=THREE.MathUtils.damp(camera.position.y,ay-state.crouch*.4+handheldY,3,dt);
-    camera.position.z=THREE.MathUtils.damp(camera.position.z,az,2.8,dt);
+    // Наплыв: расстояние до стены дышит на четверть от ZoomAmount.
+    camera.position.z=THREE.MathUtils.damp(camera.position.z,az+driftZoom*CAMERA_DISTANCE*.25,2.8,dt);
+    camera.rotation.z=THREE.MathUtils.damp(camera.rotation.z,driftRoll*Math.PI/180,2,dt);
   }
   if(state.phase==='paint'&&!state.beat){
     // взгляд между точкой краски и серединой между двумя стенами — соперник остаётся сбоку
@@ -2057,7 +2072,7 @@ function animate(){
       // Камера стоит в точке, но смотреть ей разрешено только внутри конуса
       // ±30°, и доворачивает она не мгновенно, а со своей скоростью.
       const a=lookAngles(camera.position,want);
-      state.camYaw=turnToward(state.camYaw,clampCone(a.yaw-state.camBase.yaw),dt);
+      state.camYaw=turnToward(state.camYaw,clampCone(a.yaw-state.camBase.yaw+driftYaw*.1),dt);
       state.camPitch=turnToward(state.camPitch,clampCone(a.pitch-state.camBase.pitch),dt);
       const yaw=(state.camBase.yaw+state.camYaw)*Math.PI/180;
       const pitch=(state.camBase.pitch+state.camPitch)*Math.PI/180;
