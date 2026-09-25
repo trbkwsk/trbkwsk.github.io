@@ -1,17 +1,32 @@
 import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 import { SPRAY_CAM_ARCS, SPRAY_CAM_MS, sprayCamEase,
+  CAMERA_CONE_DEG, clampCone, turnToward, dripWarning, CURVES, bell, particleLife,
   STAGES, LAST_PAINT_STAGE, COMPLETING_MS, EMIT_STEP, timeForGrid, stageProgress, dripMapFor, DripTracker, dripShape,
          PALETTE, dripColorsFor, scoreRun } from './paint-rules.mjs';
 
 const DEFAULT_GRID = {columns:4,rows:2};
 const ROUND_SECONDS = timeForGrid(DEFAULT_GRID);
 const TEX_W = 1024;
-const TEX_H = 390;
+// Текстура повторяет пропорции стены, иначе рисунок растягивает при наложении.
+// Раньше здесь стояло 390 — ровно под старую стену 5.12×1.95 (2.626:1).
+// Теперь стена собрана из квадратных ячеек, и текстура следует за сеткой.
+// Арт (1697×650) вписывается в неё с сохранением пропорций: этим уже занимается
+// compose() через Math.min, так что работа просто встаёт по центру стены,
+// не заполняя её целиком, — как и положено рисунку на стене.
+const TEX_H = TEX_W * DEFAULT_GRID.rows / DEFAULT_GRID.columns;
 const TARGET_COVERAGE = 100;
 // Значения по умолчанию для стены; конкретная стена может их переопределить.
-const PANEL_W = 5.12;
-const PANEL_H = 1.95;
+// Ячейка сетки граффити в оригинале — 36 дюймов, и она КВАДРАТНАЯ. Выведено из
+// радиуса охвата .plr: radius / √(N²+M²) даёт ровно 18.000 у двенадцати файлов
+// из тринадцати. Значит сетка 4×2 — это 144×72 дюйма, ровно 2:1.
+// Раньше здесь стояло 5.12×1.95 (2.63:1) — стена была растянута в 1.31 раза,
+// и ячейки выходили не квадратными, что перекашивало всё, что считается в UV:
+// форму факела, шаг следа, карту потёков.
+const INCH = 0.0254;
+const CELL_INCHES = 36;
+const PANEL_W = DEFAULT_GRID.columns*CELL_INCHES*INCH;   // 3.6576 м
+const PANEL_H = DEFAULT_GRID.rows*CELL_INCHES*INCH;      // 1.8288 м
 const PANEL_Y = 1.38;
 const WALL_Z = -8.15;
 
@@ -88,7 +103,31 @@ const TAG_STEP_TIME = .56;    // совпадает с ускоренным stra
 // но были завышены примерно на 37%.
 const WALK_SPEED = 1.17;      // м/с
 const RUN_SPEED = 3.35;       // м/с — те же 2.85x от шага
-const CLIP_WALK_SPEED = 2.85; // скорость, при которой клип ходьбы идёт с timeScale 1
+const CLIP_WALK_SPEED = 2.85;
+// Естественная скорость бегового клипа. Измерена в Blender по расхождению стоп
+// за цикл: клипы Mixamo сделаны «на месте», корень не едет, но стопы расходятся
+// на полную длину шага, а за цикл шагов два.
+// Метод занижает абсолют — на клипе ходьбы он даёт 2.44 м/с против
+// установленных 2.85, потому что головка кости стопы не совпадает с точкой
+// касания. Поэтому взято ОТНОШЕНИЕ бег/ходьба = 2.88/2.44 = 1.18 и привязано
+// к уже известной скорости ходьбы: 2.85 × 1.18 = 3.36 м/с.
+// Совпало с RUN_SPEED почти точно, то есть беговой клип идёт примерно на 1×.
+const CLIP_RUN_SPEED = 3.36;
+
+// Прыжок. Держим настоящую гравитацию, а высоту и время подбираем от неё:
+// при g = 9.81 подъём 3.68 м/с даёт вершину 0.69 м и время в воздухе 0.75 с.
+// Оговорка: эти числа НЕ из оригинала. В Getting Up прыжок разложен на три
+// клипа (TR_Jump 25 кадров, TR_Jump_InAir, TR_Jump_Land) и ведётся root motion,
+// а не физикой; там высота лежит в самом клипе, и я её не извлекал.
+const GRAVITY = 9.81;
+const JUMP_SPEED = 3.68;
+// Клип прыжка из Mixamo длинный (2.67 с): в него входят замах и приземление,
+// которых физический прыжок не знает. Поэтому он сжимается до длины самого
+// прыжка с небольшим запасом на приземление.
+const JUMP_CLIP_SECONDS = .95;
+// Присед медленнее шага. Числа не из оригинала: в Getting Up у приседа свои
+// клипы с собственным root motion, и скорость лежит в них.
+const CROUCH_SPEED = .62; // скорость, при которой клип ходьбы идёт с timeScale 1
 
 const renderer = new THREE.WebGLRenderer({ canvas: ui.scene, antialias: true, alpha: false, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
@@ -266,6 +305,9 @@ class PaintSurface {
     this.colorIndex = spec.color ?? 0;
     this.accent = spec.accent ?? PALETTE[this.colorIndex];
     this.pieceLimit = spec.pieceLimit ?? 1;
+    // <TagArea Complex="..."> в оригинале: 107 работ простых, 54 сложные.
+    // Сложная работа менее терпима к задержке факела на месте.
+    this.complex = spec.complex ?? false;
     this.pieces = 0;                       // сколько работ уже оставлено
     this.grid=spec.grid ?? DEFAULT_GRID;
     this.roundSeconds=timeForGrid(this.grid);
@@ -369,7 +411,7 @@ class PaintSurface {
   }
 
   holdDrip(uv,dt,now){
-    return !this.complete&&this.drips.hold(uv.x*TEX_W,(1-uv.y)*TEX_H,dt,now,TEX_W,TEX_H);
+    return !this.complete&&this.drips.hold(uv.x*TEX_W,(1-uv.y)*TEX_H,dt,now,TEX_W,TEX_H,dripWarning(this.complex));
   }
 
   animateDrips(now){
@@ -513,6 +555,13 @@ class Mannequin {
     this.rigBones = {};
     this.rigBase = {};
     this.motion = { mode:'idle', speed:0, desiredYaw:0, until:0 };
+    this.air = { active:false, vy:0, height:0 };
+    // Чередование стоек. В оригинале у Трейна шесть idle-анимаций, у нас две.
+    this.idleNext = 0; this.idleAltUntil = 0; this.idlePool = null; this.idleClip = 'idle';
+    this.wasCrouched = false; this.standUntil = 0;
+    // У соперника свой вариант бега, чтобы силуэты не совпадали.
+    this.runClip = 'run';
+    this.runStopClip = 'run_stop_alt';
     this.tagMove = { active:false, fromX:x, fromZ:0, toX:x, toZ:0, started:0, duration:TAG_STEP_TIME };
     this.tagPose = new THREE.Vector2(x, 1.62);
     this.paintBlend = 0;
@@ -738,6 +787,8 @@ class Mannequin {
     this.armTarget=null;
     if(this.rigModel)this.rigModel.position.y=0;
     Object.assign(this.motion,{mode:'idle',speed:0,desiredYaw:0,until:0});
+    Object.assign(this.air,{active:false,vy:0,height:0});
+    this.idleNext=0; this.idleAltUntil=0; this.idleClip='idle'; this.wasCrouched=false; this.standUntil=0;
     Object.assign(this.tagMove,{active:false,fromX:this.root.position.x,fromZ:this.root.position.z,toX:this.root.position.x,toZ:this.root.position.z,started:0,duration:TAG_STEP_TIME});
     this.tagPose.set(this.root.position.x,1.62);
   }
@@ -745,18 +796,32 @@ class Mannequin {
   // Input only selects a movement state and desired direction. Translation is
   // accelerated in the phase of the selected clip instead of snapping directly
   // to a target coordinate, matching Getting Up's state/root-motion structure.
-  updateLocomotion(inputX, inputZ, running, now, dt, xMin, xMax, zMin, zMax) {
+  updateLocomotion(inputX, inputZ, running, now, dt, xMin, xMax, zMin, zMax, crouching = false) {
     const input = new THREE.Vector2(inputX,inputZ);
     const moving = input.lengthSq() > .001;
     if (moving) input.normalize();
-    const targetSpeed = moving ? (running ? RUN_SPEED : WALK_SPEED) : 0;
+    const targetSpeed = moving ? (crouching ? CROUCH_SPEED : running ? RUN_SPEED : WALK_SPEED) : 0;
 
     if (moving) {
       const desiredYaw = Math.atan2(-input.x,-input.y);
       let yawDelta = Math.atan2(Math.sin(desiredYaw-this.root.rotation.y),Math.cos(desiredYaw-this.root.rotation.y));
       if (Math.abs(yawDelta)>2.45 && this.motion.speed>.65 && this.motion.mode!=='turn') {
-        this.motion.mode='turn'; this.motion.until=now+650;
-        this.playClip('turn_180',.12,{once:true,timeScale:1.65,restart:true});
+        // Разворот на бегу — через занос (TR_Run_IntoSkid), на шаге — обычный
+        // разворот корпуса.
+        const skid = this.motion.mode==='run' && this.actions.run_skid;
+        this.motion.mode='turn'; this.motion.until=now+(skid?780:650);
+        if (skid) this.playClip('run_skid',.12,{once:true,restart:true,
+          timeScale:this.actions.run_skid.getClip().duration/.78});
+        else this.playClip('turn_180',.12,{once:true,timeScale:1.65,restart:true});
+      } else if (yawDelta>1.05 && this.motion.speed>.65 && this.motion.mode!=='turn' && this.actions.turn_left) {
+        // Поворот примерно на четверть — свой клип, как TR_90TurnToRun_L в
+        // оригинале. Зеркального клипа для правого поворота в модели нет,
+        // поэтому направо разворот идёт по-старому, доворотом корпуса.
+        // Знак: desiredYaw = atan2(-input.x,-input.y), нажатие D даёт
+        // отрицательную дельту, а «вправо» у модели это +X — значит
+        // положительная дельта и есть поворот налево.
+        this.motion.mode='turn'; this.motion.until=now+430;
+        this.playClip('turn_left',.12,{once:true,restart:true});
       } else if (this.motion.mode==='idle'||this.motion.mode==='stop') {
         this.motion.mode='start'; this.motion.until=now+520;
         this.playClip('walk_start',.16,{once:true,timeScale:(this.actions.walk_start?.getClip().duration || .52)/.52,restart:true});
@@ -772,15 +837,38 @@ class Mannequin {
         // Клип крутится пропорционально реальной скорости, иначе тело замедлили,
         // а ноги продолжают перебирать в прежнем темпе — ровно то проскальзывание,
         // ради устранения которого и делался BUILD 04.
-        this.playClip('walk',.18,{timeScale:(running?RUN_SPEED:WALK_SPEED)/CLIP_WALK_SPEED});
+        if (this.motion.mode==='run' && this.actions[this.runClip]) {
+          // Бег наконец своим клипом. Раньше это была ходьба, ускоренная
+          // в 1.18 раза: ноги перебирали быстрее, но поза оставалась шаговой.
+          this.playClip(this.runClip,.2,{timeScale:RUN_SPEED/CLIP_RUN_SPEED});
+        } else if (crouching && this.actions.crouch_walk) {
+          // Номинальная скорость клипа приседа неизвестна — его собственный
+          // root motion я не мерил, поэтому играем как есть, без подгонки темпа.
+          this.playClip('crouch_walk',.18);
+        } else {
+          this.playClip('walk',.18,{timeScale:(running?RUN_SPEED:WALK_SPEED)/CLIP_WALK_SPEED});
+        }
       }
     } else if (!['idle','stop'].includes(this.motion.mode)) {
-      this.motion.mode='stop'; this.motion.until=now+560;
-      this.playClip('walk_stop',.14,{once:true,timeScale:(this.actions.walk_stop?.getClip().duration || .56)/.56,restart:true});
+      // Торможение с бега — свой клип, как TR_Run_StopToIdle. Берём короткий
+      // вариант: длинный (1.83 с) держал бы игрока на месте слишком долго.
+      const fromRun = this.motion.mode==='run' && this.actions[this.runStopClip];
+      const clip = fromRun ? this.runStopClip : 'walk_stop';
+      const target = fromRun ? .62 : .56;
+      this.motion.mode='stop'; this.motion.until=now+target*1000;
+      this.playClip(clip,.14,{once:true,restart:true,
+        timeScale:(this.actions[clip]?.getClip().duration || target)/target});
     } else if (this.motion.mode==='stop' && now>=this.motion.until) {
-      this.motion.mode='idle'; this.playClip('idle',.24);
+      this.motion.mode='idle'; this.playClip(crouching?'crouch_idle':'idle',.24);
     } else if (this.motion.mode==='idle') {
-      this.playClip('idle',.24);
+      if (crouching) { this.wasCrouched=true; this.playClip('crouch_idle',.24); }
+      else if (this.wasCrouched && this.actions.crouch_to_stand) {
+        // Разгибание — отдельный клип, иначе присед схлопывается рывком.
+        this.wasCrouched=false;
+        this.standUntil=now+this.actions.crouch_to_stand.getClip().duration*1000;
+        this.playClip('crouch_to_stand',.15,{once:true,restart:true});
+      }
+      else if (now>=(this.standUntil||0)) this.updateIdle(now);
     }
 
     // Старт по оригиналу НЕ медленнее ходьбы. В BNM Getting Up TR_IdleToWalk проходит
@@ -793,8 +881,62 @@ class Mannequin {
       this.root.position.x=THREE.MathUtils.clamp(this.root.position.x+input.x*this.motion.speed*dt,xMin,xMax);
       this.root.position.z=THREE.MathUtils.clamp(this.root.position.z+input.y*this.motion.speed*dt,zMin,zMax);
     }
-    this.root.position.y=THREE.MathUtils.damp(this.root.position.y,groundHeight(this.root.position.z),12,dt);
+    const ground=groundHeight(this.root.position.z);
+    if (this.air.active) {
+      this.air.vy-=GRAVITY*dt;
+      this.air.height+=this.air.vy*dt;
+      if (this.air.height<=0) {
+        this.air.height=0; this.air.active=false;
+        this.playClip('jump_land',.1,{once:true,restart:true});
+        // После приземления обычная логика сама подхватит ходьбу или idle.
+        this.motion.mode=moving?'walk':'idle';
+      }
+      this.root.position.y=ground+this.air.height;
+    } else {
+      this.root.position.y=THREE.MathUtils.damp(this.root.position.y,ground,12,dt);
+    }
     return moving;
+  }
+
+  // Стоя на месте, райтер время от времени меняет стойку. Одна зацикленная
+  // анимация — главная причина, по которой персонаж читается как болванчик.
+  // В оригинале таких стоек шесть; у нас в модели их две, и вторая до сих пор
+  // вообще не использовалась.
+  updateIdle(now){
+    // У Трейна шесть стоек, которые сменяют друг друга. Все наши варианты —
+    // это самостоятельные циклы по 2–10 секунд, а не короткие вставки, поэтому
+    // они не проигрываются «один раз поверх idle», а просто становятся текущей
+    // стойкой на случайное время.
+    if (!this.idlePool) {
+      this.idlePool = ['idle','idle_alt','idle2','idle3','idle_breathing',
+                       'idle_happy','idle_neutral'].filter(n=>this.actions[n]);
+    }
+    if (this.idlePool.length<2) { this.playClip('idle',.3); return; }
+    if (now >= this.idleNext) {
+      this.idleNext = now + 9000 + Math.random()*9000;
+      let pick = this.idlePool[Math.floor(Math.random()*this.idlePool.length)];
+      if (pick===this.idleClip) pick = this.idlePool[(this.idlePool.indexOf(pick)+1)%this.idlePool.length];
+      this.idleClip = pick;
+    }
+    this.playClip(this.idleClip||'idle',.45);
+  }
+
+  // Прыжок доступен только с земли. Клипы 'jump' / 'jump_land' проигрываются,
+  // если они есть в модели: playClip сам возвращает false для отсутствующего
+  // клипа, поэтому до пересборки .glb прыжок работает без анимации.
+  startJump(){
+    if (this.air.active) return false;
+    Object.assign(this.air,{active:true,vy:JUMP_SPEED,height:0});
+    // Прыжок с разбега, с шага и с места — разные клипы, как TR_Jump и его
+    // беговые варианты в оригинале. Берём по текущей скорости.
+    const v=this.motion.speed;
+    let clip='jump';
+    if (v>RUN_SPEED*.7 && this.actions.jump_run) clip='jump_run';
+    else if (v>WALK_SPEED*.5 && this.actions.jump_forward) clip='jump_forward';
+    const d=this.actions[clip]?.getClip().duration;
+    this.playClip(clip,.1,{once:true,restart:true,
+      timeScale:d?d/JUMP_CLIP_SECONDS:1});
+    return true;
   }
 
   beginTagMove(targetX,targetZ,now) {
@@ -804,9 +946,15 @@ class Mannequin {
     // One locomotion cycle per committed step; longer approaches take longer.
     const duration=TAG_STEP_TIME*Math.max(1,Math.abs(dx)/TAG_STEP_X,Math.abs(dz)/TAG_STEP_Z);
     Object.assign(this.tagMove,{active:true,fromX:this.root.position.x,fromZ:this.root.position.z,toX:targetX,toZ:targetZ,started:now,duration});
-    let clip='walk';
-    if (Math.abs(dx)>=Math.abs(dz)) clip=dx<0?'strafe_left':'strafe_right';
-    else if (dz>0) clip='walk_back';
+    // Шаг вдоль стены в приседе идёт своими клипами — они как раз для этого
+    // и добавлены; раньше присевший райтер шагал в полный рост.
+    const low = state.crouch>.5;
+    let clip = low && this.actions.crouch_walk ? 'crouch_walk' : 'walk';
+    if (Math.abs(dx)>=Math.abs(dz)) {
+      clip = dx<0 ? (low&&this.actions.crouch_strafe_left?'crouch_strafe_left':'strafe_left')
+                  : (low&&this.actions.crouch_strafe_right?'crouch_strafe_right':'strafe_right');
+    }
+    else if (dz>0) clip = low&&this.actions.crouch_walk_back ? 'crouch_walk_back' : 'walk_back';
     const clipDuration=this.actions[clip]?.getClip().duration || duration;
     const cycles=Math.max(1,Math.round(duration/TAG_STEP_TIME));
     this.playClip(clip,.1,{once:cycles===1,timeScale:clipDuration*cycles/duration,restart:true});
@@ -1149,14 +1297,17 @@ async function loadCharacters() {
   // Баллон уже вшит в эти файлы (собрано в Blender): у соперника
   // своя модель с другими анимациями, чтобы силуэты различались, а не только оттенок.
   const [playerGltf, opponentGltf] = await Promise.all([
-    loader.loadAsync('assets/characters/writer_torb_final.glb?v=can-no-mask-7'),
-    loader.loadAsync('assets/characters/writer_rival_final.glb?v=can-no-mask-7').catch(() => loader.loadAsync('assets/characters/writer_torb_final.glb?v=can-no-mask-7'))
+    loader.loadAsync('assets/characters/writer_torb_final.glb?v=idles-runstop-3'),
+    loader.loadAsync('assets/characters/writer_rival_final.glb?v=idles-runstop-3').catch(() => loader.loadAsync('assets/characters/writer_torb_final.glb?v=idles-runstop-3'))
   ]);
   player.attachRig(playerGltf.scene, playerGltf.animations || []);
   opponent.attachRig(opponentGltf.scene, opponentGltf.animations || []);
   player.playClip('idle',0); opponent.playClip('idle',0);
   if (opponent.actions.idle) { opponent.actions.idle.timeScale = .88; opponent.actions.idle.time = 1.4; }
   if (opponent.actions.walk) opponent.actions.walk.timeScale = 1.12;
+  if (opponent.actions.run_alt) opponent.runClip = 'run_alt';
+  // Сопернику длинный вариант торможения — движения не должны совпадать.
+  if (opponent.actions.run_stop) opponent.runStopClip = 'run_stop';
   const names=(playerGltf.animations||[]).map(c=>c.name).join(', ');
   console.info(names?`SprayFight: клипы анимаций — ${names}`:'SprayFight: в GLB нет анимаций, работает процедурная поза.');
 }
@@ -1182,13 +1333,30 @@ function sprayDotTexture() {
 function createSprayParticles(color) {
   const count = 30;
   const positions = new Float32Array(count*3);
+  // Цвет на вершину: three.js умножает его на material.color, поэтому белым
+  // цветом с яркостью по колоколу мы гасим частицу, не трогая её оттенок.
+  // При аддитивном смешивании это и есть затухание.
+  const colors = new Float32Array(count*3);
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
+  geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
   const material = new THREE.PointsMaterial({
     color, size:.03, transparent:true, opacity:.5, depthWrite:false,
+    vertexColors:true,
     map: sprayDotTexture(), blending: THREE.AdditiveBlending, sizeAttenuation:true
   });
   const points = new THREE.Points(geometry,material);
+  // У каждой частицы свой возраст и свой срок. Раньше их не было вовсе:
+  // положение раскидывалось заново каждый кадр, из-за чего факел мерцал
+  // случайной рябью вместо потока летящих капель.
+  points.userData.age=new Float32Array(count);
+  points.userData.life=new Float32Array(count);
+  // Возрасты изначально разбросаны: иначе все тридцать частиц полетели бы
+  // одной пачкой и факел бы пульсировал.
+  for(let i=0;i<count;i++){
+    points.userData.life[i]=1/60;
+    points.userData.age[i]=Math.random()/60;
+  }
   points.visible=false;
   scene.add(points);
   return points;
@@ -1197,18 +1365,40 @@ function createSprayParticles(color) {
 const playerSpray = createSprayParticles(0xb6ff00);
 const aiSpray = createSprayParticles(0xaab09e);
 
-function updateSprayParticles(points,start,end,visible) {
+function updateSprayParticles(points,start,end,visible,dt=1/60) {
   points.visible=visible;
   if(!visible) return;
-  const array=points.geometry.attributes.position.array;
-  for(let i=0;i<array.length/3;i+=1){
-    const t=Math.random();
-    const spread=t*.12;
-    array[i*3]=THREE.MathUtils.lerp(start.x,end.x,t)+(Math.random()-.5)*spread;
-    array[i*3+1]=THREE.MathUtils.lerp(start.y,end.y,t)+(Math.random()-.5)*spread;
-    array[i*3+2]=THREE.MathUtils.lerp(start.z,end.z,t)+(Math.random()-.5)*spread;
+  const pos=points.geometry.attributes.position.array;
+  const col=points.geometry.attributes.color.array;
+  const {age,life}=points.userData;
+  const n=pos.length/3;
+  // Срок жизни — перелёт от сопла до стены на скорости факела. Расстояние
+  // меняется, когда игрок подходит ближе или отходит, поэтому считаем каждый
+  // кадр. Разброс ±25% — чтобы частицы не шли строем.
+  const span=particleLife(start.distanceTo(end));
+  for(let i=0;i<n;i+=1){
+    age[i]+=dt;
+    if(age[i]>=life[i]){
+      age[i]=0; life[i]=span*(.75+Math.random()*.5);
+    }
+    // Доля прожитого и есть путь от сопла к стене: частица летит, а не
+    // возникает в случайной точке отрезка.
+    const t=age[i]/life[i];
+    // Конус факела расширяется по кубическому корню, а не линейно: у сопла он
+    // раскрывается быстро, дальше идёт почти параллельно. f(Root Cube) — вторая
+    // по частоте кривая в файлах факела оригинала (63 применения).
+    // Оговорка: то, что она управляет именно разбросом, не установлено —
+    // известны только состав библиотеки и частоты.
+    const spread=CURVES.rootCube(t)*.12;
+    pos[i*3]=THREE.MathUtils.lerp(start.x,end.x,t)+(Math.random()-.5)*spread;
+    pos[i*3+1]=THREE.MathUtils.lerp(start.y,end.y,t)+(Math.random()-.5)*spread;
+    pos[i*3+2]=THREE.MathUtils.lerp(start.z,end.z,t)+(Math.random()-.5)*spread;
+    // Яркость по колоколу: частица проявляется у сопла и гаснет к стене.
+    const b=bell(t);
+    col[i*3]=col[i*3+1]=col[i*3+2]=b;
   }
   points.geometry.attributes.position.needsUpdate=true;
+  points.geometry.attributes.color.needsUpdate=true;
 }
 
 function worldToUv(x,y,panel){ return new THREE.Vector2((x-panel.x)/panel.w+.5,(y-panel.y)/panel.h+.5); }
@@ -1288,7 +1478,7 @@ function reset(){
   player.resetMotion(); opponent.resetMotion();
   state.aiApproachX=RIVAL_IDLE_X;
   Object.assign(state,{keys:{},walkX:PLAYER_CENTER,standZ:7.2,crouch:0,tiptoe:0,nearWall:false,canUp:false,
-    mode:'roam',panel:null,nearRival:false,talking:false,paintCam:null,paintArc:null,emitAcc:0});
+    mode:'roam',panel:null,nearRival:false,talking:false,paintCam:null,paintArc:null,camBase:null,camYaw:0,camPitch:0,emitAcc:0});
   state.aimUv.set(.5,.5); state.reachUv.set(.5,.5);
   ui.game.classList.remove('can-tag','can-talk','out-of-reach');
   ui.game.classList.add('roam-mode');
@@ -1357,10 +1547,14 @@ function updateApproach(now,dt){
   const speedX=(k.KeyD?1:0)-(k.KeyA?1:0);
   const speedZ=(k.KeyS?1:0)-(k.KeyW?1:0);
   const running=!!(k.ShiftLeft||k.ShiftRight);
+  // Присед работает и в свободном режиме, а не только у стены.
+  const crouching=!!(k.KeyC||k.ControlLeft);
+  state.crouch=THREE.MathUtils.damp(state.crouch,crouching?1:0,9,dt);
   const moving=player.updateLocomotion(
-    speedX,speedZ,running,now,dt,
+    speedX,speedZ,running&&!crouching,now,dt,
     ROAM_X_MIN,ROAM_X_MAX,
-    WALL_Z+.34+WALL_STAND_MIN,WALL_Z+.34+ROAM_Z_MAX
+    WALL_Z+.34+WALL_STAND_MIN,WALL_Z+.34+ROAM_Z_MAX,
+    crouching
   );
   state.walkX=player.root.position.x;
   state.standZ=player.root.position.z-(WALL_Z+.34);
@@ -1423,6 +1617,13 @@ function nearestPanel(){
   return {surface:best,distance:bestD};
 }
 
+// Направление как пара углов: рыскание в плоскости XZ и тангаж.
+function lookAngles(from,to){
+  const dx=to.x-from.x, dy=to.y-from.y, dz=to.z-from.z;
+  return { yaw:Math.atan2(dx,dz)*180/Math.PI,
+           pitch:Math.atan2(dy,Math.hypot(dx,dz))*180/Math.PI };
+}
+
 function enterTagging(){
   if(state.phase!=='approach'||!state.nearWall||state.nearRival)return;
   state.panel=nearestPanel().surface;
@@ -1442,6 +1643,11 @@ function enterTagging(){
     WALL_Z+.34+state.standZ+2.75);
   // Камера не телепортируется в эту точку, а въезжает в неё по записанной дуге.
   // Вариант — по стороне, с которой игрок встал к центру стены.
+  // Базовое направление конуса обзора — от якоря на центр стены. Довор камеры
+  // разрешён только в пределах ±30° от него (Yaw Max = Pitch Max = 30.0 у всех
+  // камер GRAFF), поэтому направление фиксируется здесь же, вместе с якорем.
+  state.camBase=lookAngles(state.paintCam,new THREE.Vector3(state.panel.x,PANEL_Y,WALL_Z+.3));
+  state.camYaw=0; state.camPitch=0;
   const arc=SPRAY_CAM_ARCS[player.root.position.x<state.panel.x?'FL':'FR'];
   state.paintArc={
     t0:performance.now(),
@@ -1458,7 +1664,7 @@ function enterTagging(){
 // Отойти от стены и вернуться к свободному перемещению
 function exitTagging(){
   if(state.phase!=='paint'||state.mode==='battle')return;
-  state.paintCam=null; state.paintArc=null;
+  state.paintCam=null; state.paintArc=null; state.camBase=null;
   state.phase='approach'; state.running=false; state.pointerDown=false; state.shaking=false;
   spraySound(false); playerSpray.visible=false;
   ui.game.classList.remove('paint-mode','spraying','out-of-reach');
@@ -1623,8 +1829,8 @@ function updatePaint(now,dt){
   player.paint(state.reachUv,state.panel||playerSurface,playerActive,dt,false);
   if(state.mode==='battle')opponent.paint(state.aiUv,aiSurface,aiActive,dt);
   const playerTarget=uvToWorld(state.reachUv,state.panel||playerSurface),aiTarget=uvToWorld(state.aiUv,aiSurface);
-  updateSprayParticles(playerSpray,player.nozzleWorld(),playerTarget,playerActive);
-  updateSprayParticles(aiSpray,opponent.nozzleWorld(),aiTarget,aiActive);
+  updateSprayParticles(playerSpray,player.nozzleWorld(),playerTarget,playerActive,dt);
+  updateSprayParticles(aiSpray,opponent.nozzleWorld(),aiTarget,aiActive,dt);
   if(playerActive||state.shaking)(state.panel||playerSurface).update();
   if(aiActive)aiSurface.update();
   if(now-state.lastMetric>430){state.lastMetric=now;updateMetrics();}
@@ -1642,6 +1848,8 @@ function updatePaint(now,dt){
 async function talkToRival(){
   if(state.talking||state.mode!=='roam'||!state.nearRival)return;
   state.talking=true;
+  // Перед батлом райтер подбирается: стойка меняется на боевую.
+  player.playClip('idle_to_fight',.25,{once:true,restart:true});
   const lines=['— Ты кто такой?','— Хочешь стену? Забирай. Если возьмёшь.','— Тогда батл. Погнали.'];
   for(const line of lines){
     ui.objective.textContent=line;
@@ -1680,6 +1888,8 @@ function score(coverage,clean,drips,bonus=0){return Math.max(0,Math.round(covera
 
 function finish(reason){
   if(state.finished)return; state.finished=true; state.running=false; state.pointerDown=false; state.shaking=false; state.phase='result'; spraySound(false); playerSpray.visible=false; aiSpray.visible=false; updateMetrics();
+  // Батл кончился — райтер распрямляется из боевой стойки.
+  player.playClip('fight_to_idle',.25,{once:true,restart:true});
   const timeBonus=Math.min(10,10*state.remaining/state.roundSeconds);
   const ps=score(state.coverage,state.clean,state.drips,reason==='player'?timeBonus:0); const as=score(state.aiCoverage,state.aiClean,state.aiDrips,reason==='ai'?timeBonus:0);
   const win=reason==='player'||(reason==='time'&&ps>=as); ui.resultTitle.textContent=win?'YOU WIN':'OPPONENT WINS'; ui.resultCard.classList.toggle('loss',!win); ui.playerScore.textContent=ps; ui.aiScore.textContent=as; ui.playerMeta.textContent=`${Math.floor(state.coverage)}% / ${state.drips} DRIPS`; ui.aiMeta.textContent=`${Math.floor(state.aiCoverage)}% / ${state.aiDrips} DRIPS`;
@@ -1751,7 +1961,21 @@ function animate(){
   if(state.phase==='paint'&&!state.beat){
     // взгляд между точкой краски и серединой между двумя стенами — соперник остаётся сбоку
     const between=new THREE.Vector3(state.walkX+1.1,PANEL_Y,WALL_Z+.3);
-    state.cameraLook=uvToWorld(state.reachUv,state.panel||playerSurface).lerp(between,.5);
+    const want=uvToWorld(state.reachUv,state.panel||playerSurface).lerp(between,.5);
+    if(state.camBase){
+      // Камера стоит в точке, но смотреть ей разрешено только внутри конуса
+      // ±30°, и доворачивает она не мгновенно, а со своей скоростью.
+      const a=lookAngles(camera.position,want);
+      state.camYaw=turnToward(state.camYaw,clampCone(a.yaw-state.camBase.yaw),dt);
+      state.camPitch=turnToward(state.camPitch,clampCone(a.pitch-state.camBase.pitch),dt);
+      const yaw=(state.camBase.yaw+state.camYaw)*Math.PI/180;
+      const pitch=(state.camBase.pitch+state.camPitch)*Math.PI/180;
+      const dist=camera.position.distanceTo(want),cp=Math.cos(pitch);
+      state.cameraLook=new THREE.Vector3(
+        camera.position.x+Math.sin(yaw)*cp*dist,
+        camera.position.y+Math.sin(pitch)*dist,
+        camera.position.z+Math.cos(yaw)*cp*dist);
+    } else state.cameraLook=want;
   }
 
   // AnimationMixer rewrites the finger transforms every frame, so apply the
@@ -1798,9 +2022,16 @@ window.addEventListener('keydown',(e)=>{
   }
   if(e.code==='Escape')exitTagging();
   if(['KeyW','KeyA','KeyS','KeyD','KeyC'].includes(e.code))e.preventDefault();
-  if(e.code==='Space'&&state.running){e.preventDefault();state.pointerDown=false;state.shaking=true;}
+  // Тряска баллона — F. Раньше висела на пробеле, но пробел ушёл под прыжок.
+  if(e.code==='KeyF'&&state.running){e.preventDefault();state.pointerDown=false;state.shaking=true;}
+  // Прыжок — пробел, и только в свободном режиме: у стены персонаж привязан
+  // к плоскости рисунка, подпрыгивать там нечему.
+  if(e.code==='Space'){
+    e.preventDefault();
+    if(state.phase!=='paint')player.startJump();
+  }
 });
-window.addEventListener('keyup',(e)=>{state.keys[e.code]=false;if(e.code==='Space')state.shaking=false;});
+window.addEventListener('keyup',(e)=>{state.keys[e.code]=false;if(e.code==='KeyF')state.shaking=false;});
 window.addEventListener('blur',()=>{state.keys={};});
 ui.sound.addEventListener('click',()=>{state.sound=!state.sound;ui.sound.textContent=state.sound?'SOUND ON':'SOUND OFF';ui.sound.setAttribute('aria-pressed',String(state.sound));if(!state.sound)spraySound(false);});
 ui.start.addEventListener('click',start);ui.restart.addEventListener('click',start);

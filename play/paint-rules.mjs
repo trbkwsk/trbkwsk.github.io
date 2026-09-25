@@ -89,10 +89,12 @@ export class DripTracker {
   constructor(points){this.points=points;this.reset();}
   reset(){this.anchor=null;this.held=0;this.events=[];this.used=new Set();}
   release(){this.anchor=null;this.held=0;}
-  hold(x,y,dt,now,width,height){
+  hold(x,y,dt,now,width,height,warnTime=DRIP_WARNING.simple){
     if(!this.anchor||Math.hypot(x-this.anchor.x,y-this.anchor.y)>12){this.anchor={x,y};this.held=0;}
     this.held+=dt;
-    if(this.held<1)return false;
+    // Держать на месте дольше DripWarningTime — и пойдёт потёк. Раньше здесь
+    // стояла единица; в оригинале это 1.5 с у простой работы и 1.25 у сложной.
+    if(this.held<warnTime)return false;
     let selected=-1,distance=110;
     this.points.forEach(([u,v],i)=>{const d=Math.hypot(x-u*width,y-v*height);if(!this.used.has(i)&&d<distance){selected=i;distance=d;}});
     if(selected<0)return false;
@@ -131,7 +133,7 @@ export const SCORE = { base:10, bonus:5 };
  *          goBig:boolean, goOver:boolean, heaven:boolean}} r
  */
 export function scoreRun(r){
-  const done = r.coverage>=85;
+  const done = r.coverage>=COMPLETION_PERCENT;
   if(!done) return { total:0, parts:[], done:false };
   const parts=[['BASE',SCORE.base]];
   if(r.drips===0)               parts.push(['NO DRIPS',SCORE.bonus]);
@@ -169,3 +171,126 @@ export function sprayCamEase(t){
   const u=head/span;
   return u*u*(3-2*u)*.25+u*.75;
 }
+
+// ===== Порог засчитывания работы =====
+// `Trigger percentage level` у 244 зон рисования в .sls: 100 у подавляющего
+// большинства. Значения 85 нет ни у одной зоны — работа либо доведена, либо нет.
+export const COMPLETION_PERCENT = 100;
+
+// ===== Конус обзора камеры рисования =====
+// У всех 13 камер ICameraControl_GRAFF `Yaw Max` = `Pitch Max` = 30.0.
+// То есть камера стоит в точке, но ей разрешено доворачивать в пределах ±30°.
+// Скорость довора — `Yaw Rate` / `Pitch Rate`: 50 у шести камер, 90 у пяти,
+// 75 у двух; берём самое частое.
+export const CAMERA_CONE_DEG = 30;
+export const CAMERA_TURN_RATE = 50;
+
+// Приводит угол к диапазону (-180, 180].
+export function wrapDeg(a){
+  a=((a+180)%360+360)%360-180;
+  return a===-180 ? 180 : a;
+}
+// Зажимает отклонение от базового направления в конус ±max.
+export function clampCone(deltaDeg,maxDeg=CAMERA_CONE_DEG){
+  return Math.max(-maxDeg,Math.min(maxDeg,wrapDeg(deltaDeg)));
+}
+// Довор с ограниченной скоростью: за dt секунд не больше rate градусов.
+export function turnToward(current,target,dt,rate=CAMERA_TURN_RATE){
+  const step=rate*dt, d=wrapDeg(target-current);
+  return current + (Math.abs(d)<=step ? d : Math.sign(d)*step);
+}
+
+// ===== Инструменты =====
+// Из <AerosolOptions>/<RollerOptions>/<WheatpasteOptions> в TagAreas.xml.
+// PaintRadius — радиус факела, PaintFillRate — скорость закраски. У каждого
+// инструмента свои значения для простой и сложной работы, а «mad paint»
+// (быстрое размашистое) — отдельный множитель.
+export const TOOLS = {
+  aerosol:    { radius:17.5, fill:{ simple:2, complex:1.5 }, mad:4 },
+  roller:     { radius:15,   fill:{ simple:4, complex:1.5 }, mad:8 },
+  wheatpaste: { radius:12.5, fill:{ simple:4, complex:1.5 }, mad:8 }
+};
+// DripWarningTime — сколько можно держать факел на месте до потёка, секунды.
+// Одинаково для всех трёх инструментов, различается только по сложности работы.
+export const DRIP_WARNING = { simple:1.5, complex:1.25, mad:0.75 };
+
+export function toolRadiusRatio(name){
+  const t=TOOLS[name];
+  if(!t) throw new Error(`Неизвестный инструмент: ${name}`);
+  return t.radius/TOOLS.aerosol.radius;
+}
+export function fillRate(name,complex=false,mad=false){
+  const t=TOOLS[name];
+  if(!t) throw new Error(`Неизвестный инструмент: ${name}`);
+  return t.fill[complex?'complex':'simple']*(mad?t.mad:1);
+}
+export function dripWarning(complex=false,mad=false){
+  return mad ? DRIP_WARNING.mad : (complex?DRIP_WARNING.complex:DRIP_WARNING.simple);
+}
+
+// ===== Go Big =====
+// <GoBigMap> в TagAreas.xml: увеличение — это не флаг, а переход к другому
+// размеру сетки. В оригинале записаны только три перехода, и рядом лежит
+// комментарий разработчиков «Go big Maps needed:» — остальные не доделали.
+export const GO_BIG_MAP = [
+  { from:{columns:2,rows:1}, to:{columns:4,rows:2} },
+  { from:{columns:2,rows:3}, to:{columns:4,rows:2} },
+  { from:{columns:4,rows:2}, to:{columns:6,rows:3} }
+];
+// Возвращает увеличенную сетку или null, если для этой сетки перехода нет.
+export function goBigSize(grid){
+  const hit=GO_BIG_MAP.find(m=>m.from.columns===grid.columns&&m.from.rows===grid.rows);
+  return hit ? {...hit.to} : null;
+}
+
+// ===== Библиотека именованных кривых =====
+// Полный перечень имён, встречающихся в 963 файлах .ptm. Семь из них —
+// математические функции, остальные нарисованы вручную в редакторе эффектов
+// и в файлах лежат только по имени, без точек, поэтому здесь их нет.
+//
+// В файлах самого факела (spraywide_*) встречаются: f(Random) 83 раза,
+// f(Root Cube) 63, noise3 и noise4 по 21, f(Linear) 20, bell6 19,
+// f(Root Square) 13, f(Squared) 10, fast_in-out 1.
+//
+// ОГОВОРКА: установлено, какие кривые применяются в эффектах факела и как
+// часто. КАКОЙ параметр какой кривой управляется — НЕ установлено.
+export const CURVES = {
+  linear:      t => t,
+  squared:     t => t*t,
+  cubed:       t => t*t*t,
+  rootSquare:  t => Math.sqrt(t),
+  rootCube:    t => Math.cbrt(t),
+  // «Sine Squared» трактуем как sin²(πt/2): даёт 0 в нуле и 1 в единице,
+  // с пологими концами. Точная форма из данных не восстановима.
+  sineSquared: t => Math.sin(t*Math.PI/2)**2
+};
+// f(Random) — не кривая от t, а выборка случайного значения; в CURVES её нет
+// намеренно, иначе она нарушила бы свойство «функция от t».
+export const HAND_DRAWN_CURVES = ['noise3','noise4','bell','bell6','ramp up3','ramp down curve','fast_in-out'];
+
+// ===== Жизнь частицы краски =====
+// Слот 21 в .ptm — градиент цвета из восьми точек BGRA, и управляет им кривая
+// `bell6`: частица проявляется и гаснет по колоколу, а не линейно.
+//
+// ОГОВОРКА: `bell6` нарисована вручную в редакторе эффектов, в файлах лежит
+// только её имя — точек нет, форму восстановить нельзя (см. §161). Здесь взят
+// симметричный колокол: ноль на обоих концах, единица в середине. Установлено,
+// что кривая колоколообразная, а не её точная форма.
+export function bell(t){
+  if(t<=0||t>=1)return 0;
+  return Math.sin(Math.PI*t);
+}
+// Слот 3 у ядра факела: 50 → 250. Единица движка — дюйм, значит верхняя
+// граница это 250 дюймов в секунду = 6.35 м/с.
+export const SPRAY_SPEED = 250*0.0254;
+
+// Сколько частица летит от сопла до стены. Считается от скорости, а НЕ от
+// слота 27 (0→3.0), хотя тот и похож на время жизни: при 6.35 м/с и полуметре
+// до стены перелёт занимает 0.08 с, а не три секунды. Значит слот 27 задаёт
+// что-то другое, и брать его сюда было бы подгонкой.
+// Нижняя граница в один кадр — чтобы частица не исчезала мгновенно вплотную
+// к стене.
+export function particleLife(distance,speed=SPRAY_SPEED){
+  return Math.max(1/60,distance/speed);
+}
+
