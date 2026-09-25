@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {bell,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
+import {decideWinner,bell,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
 assert.equal(timeForGrid({columns:4,rows:2}),36);
 assert.equal(timeForGrid({columns:2,rows:1}),9);
 assert.equal(timeForGrid({columns:6,rows:3}),81);
@@ -269,3 +269,19 @@ assert.ok(particleLife(1)>particleLife(.5));
 // Вплотную к стене срок не обнуляется: держим минимум в кадр.
 assert.equal(particleLife(0),1/60);
 assert.equal(particleLife(1e-9),1/60);
+
+// --- Исход раунда ---
+const P=(t,c)=>({total:t,coverage:c});
+// Кто довёл работу, тот и выиграл, независимо от очков.
+assert.equal(decideWinner('player',P(0,10),P(20,99)),true);
+assert.equal(decideWinner('ai',P(20,99),P(0,10)),false);
+// По времени решают очки.
+assert.equal(decideWinner('time',P(20,100),P(10,100)),true);
+assert.equal(decideWinner('time',P(10,100),P(20,100)),false);
+// Очки равны (обычный случай 0:0, когда не закончил никто) — решает площадь.
+assert.equal(decideWinner('time',P(0,61),P(0,60)),true);
+assert.equal(decideWinner('time',P(0,59),P(0,60)),false);
+// Ровное равенство — за игроком.
+assert.equal(decideWinner('time',P(0,50),P(0,50)),true);
+// Очки важнее площади: меньше закрасил, но довёл до конца и получил бонусы.
+assert.equal(decideWinner('time',P(20,100),P(0,99)),true);

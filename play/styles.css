@@ -300,3 +300,11 @@ button small { display:block; margin-top:3px; font-size:7px; opacity:.7; }
 /* Тач-кнопка нужна в трёх случаях: у стены, у соперника и чтобы отойти */
 .game.touch-input.can-talk .touch-enter,
 .game.touch-input.paint-mode .touch-enter { display:block; }
+
+/* Разбор очков в итоговом окне: база и бонусы отдельными строками, как в
+   оригинале, а не одно итоговое число. */
+.score-parts { list-style: none; margin: .5rem 0 0; padding: 0; display: grid; gap: .15rem; }
+.score-parts li { display: flex; justify-content: space-between; gap: .75rem;
+  font-size: .72rem; letter-spacing: .06em; opacity: .78; }
+.score-parts li b { font-weight: 700; opacity: .95; }
+.score-parts li.bonus { color: #b6ff00; opacity: .95; }

@@ -294,3 +294,16 @@ export function particleLife(distance,speed=SPRAY_SPEED){
   return Math.max(1/60,distance/speed);
 }
 
+// ===== Исход раунда =====
+// Очки начисляются только за доведённую работу (порог 100 %), поэтому раунд,
+// который оборвал таймер, штатно даёт 0:0. Таймер — наша добавка: в оригинале
+// у всех зон рисования Completion Timer = 0. Чтобы раунд всё-таки разрешался,
+// при равных очках исход решает закрашенная площадь.
+// reason: 'player' | 'ai' — кто-то довёл работу; 'time' — вышло время.
+export function decideWinner(reason, player, ai){
+  if(reason==='player')return true;
+  if(reason==='ai')return false;
+  if(player.total!==ai.total)return player.total>ai.total;
+  return player.coverage>=ai.coverage;
+}
+

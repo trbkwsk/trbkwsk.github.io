@@ -3,7 +3,7 @@ import { GLTFLoader } from './vendor/GLTFLoader.js';
 import { SPRAY_CAM_ARCS, SPRAY_CAM_MS, sprayCamEase,
   CAMERA_CONE_DEG, clampCone, turnToward, dripWarning, CURVES, bell, particleLife,
   STAGES, LAST_PAINT_STAGE, COMPLETING_MS, EMIT_STEP, timeForGrid, stageProgress, dripMapFor, DripTracker, dripShape,
-         PALETTE, dripColorsFor, scoreRun } from './paint-rules.mjs';
+         PALETTE, dripColorsFor, scoreRun, decideWinner } from './paint-rules.mjs';
 
 const DEFAULT_GRID = {columns:4,rows:2};
 const ROUND_SECONDS = timeForGrid(DEFAULT_GRID);
@@ -39,6 +39,7 @@ const ui = {
   pressure: $('#pressureBar'), pressureNumber: $('#pressureNumber'), clean: $('#clean'), drips: $('#drips'), shake: $('#shake'),
   startModal: $('#startModal'), start: $('#start'), countdown: $('#countdown'), countdownText: $('#countdown b'),
   resultModal: $('#resultModal'), resultCard: $('.result-card'), resultTitle: $('#resultTitle'), playerScore: $('#playerScore'),
+  playerParts: $('#playerParts'), aiParts: $('#aiParts'),
   aiScore: $('#aiScore'), playerMeta: $('#playerMeta'), aiMeta: $('#aiMeta'), restart: $('#restart'), crosshair: $('#crosshair'),
   touchControls: $('#touchControls'), joystick: $('#joystick'), joystickStick: $('#joystickStick'),
   reachBtn: $('#reachBtn'), crouchBtn: $('#crouchBtn'), enterTagBtn: $('#enterTagBtn')
@@ -1884,15 +1885,47 @@ function updateHud(){
   $('#battleTime').textContent=`${playerSurface.roundSeconds} SECONDS / BATTLE`;
   ui.playerCoverage.textContent=Math.floor(state.coverage); ui.aiCoverage.textContent=Math.floor(state.aiCoverage); ui.playerProgress.style.width=`${Math.min(100,state.coverage)}%`; ui.aiProgress.style.width=`${Math.min(100,state.aiCoverage)}%`; ui.pressure.style.width=`${state.pressure}%`; ui.pressure.classList.toggle('low',state.pressure<25); ui.pressureNumber.textContent=Math.round(state.pressure); ui.clean.textContent=Math.round(state.clean); ui.drips.textContent=state.drips; ui.shake.classList.toggle('active',state.shaking);
 }
-function score(coverage,clean,drips,bonus=0){return Math.max(0,Math.round(coverage*.58+clean*.32-drips*1.4+bonus));}
+// Счёт по правилам оригинала: база 10 за доведённую работу плюс бонусы по 5.
+// Прежняя формула (coverage*.58 + clean*.32 - drips*1.4) была нашей выдумкой.
+function renderParts(node,run){
+  node.innerHTML='';
+  for(const [name,value] of run.parts){
+    const li=document.createElement('li');
+    if(name!=='BASE')li.className='bonus';
+    li.innerHTML=`<span>${name}</span><b>+${value}</b>`;
+    node.appendChild(li);
+  }
+  if(!run.done){
+    const li=document.createElement('li');
+    li.innerHTML='<span>NOT FINISHED</span><b>0</b>';
+    node.appendChild(li);
+  }
+}
 
 function finish(reason){
   if(state.finished)return; state.finished=true; state.running=false; state.pointerDown=false; state.shaking=false; state.phase='result'; spraySound(false); playerSpray.visible=false; aiSpray.visible=false; updateMetrics();
   // Батл кончился — райтер распрямляется из боевой стойки.
   player.playClip('fight_to_idle',.25,{once:true,restart:true});
-  const timeBonus=Math.min(10,10*state.remaining/state.roundSeconds);
-  const ps=score(state.coverage,state.clean,state.drips,reason==='player'?timeBonus:0); const as=score(state.aiCoverage,state.aiClean,state.aiDrips,reason==='ai'?timeBonus:0);
-  const win=reason==='player'||(reason==='time'&&ps>=as); ui.resultTitle.textContent=win?'YOU WIN':'OPPONENT WINS'; ui.resultCard.classList.toggle('loss',!win); ui.playerScore.textContent=ps; ui.aiScore.textContent=as; ui.playerMeta.textContent=`${Math.floor(state.coverage)}% / ${state.drips} DRIPS`; ui.aiMeta.textContent=`${Math.floor(state.aiCoverage)}% / ${state.aiDrips} DRIPS`;
+  const seconds=(performance.now()-state.roundStarted)/1000;
+  // goBig / goOver / heaven пока всегда false, и это честно: в игре нет ни
+  // выбора увеличенного размера, ни чужих работ, поверх которых можно писать,
+  // ни высотных точек. Поля переданы явно, чтобы было видно, чего не хватает.
+  const common={seconds,allowed:state.roundSeconds,goBig:false,goOver:false,heaven:false};
+  const pr=scoreRun({...common,coverage:state.coverage,drips:state.drips});
+  const ar=scoreRun({...common,coverage:state.aiCoverage,drips:state.aiDrips});
+  const ps=pr.total, as=ar.total;
+  // По правилам оригинала недоведённая работа не приносит очков вообще.
+  // Таймер раунда — наша добавка (в оригинале Completion Timer = 0 у всех зон),
+  // поэтому если по истечении времени не закончил никто, счёт честно 0:0,
+  // а исход решается по закрашенной площади — иначе раунд не разрешался бы.
+  const win = decideWinner(reason,
+    {total:ps,coverage:state.coverage},
+    {total:as,coverage:state.aiCoverage});
+  ui.resultTitle.textContent=win?'YOU WIN':'OPPONENT WINS'; ui.resultCard.classList.toggle('loss',!win);
+  ui.playerScore.textContent=ps; ui.aiScore.textContent=as;
+  ui.playerMeta.textContent=`${Math.floor(state.coverage)}% / ${state.drips} DRIPS`;
+  ui.aiMeta.textContent=`${Math.floor(state.aiCoverage)}% / ${state.aiDrips} DRIPS`;
+  renderParts(ui.playerParts,pr); renderParts(ui.aiParts,ar);
   setTimeout(()=>ui.resultModal.classList.add('is-visible'),600); hit(win?260:75);
 }
 
