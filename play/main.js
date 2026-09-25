@@ -3,7 +3,9 @@ import { GLTFLoader } from './vendor/GLTFLoader.js';
 import { SPRAY_CAM_ARCS, SPRAY_CAM_MS, sprayCamEase,
   CAMERA_CONE_DEG, clampCone, turnToward, dripWarning, CURVES, bell, particleLife,
   STAGES, LAST_PAINT_STAGE, COMPLETING_MS, EMIT_STEP, timeForGrid, stageProgress, dripMapFor, DripTracker, dripShape,
-         PALETTE, dripColorsFor, scoreRun, decideWinner } from './paint-rules.mjs';
+         PALETTE, dripColorsFor, scoreRun, decideWinner,
+         TOOLS, toolRadiusRatio, fillRate, toolsAllowed, goBigSize, timeForGrid as timeFor,
+         REPUTATION_PER_PIECE, APPROACH_ANGLE_DEG, facingWall } from './paint-rules.mjs';
 
 const DEFAULT_GRID = {columns:4,rows:2};
 const ROUND_SECONDS = timeForGrid(DEFAULT_GRID);
@@ -39,7 +41,7 @@ const ui = {
   pressure: $('#pressureBar'), pressureNumber: $('#pressureNumber'), clean: $('#clean'), drips: $('#drips'), shake: $('#shake'),
   startModal: $('#startModal'), start: $('#start'), countdown: $('#countdown'), countdownText: $('#countdown b'),
   resultModal: $('#resultModal'), resultCard: $('.result-card'), resultTitle: $('#resultTitle'), playerScore: $('#playerScore'),
-  playerParts: $('#playerParts'), aiParts: $('#aiParts'),
+  playerParts: $('#playerParts'), aiParts: $('#aiParts'), reputation: $('#reputation'),
   aiScore: $('#aiScore'), playerMeta: $('#playerMeta'), aiMeta: $('#aiMeta'), restart: $('#restart'), crosshair: $('#crosshair'),
   touchControls: $('#touchControls'), joystick: $('#joystick'), joystickStick: $('#joystickStick'),
   reachBtn: $('#reachBtn'), crouchBtn: $('#crouchBtn'), enterTagBtn: $('#enterTagBtn')
@@ -50,7 +52,7 @@ const state = {
   mode: 'roam', surface: null, panel: null, nearRival: false, talking: false,
   phase: 'idle', phaseStarted: 0, running: false, finished: false, pointerDown: false, shaking: false,
   pointerNdc: new THREE.Vector2(0, 0), pointerUv: new THREE.Vector2(.5, .5), lastUv: new THREE.Vector2(.5, .5),
-  cap: 'fat', pressure: 100, drips: 0, clean: 100, coverage: 0, aiCoverage: 0, aiClean: 96, aiDrips: 0,
+  cap: 'fat', tool: 'aerosol', goBig: false, reputation: 0, pressure: 100, drips: 0, clean: 100, coverage: 0, aiCoverage: 0, aiClean: 96, aiDrips: 0,
   remaining: ROUND_SECONDS, roundSeconds:ROUND_SECONDS, roundStarted: 0, lastFrame: 0, lastMetric: 0, stationary: 0, lastDrip: 0,
   aiRoute: [], aiIndex: 0, aiUv: new THREE.Vector2(.5, .5), aiPauseUntil: 0, sound: true,
   aiPressure: 100, aiShaking: false, aiStationary: 0, aiLastDrip: 0, aiWander: new THREE.Vector2(0, 0),
@@ -309,6 +311,8 @@ class PaintSurface {
     // <TagArea Complex="..."> в оригинале: 107 работ простых, 54 сложные.
     // Сложная работа менее терпима к задержке факела на месте.
     this.complex = spec.complex ?? false;
+    this.tagType = spec.tagType ?? 'Any';
+    this.tools = toolsAllowed(this.tagType);
     this.pieces = 0;                       // сколько работ уже оставлено
     this.grid=spec.grid ?? DEFAULT_GRID;
     this.roundSeconds=timeForGrid(this.grid);
@@ -341,11 +345,18 @@ class PaintSurface {
     this.update();
   }
 
-  compose(images) {
+  compose(images = this.sourceImages, big = this.big) {
+    // Картинки запоминаются, чтобы работу можно было пересобрать крупнее,
+    // когда игрок выбирает Go Big.
+    if(!images || !images.length) return;   // картинки ещё не загрузились
+    this.sourceImages = images; this.big = big;
     const ctx = ctx2d(this.final);
     ctx.clearRect(0, 0, TEX_W, TEX_H);
     const image = images[0];
-    const scale = Math.min((TEX_W - 48) / image.width, (TEX_H - 34) / image.height);
+    // Go Big — работа во всю стену, без полей. `GoBigMap` в оригинале
+    // переводит сетку 4×2 в 6×3, то есть площадь растёт в 2.25 раза.
+    const pad = big ? [0, 0] : [48, 34];
+    const scale = Math.min((TEX_W - pad[0]) / image.width, (TEX_H - pad[1]) / image.height);
     const w = image.width * scale;
     const h = image.height * scale;
     const x = (TEX_W - w) / 2;
@@ -469,7 +480,15 @@ class PaintSurface {
     if(this.complete)return {coverage:100,outside:this.outside};
     if(this.stage>LAST_PAINT_STAGE){
       // COMPLETING: слоя с маской нет, считать нечего — только дожидаемся коммита.
-      if(performance.now()>=this.completingUntil){this.complete=true;this.update();}
+      if(performance.now()>=this.completingUntil){
+        this.complete=true;
+        // Работа засчитана: занимает место на стене и приносит репутацию.
+        // `Piece Limit` = 1 у 121 зоны из 154, `Reputation Scoring` = 32
+        // у всех 85, где поле есть.
+        this.pieces+=1;
+        if(this===(state.panel||playerSurface))state.reputation+=REPUTATION_PER_PIECE;
+        this.update();
+      }
       return {coverage:100,outside:this.outside};
     }
     const mask = ctx2d(this.mask).getImageData(0, 0, TEX_W, TEX_H).data;
@@ -523,8 +542,10 @@ class PaintSurface {
 // стоит ровно одна (<IFreeFormBound Piece Limit>), и это не даёт городу
 // превратиться в ковёр из тегов.
 const WALLS = [
-  { id:'player', x:PLAYER_CENTER, grid:{columns:4,rows:2}, color:5, pieceLimit:1 },
-  { id:'rival',  x:RIVAL_CENTER,  grid:{columns:4,rows:2}, color:1, pieceLimit:1 }
+  // `Tag Type` в зонах оригинала: Any 226, Aerosol 154, Roller 76,
+  // Wheat Paste 16. Стена сама объявляет, чем на ней можно работать.
+  { id:'player', x:PLAYER_CENTER, grid:{columns:4,rows:2}, color:5, pieceLimit:1, tagType:'Any' },
+  { id:'rival',  x:RIVAL_CENTER,  grid:{columns:4,rows:2}, color:1, pieceLimit:1, tagType:'Aerosol' }
 ];
 const surfaces = WALLS.map(spec => new PaintSurface(spec));
 const surfaceById = id => surfaces.find(s => s.id === id);
@@ -1469,6 +1490,18 @@ async function loadArt(){
   state.aiRoute=aiSurface.route();
 }
 
+// Инструмент можно сменить только на тот, который разрешает сама стена.
+function setTool(tool){
+  const wall=state.panel||playerSurface;
+  if(!wall.tools.includes(tool)){
+    ui.objective.textContent=`— На этой стене только ${wall.tools.join(', ')}.`;
+    return false;
+  }
+  state.tool=tool;
+  ui.objective.textContent=`— ${tool.toUpperCase()}`;
+  return true;
+}
+
 function setCap(cap){ state.cap=cap; $$('.cap').forEach(b=>b.classList.toggle('is-active',b.dataset.cap===cap)); ui.game.classList.toggle('skinny',cap==='skinny'); }
 
 function reset(){
@@ -1486,7 +1519,9 @@ function reset(){
   camera.position.set(-1.25,3.55,9.2);
   ui.clock.classList.remove('critical'); ui.game.classList.remove('paint-mode','spraying','skinny');
   ui.resultModal.classList.remove('is-visible'); ui.resultCard.classList.remove('loss');
-  state.aiRoute=aiSurface.route();state.roundSeconds=playerSurface.roundSeconds;
+  // Крупнее работа — больше времени: 4.5 с на квад от РЕАЛЬНОЙ сетки.
+  const grid=state.goBig?(goBigSize(playerSurface.grid)||playerSurface.grid):playerSurface.grid;
+  state.aiRoute=aiSurface.route();state.roundSeconds=timeFor(grid);
   state.remaining=state.roundSeconds;
   setCap('fat'); updateHud();updateTimer();
 }
@@ -1627,7 +1662,21 @@ function lookAngles(from,to){
 
 function enterTagging(){
   if(state.phase!=='approach'||!state.nearWall||state.nearRival)return;
-  state.panel=nearestPanel().surface;
+  const target=nearestPanel().surface;
+  // Стена вмещает ограниченное число работ.
+  if(target.pieces>=target.pieceLimit){
+    ui.objective.textContent='— Стена занята. Работа здесь уже есть.';
+    return;
+  }
+  // Подходить надо лицом к стене: `Offset Angle` у зон оригинала 30–50°.
+  // Наши стены смотрят вдоль −Z, поворот игрока 0 означает взгляд на них.
+  if(!facingWall(player.root.rotation.y*180/Math.PI,0)){
+    ui.objective.textContent='— Встань лицом к стене.';
+    return;
+  }
+  state.panel=target;
+  // Инструмент по умолчанию — первый разрешённый на этой стене.
+  if(!target.tools.includes(state.tool))state.tool=target.tools[0];
   state.standZ=Math.min(state.standZ,1.35);
   ui.game.classList.remove('can-tag'); // иначе кнопка TAP TO TAG виснет и во время рисования
   player.root.rotation.y=0;
@@ -1771,7 +1820,9 @@ function stepPlayer(now,dt){
 
   // Дистанция до стены: вплотную — узкая плотная линия, издалека — широкий мягкий факел
   const near=THREE.MathUtils.clamp((state.standZ-WALL_STAND_MIN)/(2.15-WALL_STAND_MIN),0,1);
-  const base=state.cap==='fat'?31:17;
+  // Радиус факела зависит и от кэпа, и от инструмента. Отношения радиусов
+  // взяты из TagAreas.xml: Aerosol 17.5, Roller 15, Wheat Paste 12.5.
+  const base=(state.cap==='fat'?31:17)*toolRadiusRatio(state.tool);
   const radius=base*(.62+near*.85);
   const strength=Math.max(.35,state.pressure/100)*(1-near*.34);
 
@@ -1797,7 +1848,10 @@ function stepPlayer(now,dt){
   const point=new THREE.Vector2();
   for(let i=1;i<=steps;i++){
     point.copy(state.lastUv).lerp(state.reachUv,i/steps);
-    (state.panel||playerSurface).spray(point,radius,strength*dose/Math.sqrt(steps));
+    // PaintFillRate: у валика и расклейки простая работа кроется вдвое
+    // быстрее, чем баллоном (4 против 2), сложная у всех одинакова.
+    const fill=fillRate(state.tool,surface.complex)/TOOLS.aerosol.fill.simple;
+    (state.panel||playerSurface).spray(point,radius,strength*dose*fill/Math.sqrt(steps));
   }
 
   // Continuous dwell selects a fixed point from this wall's original DripMap.
@@ -1910,7 +1964,10 @@ function finish(reason){
   // goBig / goOver / heaven пока всегда false, и это честно: в игре нет ни
   // выбора увеличенного размера, ни чужих работ, поверх которых можно писать,
   // ни высотных точек. Поля переданы явно, чтобы было видно, чего не хватает.
-  const common={seconds,allowed:state.roundSeconds,goBig:false,goOver:false,heaven:false};
+  // goBig теперь настоящий: игрок выбирает увеличенный размер клавишей G.
+  // goOver и heaven остаются false — для них нужны чужие работы на стенах
+  // и высотные точки, которых в локации пока нет.
+  const common={seconds,allowed:state.roundSeconds,goBig:state.goBig,goOver:false,heaven:false};
   const pr=scoreRun({...common,coverage:state.coverage,drips:state.drips});
   const ar=scoreRun({...common,coverage:state.aiCoverage,drips:state.aiDrips});
   const ps=pr.total, as=ar.total;
@@ -1926,6 +1983,7 @@ function finish(reason){
   ui.playerMeta.textContent=`${Math.floor(state.coverage)}% / ${state.drips} DRIPS`;
   ui.aiMeta.textContent=`${Math.floor(state.aiCoverage)}% / ${state.aiDrips} DRIPS`;
   renderParts(ui.playerParts,pr); renderParts(ui.aiParts,ar);
+  ui.reputation.textContent=state.reputation;
   setTimeout(()=>ui.resultModal.classList.add('is-visible'),600); hit(win?260:75);
 }
 
@@ -2048,6 +2106,21 @@ window.addEventListener('keydown',(e)=>{
   state.keys[e.code]=true;
   if(e.code==='Digit1')setCap('fat');
   if(e.code==='Digit2')setCap('skinny');
+  if(e.code==='KeyG'&&state.phase!=='paint'){
+    // Выбор размера делается ДО подхода к стене, как и в оригинале, где
+    // Go Big меняет саму сетку работы, а не что-то по ходу рисования.
+    state.goBig=!state.goBig;
+    const wall=state.panel||playerSurface;
+    const grid=state.goBig?goBigSize(wall.grid):wall.grid;
+    ui.objective.textContent = grid
+      ? `— ${state.goBig?'GO BIG':'обычный размер'}: ${grid.columns}×${grid.rows}`
+      : '— для этой стены увеличения нет';
+    if(grid){ surfaces.forEach(s=>s.compose(undefined,state.goBig)); }
+    else state.goBig=false;
+  }
+  if(e.code==='Digit3')setTool('aerosol');
+  if(e.code==='Digit4')setTool('roller');
+  if(e.code==='Digit5')setTool('wheatpaste');
   if(e.code==='KeyE'){
     if(state.phase==='paint')exitTagging();
     else if(state.nearRival)talkToRival();

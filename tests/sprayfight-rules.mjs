@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {decideWinner,bell,BELL6_PEAK,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
+import {REPUTATION_PER_PIECE,APPROACH_ANGLE_DEG,facingWall,toolsAllowed,decideWinner,bell,BELL6_PEAK,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
 assert.equal(timeForGrid({columns:4,rows:2}),36);
 assert.equal(timeForGrid({columns:2,rows:1}),9);
 assert.equal(timeForGrid({columns:6,rows:3}),81);
@@ -290,3 +290,32 @@ assert.equal(decideWinner('time',P(0,59),P(0,60)),false);
 assert.equal(decideWinner('time',P(0,50),P(0,50)),true);
 // Очки важнее площади: меньше закрасил, но довёл до конца и получил бонусы.
 assert.equal(decideWinner('time',P(20,100),P(0,99)),true);
+
+// --- Репутация, угол подхода, разрешённые инструменты ---
+// `Reputation Scoring` = 32 у всех 85 зон, где поле есть.
+assert.equal(REPUTATION_PER_PIECE,32);
+assert.equal(APPROACH_ANGLE_DEG,50);
+// Лицом к стене — можно, боком и спиной — нет.
+assert.equal(facingWall(0,0),true);
+assert.equal(facingWall(49,0),true);
+assert.equal(facingWall(-49,0),true);
+assert.equal(facingWall(51,0),false);
+assert.equal(facingWall(180,0),false);
+// Углы приводятся: 359 это −1, то есть почти лицом.
+assert.equal(facingWall(359,0),true);
+assert.equal(facingWall(-359,0),true);
+// Стена может смотреть в другую сторону.
+assert.equal(facingWall(180,180),true);
+assert.equal(facingWall(0,180),false);
+// Допуск можно сузить.
+assert.equal(facingWall(40,0,30),false);
+assert.equal(facingWall(20,0,30),true);
+// `Tag Type` = Any открывает все три инструмента, конкретный — только свой.
+assert.equal(toolsAllowed('Any').length,3);
+assert.equal(toolsAllowed(undefined).length,3);
+assert.equal(JSON.stringify(toolsAllowed('Aerosol')),JSON.stringify(['aerosol']));
+assert.equal(JSON.stringify(toolsAllowed('Roller')),JSON.stringify(['roller']));
+assert.equal(JSON.stringify(toolsAllowed('Wheat Paste')),JSON.stringify(['wheatpaste']));
+assert.throws(()=>toolsAllowed('Etching'));
+// Всё, что разрешено, есть в таблице инструментов.
+for(const t of toolsAllowed('Any'))assert.ok(TOOLS[t],`нет инструмента ${t}`);

@@ -308,3 +308,8 @@ button small { display:block; margin-top:3px; font-size:7px; opacity:.7; }
   font-size: .72rem; letter-spacing: .06em; opacity: .78; }
 .score-parts li b { font-weight: 700; opacity: .95; }
 .score-parts li.bonus { color: #b6ff00; opacity: .95; }
+
+/* Репутация: набирается по 32 за доведённую работу, как `Reputation Scoring`
+   в зонах оригинала. */
+.reputation { margin: .1rem 0 .6rem; font-size: .74rem; letter-spacing: .1em; opacity: .7; }
+.reputation b { color: #b6ff00; opacity: 1; }

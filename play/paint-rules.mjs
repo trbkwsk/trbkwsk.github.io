@@ -324,3 +324,29 @@ export function decideWinner(reason, player, ai){
   return player.coverage>=ai.coverage;
 }
 
+// ===== Репутация =====
+// `Reputation Scoring` = 32 у всех 85 зон оригинала, где поле есть. Это
+// константа, а не разброс, поэтому и у нас за доведённую работу начисляется
+// ровно столько.
+export const REPUTATION_PER_PIECE = 32;
+
+// ===== Допуск на угол подхода =====
+// `Offset Angle` у зон рисования: встретились 50 и 30 градусов. Берём больший
+// как общий допуск — меньший, видимо, для узких мест.
+// Оговорка: значений всего два, так что это слабое основание, в отличие от
+// остальных чисел здесь.
+export const APPROACH_ANGLE_DEG = 50;
+export function facingWall(playerYawDeg, wallYawDeg, tolerance = APPROACH_ANGLE_DEG){
+  return Math.abs(wrapDeg(playerYawDeg - wallYawDeg)) <= tolerance;
+}
+
+// Какие инструменты разрешены на стене. `Tag Type` в зонах принимает значения
+// Any (226), Aerosol (154), Roller (76), Wheat Paste (16).
+export function toolsAllowed(tagType){
+  if(tagType==='Any'||!tagType)return Object.keys(TOOLS);
+  const map={Aerosol:'aerosol', Roller:'roller', 'Wheat Paste':'wheatpaste'};
+  const one=map[tagType];
+  if(!one) throw new Error(`Неизвестный тип зоны: ${tagType}`);
+  return [one];
+}
+
