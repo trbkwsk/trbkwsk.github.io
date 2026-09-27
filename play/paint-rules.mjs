@@ -380,3 +380,29 @@ export function toolsAllowed(tagType){
   return [one];
 }
 
+// ===== Скорости локомоции =====
+// Посчитаны из root motion клипов Трейна по РАЗНИЦЕ между первым и последним
+// ключом переноса корня. Декодер ключей .bnm появился 27.09.2026; до него эти
+// числа брались из поля диапазона по 0x174 делением максимума на число кадров,
+// и это давало завышение, потому что клип начинается не в нуле.
+//
+//   TR_Walk:       77.16 ед за 58 кадров = 1.330 ед/кадр
+//   TR_Run:       133.00 ед за 46 кадров = 2.891 ед/кадр
+//   TR_IdleToWalk: 13.52 ед за 18 кадров = 0.751 ед/кадр
+//
+// Единица движка — дюйм, кадров в секунде 30.
+export const FPS = 30;
+export const INCH = 0.0254;
+export const CLIP_UNITS_PER_FRAME = { walk:1.330, run:2.891, idleToWalk:0.751 };
+
+export function speedFromClip(unitsPerFrame, fps = FPS){
+  return unitsPerFrame*fps*INCH;
+}
+// 1.014 м/с
+export const WALK_SPEED = speedFromClip(CLIP_UNITS_PER_FRAME.walk);
+// 2.203 м/с
+export const RUN_SPEED = speedFromClip(CLIP_UNITS_PER_FRAME.run);
+// Старт МЕДЛЕННЕЕ ровного шага: 0.751 / 1.330 = 0.565.
+export const START_PHASE_SCALE =
+  CLIP_UNITS_PER_FRAME.idleToWalk/CLIP_UNITS_PER_FRAME.walk;
+

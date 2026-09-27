@@ -2,6 +2,7 @@ import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 import { SPRAY_CAM_ARCS, SPRAY_CAM_MS, sprayCamEase,
   CAMERA_CONE_DEG, CAMERA_DISTANCE, CAMERA_FOCUS_OFFSET, CAMERA_DRIFT,
+  WALK_SPEED, RUN_SPEED, START_PHASE_SCALE,
   clampCone, turnToward, dripWarning, CURVES, bell, particleLife,
   STAGES, LAST_PAINT_STAGE, COMPLETING_MS, EMIT_STEP, timeForGrid, stageProgress, dripMapFor, DripTracker, dripShape,
          PALETTE, dripColorsFor, scoreRun, decideWinner,
@@ -105,8 +106,18 @@ const TAG_STEP_TIME = .56;    // совпадает с ускоренным stra
 // Это нормальные человеческие скорости (ходьба 1.2-1.4, трусца ~3.3), что и
 // подтверждает трактовку. Прежние 1.61/4.60 сохраняли верное отношение 2.85x,
 // но были завышены примерно на 37%.
-const WALK_SPEED = 1.17;      // м/с
-const RUN_SPEED = 3.35;       // м/с — те же 2.85x от шага
+// Скорости взяты из root motion клипов Трейна, посчитанного по РАЗНИЦЕ между
+// первым и последним ключом переноса корня, а не по максимуму координаты.
+//   TR_Walk: 77.16 ед за 58 кадров = 1.330 ед/кадр = 1.014 м/с при 30 к/с
+//   TR_Run:  133.00 ед за 46 кадров = 2.891 ед/кадр = 2.203 м/с
+// Отношение бег/шаг = 2.174.
+//
+// Раньше здесь стояло 1.17 и 3.35 с отношением 2.86. Ошибка была в делении:
+// я брал МАКСИМУМ координаты Z и делил на число кадров, хотя клип начинается
+// не в нуле (ходьба с 13.75, бег с 73.46). Стартовое смещение уходило в
+// «пройденный путь» и завышало обе скорости.
+// Сами числа и вывод — в paint-rules.mjs, там они под тестами.
+// Здесь только псевдонимы, чтобы не плодить источники правды.
 const CLIP_WALK_SPEED = 2.85;
 // Естественная скорость бегового клипа. Измерена в Blender по расхождению стоп
 // за цикл: клипы Mixamo сделаны «на месте», корень не едет, но стопы расходятся
@@ -898,7 +909,11 @@ class Mannequin {
     // 32 ед за 19 кадров = 1.684 ед/кадр, тогда как установившийся TR_Walk — 1.525.
     // То есть стартовый клип слегка ОБГОНЯЕТ ровный шаг (толчок с места), а прежние
     // .68 делали трогание вялым. Отношение 1.684/1.525 = 1.104.
-    const phaseScale=this.motion.mode==='start'?1.104:this.motion.mode==='turn'?.2:1;
+    // Старт МЕДЛЕННЕЕ ровного шага, а не быстрее: TR_IdleToWalk проходит
+    // 13.52 ед за 18 кадров = 0.751 ед/кадр против 1.330 у TR_Walk, то есть
+    // 0.565. Прежние 1.104 держались на том же неверном делении максимума
+    // на число кадров; стоявшие до них 0.68 были ближе к истине.
+    const phaseScale=this.motion.mode==='start'?START_PHASE_SCALE:this.motion.mode==='turn'?.2:1;
     this.motion.speed=THREE.MathUtils.damp(this.motion.speed,targetSpeed*phaseScale,moving?5.2:7.5,dt);
     if (moving) {
       this.root.position.x=THREE.MathUtils.clamp(this.root.position.x+input.x*this.motion.speed*dt,xMin,xMax);

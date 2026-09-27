@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {CAMERA_DISTANCE,CAMERA_FOCUS_OFFSET,CAMERA_BLEND_SECONDS,CAMERA_DRIFT,REPUTATION_PER_PIECE,APPROACH_ANGLE_DEG,facingWall,toolsAllowed,decideWinner,bell,BELL6_PEAK,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
+import {FPS,INCH,CLIP_UNITS_PER_FRAME,speedFromClip,WALK_SPEED,RUN_SPEED,START_PHASE_SCALE,CAMERA_DISTANCE,CAMERA_FOCUS_OFFSET,CAMERA_BLEND_SECONDS,CAMERA_DRIFT,REPUTATION_PER_PIECE,APPROACH_ANGLE_DEG,facingWall,toolsAllowed,decideWinner,bell,BELL6_PEAK,particleLife,SPRAY_SPEED,CURVES,HAND_DRAWN_CURVES,TOOLS,DRIP_WARNING,toolRadiusRatio,fillRate,dripWarning,GO_BIG_MAP,goBigSize,COMPLETION_PERCENT,CAMERA_CONE_DEG,CAMERA_TURN_RATE,wrapDeg,clampCone,turnToward,SPRAY_CAM_ARCS,SPRAY_CAM_FRAMES,SPRAY_CAM_MS,SPRAY_CAM_EASEIN,sprayCamEase,timeForGrid,stageProgress,STAGES,LAST_PAINT_STAGE,COMPLETING_MS,EMIT_STEP,DripTracker,DRIP_MAPS,dripShape} from '../play/paint-rules.mjs';
 assert.equal(timeForGrid({columns:4,rows:2}),36);
 assert.equal(timeForGrid({columns:2,rows:1}),9);
 assert.equal(timeForGrid({columns:6,rows:3}),81);
@@ -340,3 +340,26 @@ assert.equal(JSON.stringify(toolsAllowed('Wheat Paste')),JSON.stringify(['wheatp
 assert.throws(()=>toolsAllowed('Etching'));
 // Всё, что разрешено, есть в таблице инструментов.
 for(const t of toolsAllowed('Any'))assert.ok(TOOLS[t],`нет инструмента ${t}`);
+
+// --- Скорости из root motion ---
+assert.equal(FPS,30);
+assert.equal(INCH,0.0254);
+// Пересчёт единиц кадра в метры в секунду.
+assert.ok(Math.abs(speedFromClip(1.330)-1.0134)<1e-3);
+assert.ok(Math.abs(WALK_SPEED-1.014)<1e-3,`шаг ${WALK_SPEED}`);
+assert.ok(Math.abs(RUN_SPEED-2.203)<1e-3,`бег ${RUN_SPEED}`);
+// Отношение бег/шаг — 2.174, а НЕ 2.85: прежнее число держалось на делении
+// максимума координаты на число кадров, хотя клип начинается не в нуле.
+assert.ok(Math.abs(RUN_SPEED/WALK_SPEED-2.174)<0.01,`отношение ${RUN_SPEED/WALK_SPEED}`);
+assert.ok(RUN_SPEED/WALK_SPEED<2.5,'отношение не должно быть прежним 2.85');
+// Старт медленнее ровного шага, а не быстрее.
+assert.ok(START_PHASE_SCALE<1,`старт ${START_PHASE_SCALE}`);
+assert.ok(Math.abs(START_PHASE_SCALE-0.565)<0.005);
+// Порядок скоростей: старт < шаг < бег.
+const start=speedFromClip(CLIP_UNITS_PER_FRAME.idleToWalk);
+assert.ok(start<WALK_SPEED&&WALK_SPEED<RUN_SPEED);
+// Все три положительны и в разумных для человека пределах.
+for(const [k,v] of Object.entries(CLIP_UNITS_PER_FRAME)){
+  const ms=speedFromClip(v);
+  assert.ok(ms>0.3&&ms<6,`${k}: ${ms} м/с вне разумного`);
+}
