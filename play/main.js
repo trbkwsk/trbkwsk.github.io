@@ -645,7 +645,7 @@ class Mannequin {
     this.rigBones = {};
     this.rigBase = {};
     this.motion = { mode:'idle', speed:0, desiredYaw:0, until:0 };
-    this.air = { active:false, vy:0, y:0, falling:false };
+    this.air = { active:false, vy:0, y:0, peak:0, falling:false };
     this.traversal = { active:false, kind:null, started:0, duration:0, from:new THREE.Vector3(), to:new THREE.Vector3(), height:0 };
     // Чередование стоек. В оригинале у Трейна шесть idle-анимаций, у нас две.
     this.idleNext = 0; this.idleAltUntil = 0; this.idlePool = null; this.idleClip = 'idle';
@@ -905,10 +905,14 @@ class Mannequin {
         if (skid) this.playClip('run_skid',.12,{once:true,restart:true,
           timeScale:this.actions.run_skid.getClip().duration/.78});
         else this.playClip('turn_180',.12,{once:true,timeScale:1.65,restart:true});
+      } else if (yawDelta<-1.05 && this.motion.speed>.65 && this.motion.mode!=='turn' && this.actions.turn_right) {
+        // Зеркальный поворот направо. До сих пор направо разворачивались
+        // доворотом корпуса, потому что клипа не было.
+        this.motion.mode='turn'; this.motion.until=now+430;
+        this.playClip('turn_right',.12,{once:true,restart:true});
       } else if (yawDelta>1.05 && this.motion.speed>.65 && this.motion.mode!=='turn' && this.actions.turn_left) {
         // Поворот примерно на четверть — свой клип, как TR_90TurnToRun_L в
-        // оригинале. Зеркального клипа для правого поворота в модели нет,
-        // поэтому направо разворот идёт по-старому, доворотом корпуса.
+        // оригинале.
         // Знак: desiredYaw = atan2(-input.x,-input.y), нажатие D даёт
         // отрицательную дельту, а «вправо» у модели это +X — значит
         // положительная дельта и есть поворот налево.
@@ -989,18 +993,30 @@ class Mannequin {
         this.air.active=false;
         // Падение и прыжок приземляются по-разному: после падения приседание
         // глубже, и для него есть свой клип.
-        this.playClip(this.air.falling&&this.actions.fall_land?'fall_land':'jump_land',
-          .1,{once:true,restart:true});
+        // Чем выше падение, тем тяжелее приземление: короткое — как с прыжка,
+        // среднее — своим клипом, высокое — жёсткое или через перекат.
+        const drop=this.air.peak-ground;
+        let land='jump_land';
+        if(this.air.falling){
+          // Пороги подобраны так, чтобы сход с ящика (1.25 м) читался обычным
+          // приземлением, а не тяжёлым: жёсткое начинается выше человеческого
+          // роста, перекат — заметно выше.
+          if(drop>3.0&&this.actions.fall_roll)land='fall_roll';
+          else if(drop>1.8&&this.actions.land_hard)land='land_hard';
+          else if(this.actions.fall_land)land='fall_land';
+        }
+        this.playClip(land,.1,{once:true,restart:true});
         this.air.falling=false;
         this.root.position.y=ground;
         this.motion.mode=moving?'walk':'idle';
       } else {
+        this.air.peak=Math.max(this.air.peak,this.air.y);
         if (this.air.vy<-1.2 && this.air.falling && this.actions.fall) this.playClip('fall',.15);
         this.root.position.y=this.air.y;
       }
     } else if (this.root.position.y-ground>.22) {
       // Сошли с края: падаем, а не просачиваемся вниз сглаживанием.
-      Object.assign(this.air,{active:true,vy:0,y:this.root.position.y,falling:true});
+      Object.assign(this.air,{active:true,vy:0,y:this.root.position.y,peak:this.root.position.y,falling:true});
       this.playClip(this.actions.fall?'fall':'jump',.12,{restart:true});
     } else {
       this.root.position.y=THREE.MathUtils.damp(this.root.position.y,ground,12,dt);
@@ -1018,8 +1034,8 @@ class Mannequin {
     // они не проигрываются «один раз поверх idle», а просто становятся текущей
     // стойкой на случайное время.
     if (!this.idlePool) {
-      this.idlePool = ['idle','idle_alt','idle2','idle3','idle_breathing',
-                       'idle_happy','idle_neutral'].filter(n=>this.actions[n]);
+      this.idlePool = ['idle','idle_alt','idle2','idle3','idle4','idle5','idle6','idle7',
+                       'idle_breathing','idle_happy','idle_neutral'].filter(n=>this.actions[n]);
     }
     if (this.idlePool.length<2) { this.playClip('idle',.3); return; }
     if (now >= this.idleNext) {
@@ -1036,7 +1052,7 @@ class Mannequin {
   // клипа, поэтому до пересборки .glb прыжок работает без анимации.
   startJump(){
     if (this.air.active) return false;
-    Object.assign(this.air,{active:true,vy:JUMP_SPEED,y:this.root.position.y,falling:false});
+    Object.assign(this.air,{active:true,vy:JUMP_SPEED,y:this.root.position.y,peak:this.root.position.y,falling:false});
     // Прыжок с разбега, с шага и с места — разные клипы, как TR_Jump и его
     // беговые варианты в оригинале. Берём по текущей скорости.
     const v=this.motion.speed;
@@ -1064,6 +1080,8 @@ class Mannequin {
     const clip = climb ? (this.actions.climb_top ? 'climb_top'
                         : this.actions.climb ? 'climb' : 'jump_forward')
                        : (this.actions.vault ? 'vault' : 'jump_forward');
+    // Клип перелёта длинный (3.6 с), в нём есть подход и сход; сжимаем его
+    // до длительности самого движения.
     const duration = this.actions[clip]?.getClip().duration;
     this.playClip(clip,.08,{once:true,restart:true,timeScale:duration?duration/this.traversal.duration:1});
     return true;
