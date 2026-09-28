@@ -1,5 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
+import { DistrictWorld, ProgressStore } from './world-systems.mjs';
 import { SPRAY_CAM_ARCS, SPRAY_CAM_MS, sprayCamEase,
   CAMERA_CONE_DEG, CAMERA_DISTANCE, CAMERA_FOCUS_OFFSET, CAMERA_DRIFT,
   WALK_SPEED, RUN_SPEED, START_PHASE_SCALE,
@@ -46,7 +47,7 @@ const ui = {
   playerParts: $('#playerParts'), aiParts: $('#aiParts'), reputation: $('#reputation'),
   aiScore: $('#aiScore'), playerMeta: $('#playerMeta'), aiMeta: $('#aiMeta'), restart: $('#restart'), crosshair: $('#crosshair'),
   touchControls: $('#touchControls'), joystick: $('#joystick'), joystickStick: $('#joystickStick'),
-  reachBtn: $('#reachBtn'), crouchBtn: $('#crouchBtn'), enterTagBtn: $('#enterTagBtn')
+  jumpBtn: $('#jumpBtn'), reachBtn: $('#reachBtn'), crouchBtn: $('#crouchBtn'), enterTagBtn: $('#enterTagBtn')
 };
 
 const state = {
@@ -71,7 +72,7 @@ const RIVAL_CENTER = 4.05;
 // Прежние PLAYER_CENTER±3.3 запирали его у собственной стены.
 const ROAM_X_MIN = PLAYER_CENTER - 3.3;
 const ROAM_X_MAX = RIVAL_CENTER + 3.3;
-const ROAM_Z_MAX = 7.4;
+const ROAM_Z_MAX = 46;
 const TALK_RANGE = 1.9;       // с какого расстояния можно заговорить с соперником
 // В свободном режиме соперник НЕ стоит у своей панели, иначе к ней не подойти
 // порисовать — вместо этого он ждёт посреди локации как обычный NPC.
@@ -156,6 +157,8 @@ renderer.toneMappingExposure = .82;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x040504);
 scene.fog = new THREE.FogExp2(0x0a0d12, .028);
+const district = new DistrictWorld(scene);
+const progressStore = new ProgressStore();
 
 const camera = new THREE.PerspectiveCamera(56, window.innerWidth / window.innerHeight, .1, 80);
 camera.position.set(-1.25, 3.55, 9.2);
@@ -287,6 +290,51 @@ function buildEnvironment() {
 }
 
 buildEnvironment();
+
+// Первый открытый район: склад переходит во двор и затем в тоннель. Геометрия
+// пока модульная и своя; дорогие/оригинальные ассеты Getting Up сюда не входят.
+function buildDistrictExpansion() {
+  const warehouse = district.addSector('warehouse', [-10, 12], new THREE.Group());
+  const yard = district.addSector('yard', [12, 29], new THREE.Group());
+  const tunnel = district.addSector('tunnel', [29, 47], new THREE.Group());
+  const box = (group, size, position, material, cast = true) => {
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(...size), material);
+    mesh.position.set(...position); mesh.castShadow = cast; mesh.receiveShadow = true;
+    group.add(mesh); return mesh;
+  };
+
+  box(yard, [20, .32, 18], [0, -.2, 20], materials.floor, false);
+  box(yard, [.55, 6, 18], [-10.25, 2.8, 20], materials.concreteDark);
+  box(yard, [.55, 6, 18], [10.25, 2.8, 20], materials.concreteDark);
+  box(yard, [20, .35, .55], [0, 5.8, 28.7], materials.metal);
+  for (const x of [-7.5, -2.5, 2.5, 7.5]) box(yard, [.22, 5.5, .22], [x, 2.55, 20], materials.rust);
+
+  box(tunnel, [20, .32, 18], [0, -.2, 38], materials.floor, false);
+  box(tunnel, [.65, 6.2, 18], [-10.2, 2.9, 38], materials.concreteWorn);
+  box(tunnel, [.65, 6.2, 18], [10.2, 2.9, 38], materials.concreteWorn);
+  box(tunnel, [20, .5, 18], [0, 6.05, 38], materials.concreteDark);
+  for (const z of [31, 35, 39, 43]) box(tunnel, [15, .1, .36], [0, 5.55, z], materials.light, false);
+
+  const obstacles = [
+    { id:'yard_barrier', sector:'yard', x:-2.2, z:16.2, w:3.2, d:.72, h:.72, vaultable:true, mat:materials.metal },
+    { id:'yard_crate', sector:'yard', x:4.1, z:22.1, w:2.4, d:1.3, h:1.25, climbable:true, mat:materials.rust },
+    { id:'tunnel_barrier', sector:'tunnel', x:-3.8, z:34.5, w:4.2, d:.62, h:.78, vaultable:true, mat:materials.steel },
+    { id:'tunnel_block', sector:'tunnel', x:4.8, z:40.5, w:2.2, d:1.4, h:1.32, climbable:true, mat:materials.concreteDark }
+  ];
+  for (const item of obstacles) {
+    const group = item.sector === 'yard' ? yard : tunnel;
+    box(group, [item.w, item.h, item.d], [item.x, item.h / 2, item.z], item.mat);
+    district.addCollider(item);
+  }
+  // Стены коридора являются коллизиями; проход между секторами остаётся открыт.
+  district.addCollider({id:'yard_left',sector:'yard',x:-10.25,z:20,w:.55,d:18,h:6});
+  district.addCollider({id:'yard_right',sector:'yard',x:10.25,z:20,w:.55,d:18,h:6});
+  district.addCollider({id:'tunnel_left',sector:'tunnel',x:-10.2,z:38,w:.65,d:18,h:6});
+  district.addCollider({id:'tunnel_right',sector:'tunnel',x:10.2,z:38,w:.65,d:18,h:6});
+  warehouse.visible = true;
+}
+
+buildDistrictExpansion();
 
 const imageLoad = (src) => new Promise((resolve, reject) => {
   const image = new Image();
@@ -557,7 +605,9 @@ const WALLS = [
   // `Tag Type` в зонах оригинала: Any 226, Aerosol 154, Roller 76,
   // Wheat Paste 16. Стена сама объявляет, чем на ней можно работать.
   { id:'player', x:PLAYER_CENTER, grid:{columns:4,rows:2}, color:5, pieceLimit:1, tagType:'Any' },
-  { id:'rival',  x:RIVAL_CENTER,  grid:{columns:4,rows:2}, color:1, pieceLimit:1, tagType:'Aerosol' }
+  { id:'rival',  x:RIVAL_CENTER,  grid:{columns:4,rows:2}, color:1, pieceLimit:1, tagType:'Aerosol' },
+  { id:'yard', x:-3.8, z:12.15, grid:{columns:4,rows:2}, color:3, pieceLimit:1, tagType:'Any' },
+  { id:'tunnel', x:3.8, z:29.15, grid:{columns:6,rows:3}, color:6, pieceLimit:1, tagType:'Aerosol' }
 ];
 const surfaces = WALLS.map(spec => new PaintSurface(spec));
 const surfaceById = id => surfaces.find(s => s.id === id);
@@ -590,6 +640,7 @@ class Mannequin {
     this.rigBase = {};
     this.motion = { mode:'idle', speed:0, desiredYaw:0, until:0 };
     this.air = { active:false, vy:0, height:0 };
+    this.traversal = { active:false, kind:null, started:0, duration:0, from:new THREE.Vector3(), to:new THREE.Vector3(), height:0 };
     // Чередование стоек. В оригинале у Трейна шесть idle-анимаций, у нас две.
     this.idleNext = 0; this.idleAltUntil = 0; this.idlePool = null; this.idleClip = 'idle';
     this.wasCrouched = false; this.standUntil = 0;
@@ -822,6 +873,7 @@ class Mannequin {
     if(this.rigModel)this.rigModel.position.y=0;
     Object.assign(this.motion,{mode:'idle',speed:0,desiredYaw:0,until:0});
     Object.assign(this.air,{active:false,vy:0,height:0});
+    Object.assign(this.traversal,{active:false,kind:null,started:0,duration:0,height:0});
     this.idleNext=0; this.idleAltUntil=0; this.idleClip='idle'; this.wasCrouched=false; this.standUntil=0;
     Object.assign(this.tagMove,{active:false,fromX:this.root.position.x,fromZ:this.root.position.z,toX:this.root.position.x,toZ:this.root.position.z,started:0,duration:TAG_STEP_TIME});
     this.tagPose.set(this.root.position.x,1.62);
@@ -974,6 +1026,37 @@ class Mannequin {
     const d=this.actions[clip]?.getClip().duration;
     this.playClip(clip,.1,{once:true,restart:true,
       timeScale:d?d/JUMP_CLIP_SECONDS:1});
+    return true;
+  }
+
+  startTraversal(candidate, now) {
+    if (!candidate || this.air.active || this.traversal.active) return false;
+    const climb = candidate.collider.climbable;
+    const landing = district.traversalLanding(candidate, this.root.position);
+    Object.assign(this.traversal, {
+      active:true, kind:climb?'climb':'vault', started:now,
+      duration:climb ? .92 : .64, height:candidate.collider.height,
+      from:this.root.position.clone(), to:landing
+    });
+    this.motion.speed=0; this.motion.mode='traverse';
+    const clip = climb && this.actions.climb ? 'climb' : this.actions.vault ? 'vault' : 'jump_forward';
+    const duration = this.actions[clip]?.getClip().duration;
+    this.playClip(clip,.08,{once:true,restart:true,timeScale:duration?duration/this.traversal.duration:1});
+    return true;
+  }
+
+  updateTraversal(now) {
+    if (!this.traversal.active) return false;
+    const raw=THREE.MathUtils.clamp((now-this.traversal.started)/(this.traversal.duration*1000),0,1);
+    const t=smoothstep(raw);
+    this.root.position.lerpVectors(this.traversal.from,this.traversal.to,t);
+    // Vault проходит невысокой дугой; climb поднимает таз выше края.
+    const lift=Math.sin(Math.PI*t)*(this.traversal.kind==='climb'?this.traversal.height+.2:.48);
+    this.root.position.y=groundHeight(this.root.position.z)+lift;
+    if(raw>=1){
+      this.traversal.active=false; this.root.position.y=groundHeight(this.root.position.z);
+      this.motion.mode='idle'; this.playClip('jump_land',.08,{once:true,restart:true});
+    }
     return true;
   }
 
@@ -1263,7 +1346,7 @@ class Mannequin {
       // The rival uses the same complete step clips as the player. It cannot
       // slide continuously after the cursor/path target.
       const desiredX = THREE.MathUtils.clamp(wallX - .42, centerX - 2.8, centerX + 2.8);
-      const desiredZ=WALL_Z+.34+1.35;
+      const desiredZ=panel.z+.34+1.35;
       if (!this.tagMove.active && Math.abs(this.root.position.x-desiredX)>.38) {
         const stepX=THREE.MathUtils.clamp(desiredX-this.root.position.x,-TAG_STEP_X,TAG_STEP_X);
         this.beginTagMove(this.root.position.x+stepX,desiredZ,performance.now());
@@ -1310,7 +1393,7 @@ class Mannequin {
       THREE.MathUtils.lerp(this.tagPose.y,wallY,.36),
       // Leave space between nozzle and wall instead of extending the wrist
       // all the way into the concrete.
-      WALL_Z + .70
+      panel.z + .70
     );
     this.aimArmAt(aimWorld,dt,this.paintBlend);
   }
@@ -1501,7 +1584,7 @@ async function loadArt(){
   ]);
   // Player follows the current SPRAY artwork only. The old writer-a-base had
   // a different silhouette and created the wrong combined sketch.
-  playerSurface.compose([aFill]);
+  surfaces.filter(surface=>surface!==aiSurface).forEach(surface=>surface.compose([aFill]));
   aiSurface.compose([bFinal,bLines]);
   state.aiRoute=aiSurface.route();
 }
@@ -1542,8 +1625,34 @@ function reset(){
   setCap('fat'); updateHud();updateTimer();
 }
 
+function progressSnapshot(){
+  return {
+    reputation:state.reputation,
+    position:{x:player.root.position.x,y:player.root.position.y,z:player.root.position.z},
+    sector:district.activeSector,
+    discovered:[...district.discovered]
+  };
+}
+
+function saveProgress(){ progressStore.save(progressSnapshot()); }
+
+function restoreProgress(){
+  const saved=progressStore.load();
+  if(!saved)return false;
+  state.reputation=Math.max(0,Number(saved.reputation)||0);
+  const p=saved.position;
+  if(p&&Number.isFinite(p.x)&&Number.isFinite(p.z)){
+    player.root.position.set(THREE.MathUtils.clamp(p.x,-9.5,9.5),0,THREE.MathUtils.clamp(p.z,-7.2,45.5));
+    state.walkX=player.root.position.x;state.standZ=player.root.position.z-(WALL_Z+.34);
+  }
+  for(const id of saved.discovered||[])district.discovered.add(id);
+  district.updateSectors(player.root.position);
+  return true;
+}
+
 async function start(){
   try { reset(); } catch (error) { console.error('SprayFight reset failed; starting with current state.', error); }
+  restoreProgress();
   ui.startModal.classList.remove('is-visible');
   try { ensureAudio(); } catch (error) { console.warn('Audio unavailable; continuing silently.', error); }
   state.phase='approach'; state.phaseStarted=performance.now(); ui.objective.textContent='WALK — W A S D · SHIFT TO RUN';
@@ -1602,12 +1711,19 @@ function updateApproach(now,dt){
   // Присед работает и в свободном режиме, а не только у стены.
   const crouching=!!(k.KeyC||k.ControlLeft);
   state.crouch=THREE.MathUtils.damp(state.crouch,crouching?1:0,9,dt);
-  const moving=player.updateLocomotion(
-    speedX,speedZ,running&&!crouching,now,dt,
-    ROAM_X_MIN,ROAM_X_MAX,
+  const previousPosition=player.root.position.clone();
+  const traversing=player.updateTraversal(now);
+  const moving=traversing || player.updateLocomotion(
+    traversing?0:speedX,traversing?0:speedZ,running&&!crouching,now,dt,
+    -9.7,9.7,
     WALL_Z+.34+WALL_STAND_MIN,WALL_Z+.34+ROAM_Z_MAX,
     crouching
   );
+  if(!traversing){
+    const resolved=district.resolve(previousPosition,player.root.position);
+    player.root.position.copy(resolved.position);
+  }
+  const sector=district.updateSectors(player.root.position);
   state.walkX=player.root.position.x;
   state.standZ=player.root.position.z-(WALL_Z+.34);
   // The rival is already at his panel. He waits, shifts his weight and only
@@ -1640,7 +1756,7 @@ function updateApproach(now,dt){
   ui.objective.textContent=
       state.nearRival ? 'PRESS E TO TALK'
     : state.nearWall  ? 'PRESS E TO TAG THIS WALL'
-    : 'WALK — W A S D · SHIFT TO RUN';
+    : `${sector.toUpperCase()} · WALK W A S D · SHIFT RUN · SPACE JUMP / VAULT`;
   // Подпись тач-кнопки следует за тем же выбором
   ui.enterTagBtn.textContent=state.nearRival?'TALK':'TAP TO TAG';
 
@@ -1654,10 +1770,17 @@ function updateApproach(now,dt){
 // Ближайшая стена локации. Перебирается весь список WALLS, расстояние — по
 // горизонтали до центра панели плюс отход от её плоскости, поэтому добавление
 // новой стены ничего здесь менять не требует.
+// Стена расписывается только с лицевой стороны. Все панели смотрят в сторону
+// +Z, поэтому игрок должен быть перед ней, а не за.
+// Без этой проверки стена считалась близкой и со спины, и вход в рисование
+// проносил персонажа СКВОЗЬ неё на другую сторону: при подходе к дворовой
+// стене (z = 12.15) с z = 11 якорь камеры вставал на 15.74, то есть стена
+// оказывалась между камерой и игроком.
 function panelDistance(surface){
   const pos=player.root.position;
+  if(pos.z < surface.z) return Infinity;      // игрок за стеной
   const dx=Math.max(0,Math.abs(pos.x-surface.x)-surface.w/2);
-  const dz=Math.abs(pos.z-surface.z);
+  const dz=pos.z-surface.z;
   return Math.hypot(dx,dz);
 }
 function nearestPanel(){
@@ -1693,10 +1816,10 @@ function enterTagging(){
   state.panel=target;
   // Инструмент по умолчанию — первый разрешённый на этой стене.
   if(!target.tools.includes(state.tool))state.tool=target.tools[0];
-  state.standZ=Math.min(state.standZ,1.35);
+  state.standZ=Math.min(Math.abs(player.root.position.z-(target.z+.34)),1.35);
   ui.game.classList.remove('can-tag'); // иначе кнопка TAP TO TAG виснет и во время рисования
   player.root.rotation.y=0;
-  player.beginTagMove(player.root.position.x,WALL_Z+.34+state.standZ,performance.now());
+  player.beginTagMove(player.root.position.x,target.z+.34+state.standZ,performance.now());
   state.aimUv.set(.5,.5); state.reachUv.set(.5,.5); state.lastUv.copy(state.reachUv);
   // Камера рисования — НЕПОДВИЖНАЯ ТОЧКА. В оригинале все 14 камер с именем
   // ICameraControl_GRAFF имеют Preset=Point и Type=None: при подходе к стене
@@ -1709,13 +1832,13 @@ function enterTagging(){
   state.paintCam=new THREE.Vector3(
     player.root.position.x+CAMERA_FOCUS_OFFSET[0],
     CAMERA_FOCUS_OFFSET[1]+.6,
-    WALL_Z+.34+state.standZ+CAMERA_DISTANCE);
+    target.z+.34+state.standZ+CAMERA_DISTANCE);
   // Камера не телепортируется в эту точку, а въезжает в неё по записанной дуге.
   // Вариант — по стороне, с которой игрок встал к центру стены.
   // Базовое направление конуса обзора — от якоря на центр стены. Довор камеры
   // разрешён только в пределах ±30° от него (Yaw Max = Pitch Max = 30.0 у всех
   // камер GRAFF), поэтому направление фиксируется здесь же, вместе с якорем.
-  state.camBase=lookAngles(state.paintCam,new THREE.Vector3(state.panel.x,PANEL_Y,WALL_Z+.3));
+  state.camBase=lookAngles(state.paintCam,new THREE.Vector3(state.panel.x,PANEL_Y,target.z+.3));
   state.camYaw=0; state.camPitch=0;
   const arc=SPRAY_CAM_ARCS[player.root.position.x<state.panel.x?'FL':'FR'];
   state.paintArc={
@@ -1737,7 +1860,8 @@ function exitTagging(){
   state.phase='approach'; state.running=false; state.pointerDown=false; state.shaking=false;
   spraySound(false); playerSpray.visible=false;
   ui.game.classList.remove('paint-mode','spraying','out-of-reach');
-  player.beginTagMove(player.root.position.x,WALL_Z+.34+2.6,performance.now());
+  const panelZ=(state.panel||playerSurface).z;
+  player.beginTagMove(player.root.position.x,panelZ+.34+2.6,performance.now());
 }
 
 // Шаги вдоль стены и приседание уже во время раунда
@@ -1748,13 +1872,14 @@ function updateTagMovement(now,dt){
   player.updateTagMove(now);
   if(!player.tagMove.active&&(strafe||depth)){
     const nextX=THREE.MathUtils.clamp(player.root.position.x+strafe*TAG_STEP_X,(state.panel||playerSurface).x-(state.panel||playerSurface).w/2+.5,(state.panel||playerSurface).x+(state.panel||playerSurface).w/2-.5);
-    const currentStand=player.root.position.z-(WALL_Z+.34);
+    const panelZ=(state.panel||playerSurface).z;
+    const currentStand=player.root.position.z-(panelZ+.34);
     const nextStand=THREE.MathUtils.clamp(currentStand+depth*TAG_STEP_Z,WALL_STAND_MIN,2.15);
-    player.beginTagMove(nextX,WALL_Z+.34+nextStand,now);
+    player.beginTagMove(nextX,panelZ+.34+nextStand,now);
   }
   // Reach and spray width follow the actual body, not the pending step target.
   state.walkX=player.root.position.x;
-  state.standZ=player.root.position.z-(WALL_Z+.34);
+  state.standZ=player.root.position.z-((state.panel||playerSurface).z+.34);
   const wantCrouch=k.KeyC||k.ControlLeft?1:0;
   const wantTiptoe=(k.ShiftLeft||k.ShiftRight)?1:0;
   state.crouch=THREE.MathUtils.damp(state.crouch,wantCrouch,9,dt);
@@ -2003,6 +2128,7 @@ function finish(reason){
   ui.aiMeta.textContent=`${Math.floor(state.aiCoverage)}% / ${state.aiDrips} DRIPS`;
   renderParts(ui.playerParts,pr); renderParts(ui.aiParts,ar);
   ui.reputation.textContent=state.reputation;
+  saveProgress();
   setTimeout(()=>ui.resultModal.classList.add('is-visible'),600); hit(win?260:75);
 }
 
@@ -2030,9 +2156,10 @@ function animate(){
     opponent.paint(new THREE.Vector2(.5,.5),aiSurface,false,dt);
     // пролёт от общего плана к рабочей позиции за плечом
     const t=smoothstep(Math.min(1,(now-state.phaseStarted)/2600));
-    const shoulder=new THREE.Vector3(state.walkX+1.15,2.05,WALL_Z+.34+state.standZ+2.1);
+    const panelZ=(state.panel||playerSurface).z;
+    const shoulder=new THREE.Vector3(state.walkX+1.15,2.05,panelZ+.34+state.standZ+2.1);
     camera.position.lerpVectors(WIDE_POS,shoulder,t);
-    state.cameraLook=WIDE_LOOK.clone().lerp(new THREE.Vector3(state.walkX,PANEL_Y,WALL_Z+.3),t);
+    state.cameraLook=WIDE_LOOK.clone().lerp(new THREE.Vector3(state.walkX,PANEL_Y,panelZ+.3),t);
   }
   else if(state.phase==='paint')updatePaint(now,dt);
   else if(state.phase==='result'){
@@ -2061,7 +2188,8 @@ function animate(){
     const handheldY=Math.sin(t*2*Math.PI/CAMERA_DRIFT.roll.period)*.02;
     // Едем к ЗАФИКСИРОВАННОМУ якорю, а не за игроком. Лёгкое покачивание
     // оставлено — оно от дрожания рук, а не от слежения.
-    const anchor=state.paintCam||new THREE.Vector3(state.walkX+1.55,2.15,WALL_Z+.34+state.standZ+2.75);
+    const panelZ=(state.panel||playerSurface).z;
+    const anchor=state.paintCam||new THREE.Vector3(state.walkX+1.55,2.15,panelZ+.34+state.standZ+2.75);
     // Пока дуга играет — идём по ней, после неё просто стоим в якоре.
     // LOCKGAMEPLAY=0: управление во время проезда не отбирается, красить можно.
     let ax=anchor.x,ay=anchor.y,az=anchor.z;
@@ -2081,7 +2209,7 @@ function animate(){
   }
   if(state.phase==='paint'&&!state.beat){
     // взгляд между точкой краски и серединой между двумя стенами — соперник остаётся сбоку
-    const between=new THREE.Vector3(state.walkX+1.1,PANEL_Y,WALL_Z+.3);
+    const between=new THREE.Vector3(state.walkX+1.1,PANEL_Y,(state.panel||playerSurface).z+.3);
     const want=uvToWorld(state.reachUv,state.panel||playerSurface).lerp(between,.5);
     if(state.camBase){
       // Камера стоит в точке, но смотреть ей разрешено только внутри конуса
@@ -2164,11 +2292,16 @@ window.addEventListener('keydown',(e)=>{
   // к плоскости рисунка, подпрыгивать там нечему.
   if(e.code==='Space'){
     e.preventDefault();
-    if(state.phase!=='paint')player.startJump();
+    if(state.phase!=='paint'){
+      const candidate=district.traversalCandidate(player.root.position,player.root.rotation.y);
+      if(!player.startTraversal(candidate,performance.now()))player.startJump();
+    }
   }
 });
 window.addEventListener('keyup',(e)=>{state.keys[e.code]=false;if(e.code==='KeyF')state.shaking=false;});
 window.addEventListener('blur',()=>{state.keys={};});
+window.addEventListener('pagehide',saveProgress);
+setInterval(()=>{if(state.phase!=='idle')saveProgress();},5000);
 ui.sound.addEventListener('click',()=>{state.sound=!state.sound;ui.sound.textContent=state.sound?'SOUND ON':'SOUND OFF';ui.sound.setAttribute('aria-pressed',String(state.sound));if(!state.sound)spraySound(false);});
 ui.start.addEventListener('click',start);ui.restart.addEventListener('click',start);
 window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight,false);renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.75));});
@@ -2226,6 +2359,12 @@ function bindHoldButton(button, code){
 }
 bindHoldButton(ui.crouchBtn, 'KeyC');
 bindHoldButton(ui.reachBtn, 'ShiftLeft');
+ui.jumpBtn.addEventListener('pointerdown',(e)=>{
+  e.preventDefault();
+  if(state.phase==='paint')return;
+  const candidate=district.traversalCandidate(player.root.position,player.root.rotation.y);
+  if(!player.startTraversal(candidate,performance.now()))player.startJump();
+});
 
 ui.enterTagBtn.addEventListener('pointerdown', (e) => {
   e.preventDefault();
@@ -2235,6 +2374,7 @@ ui.enterTagBtn.addEventListener('pointerdown', (e) => {
 });
 
 window.SF = { state, reset, start, startBattle, surfaces, clampToReach, reachCenter, player, opponent, THREE,
+  district, progressStore, saveProgress,
   diag:()=>({
     баллонИгрока: !!player.canModel,
     баллонСоперника: !!opponent.canModel,
@@ -2246,10 +2386,11 @@ ui.start.disabled = true;
 ui.start.textContent = 'LOADING';
 Promise.all([loadArt(), loadCharacters()]).then(()=>{
   reset();
+  const restored=restoreProgress();
   console.info('SprayFight diag:', JSON.stringify(window.SF.diag()));
   animate();
   ui.start.disabled = false;
-  ui.start.textContent = 'ENTER';
+  ui.start.textContent = restored ? 'CONTINUE' : 'ENTER';
 }).catch((error)=>{
   console.error(error);
   ui.start.disabled=true;
