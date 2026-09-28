@@ -85,7 +85,13 @@ const WIDE_LOOK = new THREE.Vector3(0, 1.75, WALL_Z + .3);
 const smoothstep = (t) => t * t * (3 - 2 * t);
 
 // Высота пола под ногами: у дренажного жёлоба настил приподнят
-function groundHeight(z){ return Math.abs(z + 6.1) < .34 ? .085 : 0; }
+// Опора под точкой: пандус склада плюс верх любого коллайдера, на который
+// можно встать. `ceiling` отсекает то, что выше ног, — иначе стоящий рядом
+// ящик считался бы полом.
+function groundHeight(z, x = 0, ceiling = Infinity){
+  const ramp = Math.abs(z + 6.1) < .34 ? .085 : 0;
+  return Math.max(ramp, district.surfaceAt(x, z, ceiling));
+}
 const WALL_STAND_MIN = .62;   // ближе — факел узкий, но течёт
 const WALL_STAND_MAX = 2.9;   // дальше — стена вне досягаемости
 const REACH_X = 1.15;         // сколько рука достаёт вбок, в метрах
@@ -639,7 +645,7 @@ class Mannequin {
     this.rigBones = {};
     this.rigBase = {};
     this.motion = { mode:'idle', speed:0, desiredYaw:0, until:0 };
-    this.air = { active:false, vy:0, height:0 };
+    this.air = { active:false, vy:0, y:0, falling:false };
     this.traversal = { active:false, kind:null, started:0, duration:0, from:new THREE.Vector3(), to:new THREE.Vector3(), height:0 };
     // Чередование стоек. В оригинале у Трейна шесть idle-анимаций, у нас две.
     this.idleNext = 0; this.idleAltUntil = 0; this.idlePool = null; this.idleClip = 'idle';
@@ -872,7 +878,7 @@ class Mannequin {
     this.armTarget=null;
     if(this.rigModel)this.rigModel.position.y=0;
     Object.assign(this.motion,{mode:'idle',speed:0,desiredYaw:0,until:0});
-    Object.assign(this.air,{active:false,vy:0,height:0});
+    Object.assign(this.air,{active:false,vy:0,y:0,falling:false});
     Object.assign(this.traversal,{active:false,kind:null,started:0,duration:0,height:0});
     this.idleNext=0; this.idleAltUntil=0; this.idleClip='idle'; this.wasCrouched=false; this.standUntil=0;
     Object.assign(this.tagMove,{active:false,fromX:this.root.position.x,fromZ:this.root.position.z,toX:this.root.position.x,toZ:this.root.position.z,started:0,duration:TAG_STEP_TIME});
@@ -971,17 +977,31 @@ class Mannequin {
       this.root.position.x=THREE.MathUtils.clamp(this.root.position.x+input.x*this.motion.speed*dt,xMin,xMax);
       this.root.position.z=THREE.MathUtils.clamp(this.root.position.z+input.y*this.motion.speed*dt,zMin,zMax);
     }
-    const ground=groundHeight(this.root.position.z);
+    // Опора считается не выше текущего положения ног, иначе стоящий рядом
+    // ящик принимался бы за пол и персонажа вздёргивало бы на него.
+    const ground=groundHeight(this.root.position.z,this.root.position.x,this.root.position.y);
     if (this.air.active) {
+      // Высота ведётся АБСОЛЮТНАЯ, а не над опорой: опора меняется, когда
+      // сходишь со следа ящика, и относительный отсчёт дал бы скачок.
       this.air.vy-=GRAVITY*dt;
-      this.air.height+=this.air.vy*dt;
-      if (this.air.height<=0) {
-        this.air.height=0; this.air.active=false;
-        this.playClip('jump_land',.1,{once:true,restart:true});
-        // После приземления обычная логика сама подхватит ходьбу или idle.
+      this.air.y+=this.air.vy*dt;
+      if (this.air.y<=ground) {
+        this.air.active=false;
+        // Падение и прыжок приземляются по-разному: после падения приседание
+        // глубже, и для него есть свой клип.
+        this.playClip(this.air.falling&&this.actions.fall_land?'fall_land':'jump_land',
+          .1,{once:true,restart:true});
+        this.air.falling=false;
+        this.root.position.y=ground;
         this.motion.mode=moving?'walk':'idle';
+      } else {
+        if (this.air.vy<-1.2 && this.air.falling && this.actions.fall) this.playClip('fall',.15);
+        this.root.position.y=this.air.y;
       }
-      this.root.position.y=ground+this.air.height;
+    } else if (this.root.position.y-ground>.22) {
+      // Сошли с края: падаем, а не просачиваемся вниз сглаживанием.
+      Object.assign(this.air,{active:true,vy:0,y:this.root.position.y,falling:true});
+      this.playClip(this.actions.fall?'fall':'jump',.12,{restart:true});
     } else {
       this.root.position.y=THREE.MathUtils.damp(this.root.position.y,ground,12,dt);
     }
@@ -1016,7 +1036,7 @@ class Mannequin {
   // клипа, поэтому до пересборки .glb прыжок работает без анимации.
   startJump(){
     if (this.air.active) return false;
-    Object.assign(this.air,{active:true,vy:JUMP_SPEED,height:0});
+    Object.assign(this.air,{active:true,vy:JUMP_SPEED,y:this.root.position.y,falling:false});
     // Прыжок с разбега, с шага и с места — разные клипы, как TR_Jump и его
     // беговые варианты в оригинале. Берём по текущей скорости.
     const v=this.motion.speed;
@@ -1035,11 +1055,15 @@ class Mannequin {
     const landing = district.traversalLanding(candidate, this.root.position);
     Object.assign(this.traversal, {
       active:true, kind:climb?'climb':'vault', started:now,
-      duration:climb ? .92 : .64, height:candidate.collider.height,
+      duration:climb ? 1.05 : .64, height:candidate.collider.height,
       from:this.root.position.clone(), to:landing
     });
     this.motion.speed=0; this.motion.mode='traverse';
-    const clip = climb && this.actions.climb ? 'climb' : this.actions.vault ? 'vault' : 'jump_forward';
+    // Подъём на ящик — своя анимация выхода наверх; через барьер клипа нет,
+    // поэтому пока остаётся прыжок вперёд.
+    const clip = climb ? (this.actions.climb_top ? 'climb_top'
+                        : this.actions.climb ? 'climb' : 'jump_forward')
+                       : (this.actions.vault ? 'vault' : 'jump_forward');
     const duration = this.actions[clip]?.getClip().duration;
     this.playClip(clip,.08,{once:true,restart:true,timeScale:duration?duration/this.traversal.duration:1});
     return true;
@@ -1051,11 +1075,21 @@ class Mannequin {
     const t=smoothstep(raw);
     this.root.position.lerpVectors(this.traversal.from,this.traversal.to,t);
     // Vault проходит невысокой дугой; climb поднимает таз выше края.
-    const lift=Math.sin(Math.PI*t)*(this.traversal.kind==='climb'?this.traversal.height+.2:.48);
-    this.root.position.y=groundHeight(this.root.position.z)+lift;
+    if(this.traversal.kind==='climb'){
+      // Подъём: тянемся вверх и выходим на верхнюю грань, а не сквозь ящик.
+      const arc=Math.sin(Math.PI*t)*.18;
+      this.root.position.y=this.traversal.from.y
+        +(this.traversal.to.y-this.traversal.from.y)*smoothstep(Math.min(1,raw*1.35))+arc;
+    } else {
+      const lift=Math.sin(Math.PI*t)*.48;
+      this.root.position.y=groundHeight(this.root.position.z,this.root.position.x)+lift;
+    }
     if(raw>=1){
-      this.traversal.active=false; this.root.position.y=groundHeight(this.root.position.z);
-      this.motion.mode='idle'; this.playClip('jump_land',.08,{once:true,restart:true});
+      this.traversal.active=false;
+      this.root.position.y=this.traversal.to.y;
+      this.motion.mode='idle';
+      this.playClip(this.traversal.kind==='climb'?'idle':'jump_land',.12,
+        {once:this.traversal.kind!=='climb',restart:true});
     }
     return true;
   }
@@ -1732,7 +1766,8 @@ function updateApproach(now,dt){
     crouching
   );
   if(!traversing){
-    const resolved=district.resolve(previousPosition,player.root.position);
+    // Высота ног важна: на что уже встал — то не мешает идти.
+    const resolved=district.resolve(previousPosition,player.root.position,.34,player.root.position.y);
     player.root.position.copy(resolved.position);
   }
   const sector=district.updateSectors(player.root.position);

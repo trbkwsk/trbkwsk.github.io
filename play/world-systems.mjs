@@ -53,18 +53,31 @@ export class DistrictWorld {
     return id;
   }
 
-  collides(x, z, radius = .34) {
+  /** Верх самой высокой опоры под точкой, не выше `ceiling`. Ноль — земля. */
+  surfaceAt(x, z, ceiling = Infinity) {
+    let top = 0;
+    for (const c of this.colliders) {
+      if (x < c.minX || x > c.maxX || z < c.minZ || z > c.maxZ) continue;
+      if (c.height > ceiling + .05) continue;      // выше нас — не опора, а препятствие
+      if (c.height > top) top = c.height;
+    }
+    return top;
+  }
+
+  /** Препятствие мешает, только если его верх ВЫШЕ ног. На что встал — не мешает. */
+  collides(x, z, radius = .34, feet = 0) {
     return this.colliders.find((c) =>
+      c.height > feet + .12 &&
       x + radius > c.minX && x - radius < c.maxX &&
       z + radius > c.minZ && z - radius < c.maxZ
     ) || null;
   }
 
-  resolve(previous, wanted, radius = .34) {
+  resolve(previous, wanted, radius = .34, feet = 0) {
     const result = wanted.clone();
-    const hitX = this.collides(result.x, previous.z, radius);
+    const hitX = this.collides(result.x, previous.z, radius, feet);
     if (hitX) result.x = previous.x;
-    const hitZ = this.collides(result.x, result.z, radius);
+    const hitZ = this.collides(result.x, result.z, radius, feet);
     if (hitZ) result.z = previous.z;
     result.x = clamp(result.x, -10.0 + radius, 10.0 - radius);
     result.z = clamp(result.z, -7.45, 46.0);
@@ -87,10 +100,23 @@ export class DistrictWorld {
     return best;
   }
 
+  /** Куда попадаем после преодоления.
+
+   * Через низкий барьер (vault) — на ту сторону. На высокий ящик (climb) —
+   * НА ВЕРХ, в середину его глубины: раньше climb тоже переносил насквозь,
+   * и постоять на ящике было нельзя.
+   */
   traversalLanding(candidate, position) {
     const c = candidate.collider;
-    const step = c.climbable ? 1.45 : 1.15;
-    const landing = position.clone().addScaledVector(candidate.forward, step);
+    const landing = position.clone();
+    if (c.climbable) {
+      landing.x = clamp(position.x, c.minX + .3, c.maxX - .3);
+      landing.z = (c.minZ + c.maxZ) / 2;
+      landing.y = c.height;
+    } else {
+      landing.addScaledVector(candidate.forward, 1.15);
+      landing.y = 0;
+    }
     landing.x = clamp(landing.x, -9.5, 9.5);
     landing.z = clamp(landing.z, -7.2, 45.5);
     return landing;
