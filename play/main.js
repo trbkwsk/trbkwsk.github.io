@@ -1552,8 +1552,15 @@ function ensureAudio(){
   const ctx=new AC(); const buffer=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate); const data=buffer.getChannelData(0);
   for(let i=0;i<data.length;i+=1)data[i]=Math.random()*2-1;
   const source=ctx.createBufferSource(); source.buffer=buffer; source.loop=true;
-  const filter=ctx.createBiquadFilter(); filter.type='bandpass'; filter.frequency.value=3900; filter.Q.value=.72;
-  const gain=ctx.createGain(); gain.gain.value=0; source.connect(filter).connect(gain).connect(ctx.destination); source.start();
+  // Полоса факела снята замером с записи оригинала (звук в сборку не берём,
+  // только измеренные параметры): у `spray_can_loop` центроид 6.6 кГц и
+  // 99 % энергии выше 3 кГц — 38 % в полосе 3–6 кГц и 61 % в 6–11 кГц.
+  // Прежний полосовой на 3900 Гц давал заметный низ и звучал темнее оригинала.
+  // Верхняя граница 11 кГц — предел исходной записи (22050 Гц дискретизации).
+  const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=3000; hp.Q.value=.7;
+  const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=11000; lp.Q.value=.7;
+  const gain=ctx.createGain(); gain.gain.value=0;
+  source.connect(hp).connect(lp).connect(gain).connect(ctx.destination); source.start();
   audio={ctx,gain,lastShake:0,noise:buffer};
 }
 function spraySound(active){ if(!audio)return; audio.gain.gain.setTargetAtTime(active && state.sound ? .075 : 0,audio.ctx.currentTime,.025); }
@@ -1561,7 +1568,12 @@ function rattle(){
   if(!audio||!state.sound)return;
   const ctx=audio.ctx, t=ctx.currentTime;
   // удар шарика о стенку: два коротких металлических тона
-  for(const [freq,gainValue,decay] of [[2100+Math.random()*900,.06,.018],[4300+Math.random()*1200,.03,.012]]){
+  // У записи встряски энергия иначе разложена, чем у факела: 25 % в 1–3 кГц,
+  // 43 % в 3–6 кГц и 32 % выше 6 кГц. Верхней трети у нас не было, поэтому
+  // добавлен третий, самый короткий тон.
+  for(const [freq,gainValue,decay] of [[2100+Math.random()*900,.06,.018],
+                                       [4300+Math.random()*1200,.03,.012],
+                                       [7200+Math.random()*1800,.018,.008]]){
     const o=ctx.createOscillator(), g=ctx.createGain();
     o.type='sine'; o.frequency.setValueAtTime(freq,t);
     o.frequency.exponentialRampToValueAtTime(freq*.72,t+decay);
