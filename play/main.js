@@ -2298,17 +2298,19 @@ function animate(){
       state.cameraLook=(state.cameraLook||state.beat.look.clone()).lerp(state.beat.look,Math.min(1,dt*3));
     }
   }
+  // Дрейфы камеры рисования из ComponentGraffiti: крен 1.25° с периодом 5 с,
+  // рыскание 10° с периодом 10 с, наплыв 0.25 с периодом 8 с. Раньше здесь
+  // было выдуманное дрожание рук с периодом меньше секунды — размах близкий,
+  // а характер совсем другой: в оригинале это медленное дыхание кадра.
+  // Считаются до обоих блоков фазы paint: доворот взгляда ниже тоже берёт
+  // driftYaw, и объявление внутри первого блока роняло весь кадр.
+  const camT=now/1000;
+  const driftYaw=Math.sin(camT*2*Math.PI/CAMERA_DRIFT.yaw.period)*CAMERA_DRIFT.yaw.amount;
+  const driftRoll=Math.sin(camT*2*Math.PI/CAMERA_DRIFT.roll.period)*CAMERA_DRIFT.roll.amount;
+  const driftZoom=Math.sin(camT*2*Math.PI/CAMERA_DRIFT.zoom.period)*CAMERA_DRIFT.zoom.amount;
+  const handheldX=Math.sin(camT*2*Math.PI/CAMERA_DRIFT.yaw.period)*.03;
+  const handheldY=Math.sin(camT*2*Math.PI/CAMERA_DRIFT.roll.period)*.02;
   if(state.phase==='paint'&&!state.beat){
-    // Дрейфы камеры рисования из ComponentGraffiti: крен 1.25° с периодом 5 с,
-    // рыскание 10° с периодом 10 с, наплыв 0.25 с периодом 8 с. Раньше здесь
-    // было выдуманное дрожание рук с периодом меньше секунды — размах близкий,
-    // а характер совсем другой: в оригинале это медленное дыхание кадра.
-    const t=now/1000;
-    const driftYaw=Math.sin(t*2*Math.PI/CAMERA_DRIFT.yaw.period)*CAMERA_DRIFT.yaw.amount;
-    const driftRoll=Math.sin(t*2*Math.PI/CAMERA_DRIFT.roll.period)*CAMERA_DRIFT.roll.amount;
-    const driftZoom=Math.sin(t*2*Math.PI/CAMERA_DRIFT.zoom.period)*CAMERA_DRIFT.zoom.amount;
-    const handheldX=Math.sin(t*2*Math.PI/CAMERA_DRIFT.yaw.period)*.03;
-    const handheldY=Math.sin(t*2*Math.PI/CAMERA_DRIFT.roll.period)*.02;
     // Едем к ЗАФИКСИРОВАННОМУ якорю, а не за игроком. Лёгкое покачивание
     // оставлено — оно от дрожания рук, а не от слежения.
     const panelZ=(state.panel||playerSurface).z;
@@ -2498,6 +2500,7 @@ ui.enterTagBtn.addEventListener('pointerdown', (e) => {
 
 window.SF = { state, reset, start, startBattle, surfaces, clampToReach, reachCenter, player, opponent, THREE,
   district, progressStore, saveProgress, audioState:()=>audio,
+  updatePaint, updateTagMovement, stepPlayer, updatePointer, camera, raycaster,
   diag:()=>({
     баллонИгрока: !!player.canModel,
     баллонСоперника: !!opponent.canModel,
