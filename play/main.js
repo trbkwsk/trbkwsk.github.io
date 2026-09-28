@@ -1597,6 +1597,48 @@ function clampToReach(uv){
 function uvToWorld(uv,panel){ return new THREE.Vector3(panel.x+(uv.x-.5)*panel.w,panel.y+(uv.y-.5)*panel.h,panel.z+.34); }
 
 let audio=null;
+// Какие записи игра ищет. Имена — то, что лежит в `play/assets/audio/sfx/`.
+// Ни одна не обязательна: чего нет, то заменяется процедурным звуком.
+const SAMPLE_FILES = {
+  sprayLoop: 'spray_can_loop.wav',
+  shake:     'spray_can_shake_1.wav',
+  drip:      'spray_drip.wav',
+  roller:    'paint_roller_apply.wav',
+  canPickup: 'paint_can_pickup.wav'
+};
+
+async function loadSamples(ctx){
+  const g=ctx.createGain(); g.gain.value=1; g.connect(ctx.destination);
+  audio.sampleGain=g;
+  for(const [key,file] of Object.entries(SAMPLE_FILES)){
+    try{
+      const res=await fetch(`assets/audio/sfx/${file}`);
+      if(!res.ok)continue;                       // нет файла — молча остаёмся на синтезе
+      audio.samples[key]=await ctx.decodeAudioData(await res.arrayBuffer());
+    }catch{ /* сеть или декодирование — тоже остаёмся на синтезе */ }
+  }
+  // Петля распыления, если запись нашлась, заменяет шумовой генератор.
+  if(audio.samples.sprayLoop){
+    const src=ctx.createBufferSource();
+    src.buffer=audio.samples.sprayLoop; src.loop=true;
+    const lg=ctx.createGain(); lg.gain.value=0;
+    src.connect(lg).connect(ctx.destination); src.start();
+    audio.loopSource=lg;
+    audio.gain.gain.value=0;                     // синтез приглушаем
+  }
+}
+
+// Разовый звук из записи. Возвращает false, если записи нет, — вызывающий
+// тогда играет свой синтез.
+function playSample(key,volume=1,rate=1){
+  if(!audio||!state.sound||!audio.samples[key])return false;
+  const ctx=audio.ctx, src=ctx.createBufferSource();
+  src.buffer=audio.samples[key]; src.playbackRate.value=rate;
+  const g=ctx.createGain(); g.gain.value=volume;
+  src.connect(g).connect(ctx.destination); src.start();
+  return true;
+}
+
 function ensureAudio(){
   if(audio){ if(audio.ctx.state==='suspended')audio.ctx.resume(); return; }
   const AC=window.AudioContext||window.webkitAudioContext;
@@ -1613,11 +1655,22 @@ function ensureAudio(){
   const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=11000; lp.Q.value=.7;
   const gain=ctx.createGain(); gain.gain.value=0;
   source.connect(hp).connect(lp).connect(gain).connect(ctx.destination); source.start();
-  audio={ctx,gain,lastShake:0,noise:buffer};
+  audio={ctx,gain,lastShake:0,noise:buffer,samples:{},sampleGain:null};
+  // Если рядом лежат записи, игра играет их; если нет — остаётся синтез.
+  // Папка `assets/audio/` намеренно не входит в публикуемую сборку, поэтому
+  // выложенная версия всегда звучит синтезом, а локальная — тем, что положено.
+  loadSamples(ctx);
 }
-function spraySound(active){ if(!audio)return; audio.gain.gain.setTargetAtTime(active && state.sound ? .075 : 0,audio.ctx.currentTime,.025); }
+function spraySound(active){
+  if(!audio)return;
+  const on=active && state.sound;
+  const t=audio.ctx.currentTime;
+  if(audio.loopSource) audio.loopSource.gain.setTargetAtTime(on?.55:0,t,.025);
+  else audio.gain.gain.setTargetAtTime(on?.075:0,t,.025);
+}
 function rattle(){
   if(!audio||!state.sound)return;
+  if(playSample('shake',.5))return;
   const ctx=audio.ctx, t=ctx.currentTime;
   // удар шарика о стенку: два коротких металлических тона
   // У записи встряски энергия иначе разложена, чем у факела: 25 % в 1–3 кГц,
@@ -2045,7 +2098,7 @@ function stepPlayer(now,dt){
   if(ticks<1){
     // Порция ещё не набралась. lastUv НЕ трогаем — пройденный путь копится и
     // войдёт в следующий мазок целиком, без разрывов линии.
-    if(surface.holdDrip(state.reachUv,dt,now)){state.drips+=1;hit(60);state.camShake=.22;}
+    if(surface.holdDrip(state.reachUv,dt,now)){state.drips+=1;if(!playSample('drip',.6))hit(60);state.camShake=.22;}
     return true;
   }
   state.emitAcc-=ticks*EMIT_STEP;
@@ -2064,7 +2117,7 @@ function stepPlayer(now,dt){
   }
 
   // Continuous dwell selects a fixed point from this wall's original DripMap.
-  if(surface.holdDrip(state.reachUv,dt,now)){state.drips+=1;hit(60);state.camShake=.22;}
+  if(surface.holdDrip(state.reachUv,dt,now)){state.drips+=1;if(!playSample('drip',.6))hit(60);state.camShake=.22;}
   state.lastUv.copy(state.reachUv);
   return true;
 }
