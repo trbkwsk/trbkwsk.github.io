@@ -10,3 +10,6 @@ play/assets/audio/
 
 # Временные страницы браузерных проверок
 play/__probe.html
+
+# Личные разрешения Claude Code, не общие
+.claude/settings.local.json

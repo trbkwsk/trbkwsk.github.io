@@ -1607,25 +1607,30 @@ const SAMPLE_FILES = {
   canPickup: 'paint_can_pickup.wav'
 };
 
-async function loadSamples(ctx){
-  const g=ctx.createGain(); g.gain.value=1; g.connect(ctx.destination);
-  audio.sampleGain=g;
+function loadSamples(ctx){
+  // Грузим параллельно, а не по очереди: последовательная загрузка тянулась
+  // и до подмены петли дело доходило заметно позже, чем игрок начинал красить.
   for(const [key,file] of Object.entries(SAMPLE_FILES)){
-    try{
-      const res=await fetch(`assets/audio/sfx/${file}`);
-      if(!res.ok)continue;                       // нет файла — молча остаёмся на синтезе
-      audio.samples[key]=await ctx.decodeAudioData(await res.arrayBuffer());
-    }catch{ /* сеть или декодирование — тоже остаёмся на синтезе */ }
+    fetch(`assets/audio/sfx/${file}`)
+      .then(res => res.ok ? res.arrayBuffer() : Promise.reject())
+      .then(buf => ctx.decodeAudioData(buf))
+      .then(decoded => {
+        audio.samples[key]=decoded;
+        // Петля подменяется СРАЗУ, как только пришла, а не после всех файлов.
+        if(key==='sprayLoop')swapSprayLoop(ctx,decoded);
+      })
+      .catch(()=>{ /* нет файла, сеть или декодирование — остаёмся на синтезе */ });
   }
-  // Петля распыления, если запись нашлась, заменяет шумовой генератор.
-  if(audio.samples.sprayLoop){
-    const src=ctx.createBufferSource();
-    src.buffer=audio.samples.sprayLoop; src.loop=true;
-    const lg=ctx.createGain(); lg.gain.value=0;
-    src.connect(lg).connect(ctx.destination); src.start();
-    audio.loopSource=lg;
-    audio.gain.gain.value=0;                     // синтез приглушаем
-  }
+}
+
+function swapSprayLoop(ctx,buffer){
+  if(audio.loopSource)return;
+  const src=ctx.createBufferSource();
+  src.buffer=buffer; src.loop=true;
+  const lg=ctx.createGain(); lg.gain.value=0;
+  src.connect(lg).connect(ctx.destination); src.start();
+  audio.loopSource=lg;
+  audio.gain.gain.value=0;                       // шумовой синтез приглушаем
 }
 
 // Разовый звук из записи. Возвращает false, если записи нет, — вызывающий
@@ -2492,7 +2497,7 @@ ui.enterTagBtn.addEventListener('pointerdown', (e) => {
 });
 
 window.SF = { state, reset, start, startBattle, surfaces, clampToReach, reachCenter, player, opponent, THREE,
-  district, progressStore, saveProgress,
+  district, progressStore, saveProgress, audioState:()=>audio,
   diag:()=>({
     баллонИгрока: !!player.canModel,
     баллонСоперника: !!opponent.canModel,
