@@ -1,6 +1,7 @@
 import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 import { DistrictWorld, ProgressStore } from './world-systems.mjs';
+import { cameraInput, keyboardSpray, fastSpray, sneakInput, editableTarget, RESERVED_KEYS } from './input-bindings.mjs';
 import { SPRAY_CAM_ARCS, SPRAY_CAM_MS, sprayCamEase,
   CAMERA_CONE_DEG, CAMERA_DISTANCE, CAMERA_FOCUS_OFFSET, CAMERA_DRIFT,
   WALK_SPEED, RUN_SPEED, START_PHASE_SCALE,
@@ -62,7 +63,8 @@ const state = {
   aiApproachX: 4.05, aiNextStep: 0, aiBurstUntil: 0, aiRestUntil: 0,
   beat: null, beatsDone: {}, camShake: 0,
   // Getting Up-механика: райтер сам стоит у стены, рука достаёт не везде
-  keys: {}, walkX: -4.05, standZ: 2.2, crouch: 0, tiptoe: 0, facing: 0, canUp: false,
+  keys: {}, runEnabled: false, keyboardTag: false, viewYaw: 0, viewPitch: 0,
+  walkX: -4.05, standZ: 2.2, crouch: 0, tiptoe: 0, facing: 0, canUp: false,
   reachUv: new THREE.Vector2(.5, .5), aimUv: new THREE.Vector2(.5, .5), nearWall: false
 };
 
@@ -1733,7 +1735,8 @@ function reset(){
   player.resetMotion(); opponent.resetMotion();
   state.aiApproachX=RIVAL_IDLE_X;
   Object.assign(state,{keys:{},walkX:PLAYER_CENTER,standZ:7.2,crouch:0,tiptoe:0,nearWall:false,canUp:false,
-    mode:'roam',panel:null,nearRival:false,talking:false,paintCam:null,paintArc:null,camBase:null,camYaw:0,camPitch:0,emitAcc:0});
+    mode:'roam',panel:null,nearRival:false,talking:false,paintCam:null,paintArc:null,camBase:null,camYaw:0,camPitch:0,emitAcc:0,
+    runEnabled:false,keyboardTag:false,viewYaw:0,viewPitch:0});
   state.aimUv.set(.5,.5); state.reachUv.set(.5,.5);
   ui.game.classList.remove('can-tag','can-talk','out-of-reach');
   ui.game.classList.add('roam-mode');
@@ -1791,7 +1794,7 @@ async function beginCountdown(){
   }
   ui.countdown.classList.remove('visible');
   state.phase='paint'; state.running=true; state.roundStarted=performance.now(); state.lastMetric=state.roundStarted;
-  ui.game.classList.add('paint-mode'); ui.objective.textContent='A/D STEP · W/S DISTANCE · C CROUCH · HOLD TO SPRAY';
+  ui.game.classList.add('paint-mode'); ui.objective.textContent='A/D STEP · W/S HEIGHT · V + U SPRAY · V + O FAST';
 }
 
 // Короткие акценты камеры между ключевыми моментами раунда
@@ -1829,9 +1832,9 @@ function updateApproach(now,dt){
   const k=state.keys;
   const speedX=(k.KeyD?1:0)-(k.KeyA?1:0);
   const speedZ=(k.KeyS?1:0)-(k.KeyW?1:0);
-  const running=!!(k.ShiftLeft||k.ShiftRight);
+  const running=state.runEnabled;
   // Присед работает и в свободном режиме, а не только у стены.
-  const crouching=!!(k.KeyC||k.ControlLeft);
+  const crouching=sneakInput(k)||!!k.TouchCrouch;
   state.crouch=THREE.MathUtils.damp(state.crouch,crouching?1:0,9,dt);
   const previousPosition=player.root.position.clone();
   const traversing=player.updateTraversal(now);
@@ -1878,8 +1881,8 @@ function updateApproach(now,dt){
   ui.game.classList.toggle('can-tag',state.nearWall&&!state.nearRival);
   ui.objective.textContent=
       state.nearRival ? 'PRESS E TO TALK'
-    : state.nearWall  ? 'PRESS E TO TAG THIS WALL'
-    : `${sector.toUpperCase()} · WALK W A S D · SHIFT RUN · SPACE JUMP / VAULT`;
+    : state.nearWall  ? 'HOLD V TO TAG · E / Q INTERACT'
+    : `${sector.toUpperCase()} · WASD · CTRL WALK / RUN · SHIFT SNEAK · SPACE JUMP`;
   // Подпись тач-кнопки следует за тем же выбором
   ui.enterTagBtn.textContent=state.nearRival?'TALK':'TAP TO TAG';
 
@@ -1962,7 +1965,7 @@ function enterTagging(){
   // разрешён только в пределах ±30° от него (Yaw Max = Pitch Max = 30.0 у всех
   // камер GRAFF), поэтому направление фиксируется здесь же, вместе с якорем.
   state.camBase=lookAngles(state.paintCam,new THREE.Vector3(state.panel.x,PANEL_Y,target.z+.3));
-  state.camYaw=0; state.camPitch=0;
+  state.camYaw=0; state.camPitch=0;state.viewYaw=0;state.viewPitch=0;
   const arc=SPRAY_CAM_ARCS[player.root.position.x<state.panel.x?'FL':'FR'];
   state.paintArc={
     t0:performance.now(),
@@ -1973,7 +1976,7 @@ function enterTagging(){
   // Свободный режим: рисуем сразу, без отсчёта, таймера и счёта.
   state.phase='paint'; state.running=true; state.roundStarted=performance.now(); state.lastMetric=state.roundStarted;
   ui.game.classList.add('paint-mode'); ui.enterTagBtn.textContent='STEP BACK';
-  ui.objective.textContent='A/D STEP · W/S DISTANCE · C CROUCH · HOLD TO SPRAY · E TO STEP BACK';
+  ui.objective.textContent='A/D STEP · W/S HEIGHT · V + U SPRAY · V + O FAST · E / Q BACK';
 }
 
 // Отойти от стены и вернуться к свободному перемещению
@@ -1991,7 +1994,8 @@ function exitTagging(){
 function updateTagMovement(now,dt){
   const k=state.keys;
   const strafe=(k.KeyD?1:0)-(k.KeyA?1:0);
-  const depth=(k.KeyS?1:0)-(k.KeyW?1:0);
+  const depth=0; // W/S controls the spray height, not distance to the wall.
+  state.aimUv.y=THREE.MathUtils.clamp(state.aimUv.y+((k.KeyW?1:0)-(k.KeyS?1:0))*dt*.45,0,1);
   player.updateTagMove(now);
   if(!player.tagMove.active&&(strafe||depth)){
     const nextX=THREE.MathUtils.clamp(player.root.position.x+strafe*TAG_STEP_X,(state.panel||playerSurface).x-(state.panel||playerSurface).w/2+.5,(state.panel||playerSurface).x+(state.panel||playerSurface).w/2-.5);
@@ -2003,8 +2007,8 @@ function updateTagMovement(now,dt){
   // Reach and spray width follow the actual body, not the pending step target.
   state.walkX=player.root.position.x;
   state.standZ=player.root.position.z-((state.panel||playerSurface).z+.34);
-  const wantCrouch=k.KeyC||k.ControlLeft?1:0;
-  const wantTiptoe=(k.ShiftLeft||k.ShiftRight)?1:0;
+  const wantCrouch=k.TouchCrouch?1:0;
+  const wantTiptoe=k.TouchReach?1:0;
   state.crouch=THREE.MathUtils.damp(state.crouch,wantCrouch,9,dt);
   state.tiptoe=THREE.MathUtils.damp(state.tiptoe,wantTiptoe,9,dt);
 }
@@ -2079,11 +2083,13 @@ function stepAi(now,dt){
 
 function stepPlayer(now,dt){
   const surface=state.panel||playerSurface;
-  const spraying=state.pointerDown&&!state.shaking&&state.pressure>1&&!player.tagMove.active&&player.paintBlend>.92&&!surface.complete;
+  const spraying=(state.pointerDown||keyboardSpray(state.keys))&&!state.shaking&&state.pressure>1&&!player.tagMove.active&&player.paintBlend>.92&&!surface.complete;
   ui.game.classList.toggle('spraying',spraying); spraySound(spraying);
   if(state.shaking&&!state.pointerDown){ state.pressure=Math.min(100,state.pressure+43*dt); if(audio&&now-audio.lastShake>(75+Math.random()*40)){audio.lastShake=now;rattle();} }
   if(!spraying){ surface.drips.release(); state.stationary=0; state.lastUv.copy(state.reachUv); return false; }
-  state.pressure=Math.max(0,state.pressure-(state.cap==='fat'?7:4.6)*dt);
+  // Prototype tuning only: the original fast-paint multiplier is not proven.
+  const delivery=fastSpray(state.keys)?1.5:1;
+  state.pressure=Math.max(0,state.pressure-(state.cap==='fat'?7:4.6)*dt*delivery);
 
   // Дистанция до стены: вплотную — узкая плотная линия, издалека — широкий мягкий факел
   const near=THREE.MathUtils.clamp((state.standZ-WALL_STAND_MIN)/(2.15-WALL_STAND_MIN),0,1);
@@ -2118,7 +2124,7 @@ function stepPlayer(now,dt){
     // PaintFillRate: у валика и расклейки простая работа кроется вдвое
     // быстрее, чем баллоном (4 против 2), сложная у всех одинакова.
     const fill=fillRate(state.tool,surface.complex)/TOOLS.aerosol.fill.simple;
-    (state.panel||playerSurface).spray(point,radius,strength*dose*fill/Math.sqrt(steps));
+    (state.panel||playerSurface).spray(point,radius,strength*dose*fill*delivery/Math.sqrt(steps));
   }
 
   // Continuous dwell selects a fixed point from this wall's original DripMap.
@@ -2269,6 +2275,9 @@ function updatePointer(event){
 
 function animate(){
   requestAnimationFrame(animate); const dt=Math.min(.05,clock.getDelta()); const now=performance.now();
+  const view=cameraInput(state.keys);
+  state.viewYaw=THREE.MathUtils.clamp(state.viewYaw+view.yaw*dt*60,-120,120);
+  state.viewPitch=THREE.MathUtils.clamp(state.viewPitch+view.pitch*dt*45,-30,30);
   player.updateMixer(dt); opponent.updateMixer(dt);
   if(state.phase==='idle'){ if(!player.playClip('idle'))player.walk(now/1000,3.6); if(!opponent.playClip('idle'))opponent.walk(now/1000+.4,3.6); }
   else if(state.phase==='approach')updateApproach(now,dt);
@@ -2340,8 +2349,8 @@ function animate(){
       // Камера стоит в точке, но смотреть ей разрешено только внутри конуса
       // ±30°, и доворачивает она не мгновенно, а со своей скоростью.
       const a=lookAngles(camera.position,want);
-      state.camYaw=turnToward(state.camYaw,clampCone(a.yaw-state.camBase.yaw+driftYaw*.1),dt);
-      state.camPitch=turnToward(state.camPitch,clampCone(a.pitch-state.camBase.pitch),dt);
+      state.camYaw=turnToward(state.camYaw,clampCone(a.yaw-state.camBase.yaw+driftYaw*.1+state.viewYaw),dt);
+      state.camPitch=turnToward(state.camPitch,clampCone(a.pitch-state.camBase.pitch+state.viewPitch),dt);
       const yaw=(state.camBase.yaw+state.camYaw)*Math.PI/180;
       const pitch=(state.camBase.pitch+state.camPitch)*Math.PI/180;
       const dist=camera.position.distanceTo(want),cp=Math.cos(pitch);
@@ -2372,7 +2381,13 @@ function animate(){
       (state.aiPauseUntil-now).toFixed(0), state.aiUv.x.toFixed(3), state.aiUv.y.toFixed(3),
       state.aiCoverage.toFixed(1), state.aiDrips);
   }
-  camera.lookAt(look);
+  if(state.phase==='approach'){
+    const offset=look.clone().sub(camera.position);
+    offset.applyAxisAngle(new THREE.Vector3(0,1,0),-state.viewYaw*Math.PI/180);
+    const horizontal=Math.hypot(offset.x,offset.z);
+    offset.y+=Math.tan(state.viewPitch*Math.PI/180)*horizontal;
+    camera.lookAt(camera.position.clone().add(offset));
+  }else camera.lookAt(look);
   for(const surface of surfaces)surface.animateDrips(now);
   renderer.render(scene,camera);
 }
@@ -2386,9 +2401,18 @@ ui.shake.addEventListener('pointerdown',(e)=>{e.preventDefault();if(!state.runni
 ['pointerup','pointercancel','pointerleave'].forEach(name=>ui.shake.addEventListener(name,()=>state.shaking=false));
 ui.shake.addEventListener('click',()=>{if(!state.running)return;state.pointerDown=false;state.shaking=true;setTimeout(()=>{state.shaking=false;},720);});
 window.addEventListener('keydown',(e)=>{
+  if(editableTarget(e.target)||e.metaKey||e.altKey)return;
+  if(state.phase==='idle'||state.phase==='result')return;
+  if(['Space','Tab','ArrowUp','KeyW','KeyA','KeyS','KeyD','KeyV','KeyU','KeyO','KeyI','KeyJ','KeyK','KeyL'].includes(e.code))e.preventDefault();
   state.keys[e.code]=true;
-  if(e.code==='Digit1')setCap('fat');
-  if(e.code==='Digit2')setCap('skinny');
+  if(e.repeat)return;
+  if(e.code==='ControlLeft')state.runEnabled=!state.runEnabled;
+  if(e.code==='KeyV'&&state.phase==='approach'&&!state.nearRival){
+    state.keyboardTag=true;enterTagging();
+    if(state.phase==='approach')state.keyboardTag=false;
+  }
+  if(e.code==='Digit9')setCap('fat');
+  if(e.code==='Digit0')setCap('skinny');
   if(e.code==='KeyG'&&state.phase!=='paint'){
     // Выбор размера делается ДО подхода к стене, как и в оригинале, где
     // Go Big меняет саму сетку работы, а не что-то по ходу рисования.
@@ -2401,18 +2425,19 @@ window.addEventListener('keydown',(e)=>{
     if(grid){ surfaces.forEach(s=>s.compose(undefined,state.goBig)); }
     else state.goBig=false;
   }
-  if(e.code==='Digit3')setTool('aerosol');
-  if(e.code==='Digit4')setTool('roller');
-  if(e.code==='Digit5')setTool('wheatpaste');
-  if(e.code==='KeyE'){
+  if(e.code==='Digit6')setTool('aerosol');
+  if(e.code==='Digit7')setTool('roller');
+  if(e.code==='Digit8')setTool('wheatpaste');
+  if(e.code==='KeyE'||e.code==='KeyQ'){
     if(state.phase==='paint')exitTagging();
     else if(state.nearRival)talkToRival();
     else enterTagging();
   }
   if(e.code==='Escape')exitTagging();
   if(['KeyW','KeyA','KeyS','KeyD','KeyC'].includes(e.code))e.preventDefault();
-  // Тряска баллона — F. Раньше висела на пробеле, но пробел ушёл под прыжок.
-  if(e.code==='KeyF'&&state.running){e.preventDefault();state.pointerDown=false;state.shaking=true;}
+  // F stays reserved for intuition; R is an explicit prototype extension.
+  if(e.code==='KeyR'&&state.running){e.preventDefault();state.pointerDown=false;state.shaking=true;}
+  if(RESERVED_KEYS.has(e.code))ui.objective.textContent='— ORIGINAL ACTION NOT IMPLEMENTED YET (see CONTROLS.md)';
   // Прыжок — пробел, и только в свободном режиме: у стены персонаж привязан
   // к плоскости рисунка, подпрыгивать там нечему.
   if(e.code==='Space'){
@@ -2423,8 +2448,12 @@ window.addEventListener('keydown',(e)=>{
     }
   }
 });
-window.addEventListener('keyup',(e)=>{state.keys[e.code]=false;if(e.code==='KeyF')state.shaking=false;});
-window.addEventListener('blur',()=>{state.keys={};});
+window.addEventListener('keyup',(e)=>{
+  state.keys[e.code]=false;
+  if(e.code==='KeyR')state.shaking=false;
+  if(e.code==='KeyV'&&state.keyboardTag){state.keyboardTag=false;exitTagging();}
+});
+window.addEventListener('blur',()=>{state.keys={};state.pointerDown=false;state.shaking=false;if(state.keyboardTag){state.keyboardTag=false;exitTagging();}});
 window.addEventListener('pagehide',saveProgress);
 setInterval(()=>{if(state.phase!=='idle')saveProgress();},5000);
 ui.sound.addEventListener('click',()=>{state.sound=!state.sound;ui.sound.textContent=state.sound?'SOUND ON':'SOUND OFF';ui.sound.setAttribute('aria-pressed',String(state.sound));if(!state.sound)spraySound(false);});
@@ -2433,7 +2462,7 @@ window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.inn
 
 // ===== Touch controls: телефон/планшет без клавиатуры =====
 // Джойстик и кнопки не заводят новую логику движения — они просто выставляют
-// те же state.keys.KeyW/A/S/D/C/ShiftLeft, которые уже читают updateApproach()
+// WASD and independent virtual TouchCrouch/TouchReach actions, read by updateApproach()
 // и updateTagMovement(). Так исключён риск разойтись с логикой Codex.
 const touchCapable = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
 if (touchCapable) ui.game.classList.add('touch-input');
@@ -2473,7 +2502,7 @@ if (touchCapable) ui.game.classList.add('touch-input');
   base.addEventListener('pointercancel', releaseStick);
 })();
 
-// Присед и вытягивание руки — как удержание клавиш C и Shift, только пальцем
+// Touch actions are independent of the original keyboard bindings.
 function bindHoldButton(button, code){
   const press = (e) => { e.preventDefault(); state.keys[code] = true; button.classList.add('is-active'); };
   const release = () => { state.keys[code] = false; button.classList.remove('is-active'); };
@@ -2482,8 +2511,8 @@ function bindHoldButton(button, code){
   button.addEventListener('pointercancel', release);
   button.addEventListener('pointerleave', release);
 }
-bindHoldButton(ui.crouchBtn, 'KeyC');
-bindHoldButton(ui.reachBtn, 'ShiftLeft');
+bindHoldButton(ui.crouchBtn, 'TouchCrouch');
+bindHoldButton(ui.reachBtn, 'TouchReach');
 ui.jumpBtn.addEventListener('pointerdown',(e)=>{
   e.preventDefault();
   if(state.phase==='paint')return;
