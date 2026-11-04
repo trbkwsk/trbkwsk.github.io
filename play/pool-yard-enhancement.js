@@ -25,6 +25,7 @@
       generic:{roughness:.74,metalness:0}})[kind]||null;
   }
   function wetPaintPolicy(){return{shininess:82,specular:0xcfe5ee};}
+  function comparisonFilename(step){return`pool-yard-original-enhanced-step-${Math.max(0,Math.trunc(Number(step)||0))}.png`;}
   function create(THREE,scene,renderer,originalHemisphere,originalSun){
     let enhanced=false;const materials=new Map(),meshes=[],paintMaterials=new Map();
     const fill=new THREE.HemisphereLight(0xcfe2e8,0x302b24,.62);fill.visible=false;scene.add(fill);
@@ -98,5 +99,5 @@
       contact_shadow:enhanced,wet_paint_materials:paintMaterials.size,tone_mapping:enhanced?'ACESFilmic':'None'};}
     return{register,apply,updateActor,updatePaint,snapshot,get enhanced(){return enhanced}};
   }
-  return{classify,policy,wetPaintPolicy,create};
+  return{classify,policy,wetPaintPolicy,comparisonFilename,create};
 });

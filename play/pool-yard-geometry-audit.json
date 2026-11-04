@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "kind": "pool-yard-published-glb-attribute-audit",
+  "conclusion": "Normals and UV0 are complete; tangents are absent and should only be authored together with future normal maps.",
+  "files": [
+    {"path":"artifacts/pool-yard/objects.glb","sha256":"d8564e30e8edee84737e4de9890e89cd7adb34436aff279a3a4937c2a40f4a6e","meshes":35,"primitives":63,"position":63,"normals":63,"tangents":0,"uv0":63,"indexed":63},
+    {"path":"artifacts/pool-yard/world.glb","sha256":"0c4bd5c221a1bc8b74a94f7623cb9eb5666cf65e926a2e37b1ef1d19c7606858","meshes":29,"primitives":129,"position":129,"normals":129,"tangents":0,"uv0":129,"indexed":129},
+    {"path":"artifacts/trane-act1-game.glb","sha256":"dfa91462fa47a85e343e78b5ed7d3aea977cfeab6e3c46730fd9edea4342f692","meshes":1,"primitives":4,"position":4,"normals":4,"tangents":0,"uv0":4,"indexed":4},
+    {"path":"artifacts/paintcan.glb","sha256":"94361c1711b3eaaec46f0a416c1624248913dbc5518a49b396ae1d29f5c7db9c","meshes":1,"primitives":1,"position":1,"normals":1,"tangents":0,"uv0":1,"indexed":1}
+  ]
+}

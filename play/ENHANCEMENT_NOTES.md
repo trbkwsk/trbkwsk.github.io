@@ -19,3 +19,10 @@ The mode is reversible at runtime. It does not modify GLB files, textures,
 geometry, skeletons, animation data, collision data or graffiti simulation.
 The diagnostics snapshot records the active mode and labels it
 `authored_remaster: true`.
+
+`Сравнить кадр` pauses the sandbox and exports one PNG with Original and
+Enhanced rendered from the same camera and simulation step.
+
+All four published GLBs contain normals and UV0 for every primitive, but none
+contains tangents. Tangents must be generated only when authored normal maps
+are introduced; this preset does not rewrite the recovered vertex data.

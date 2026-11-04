@@ -12,4 +12,6 @@ assert(E.policy('glass').roughness<E.policy('fabric').roughness);
 assert(E.policy('skin').roughness<E.policy('fabric').roughness);
 assert(E.wetPaintPolicy().shininess>60);
 assert.equal(E.wetPaintPolicy().specular,0xcfe5ee);
-console.log('pool-yard enhancement tests: 11 passed');
+assert.equal(E.comparisonFilename(42.9),'pool-yard-original-enhanced-step-42.png');
+assert.equal(E.comparisonFilename(-1),'pool-yard-original-enhanced-step-0.png');
+console.log('pool-yard enhancement tests: 13 passed');

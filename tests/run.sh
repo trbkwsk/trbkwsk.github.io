@@ -4,6 +4,7 @@
 set -e
 if command -v node >/dev/null 2>&1; then
   node "$(dirname "$0")/pool-yard-enhancement.test.js"
+  node "$(dirname "$0")/pool-yard-geometry-audit.test.js"
 fi
 JSC=/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc
 [ -x "$JSC" ] || { echo "jsc не найден"; exit 1; }

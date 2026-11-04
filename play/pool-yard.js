@@ -134,6 +134,20 @@
   $('start').onclick=toggle;$('reset').onclick=()=>{if(ready)reset()};
   $('walk').onclick=()=>{if(ready){walk=!walk;renderer.domElement.focus({preventScroll:true});refresh()}};
   $('visual').onclick=()=>{if(ready){enhancement.apply(!enhancement.enhanced);$('visual').textContent='Графика: '+(enhancement.enhanced?'Enhanced':'Original');renderer.domElement.focus({preventScroll:true});refresh()}};
+  $('compare').onclick=async()=>{
+    if(!ready)return;running=false;pressed.clear();jumpQueued=false;refresh();
+    const previous=enhancement.enhanced,source=renderer.domElement,w=source.width,h=source.height;
+    const output=document.createElement('canvas');output.width=w*2;output.height=h;const ctx=output.getContext('2d');
+    for(const [mode,x,label]of [[false,0,'ORIGINAL'],[true,w,'ENHANCED']]){
+      enhancement.apply(mode);enhancement.updateActor(position,grounded);renderer.render(scene,camera);ctx.drawImage(source,x,0,w,h);
+      ctx.fillStyle='rgba(8,12,10,.78)';ctx.fillRect(x+20,20,170,44);ctx.fillStyle='#eff7e9';ctx.font='700 21px system-ui';ctx.fillText(label,x+36,49);
+    }
+    enhancement.apply(previous);enhancement.updateActor(position,grounded);renderer.render(scene,camera);
+    $('visual').textContent='Графика: '+(enhancement.enhanced?'Enhanced':'Original');refresh();
+    const blob=await new Promise(resolve=>output.toBlob(resolve,'image/png'));
+    if(!blob)throw Error('Не удалось создать сравнение');const url=URL.createObjectURL(blob),link=document.createElement('a');
+    link.href=url;link.download=PoolYardEnhancement.comparisonFilename(driver.steps);link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  };
   $('camera').onclick=()=>{if(ready){cameraYaw=heading;cameraPitch=.32;cameraUpdate(1,true);refresh()}};
   $('street').onclick=()=>{if(ready){cameraYaw=0;cameraPitch=.32;cameraUpdate(1,true);renderer.domElement.focus({preventScroll:true});refresh()}};
   $('step').onclick=()=>{if(ready&&!running){fixed();cameraUpdate(1,true);refresh()}};
@@ -231,7 +245,7 @@
     if(bounds.isEmpty())throw Error('Не удалось измерить видимую модель');
     const height=bounds.max.y-bounds.min.y;capsule={height,radius:height*.14,footOffset:bounds.min.y-position[1],stepHeight:height*.18};
     const triangles=[];addTriangles(world.scene,triangles);addTriangles(level.scene,triangles);collider=new C.World(triangles);
-    ready=true;for(const id of ['start','reset','walk','camera','visual','capture','step','street','spawn','erase'])$(id).disabled=false;reset();
+    ready=true;for(const id of ['start','reset','walk','camera','visual','compare','capture','step','street','spawn','erase'])$(id).disabled=false;reset();
     $('status').textContent='The Pool Yard · свободная прогулка\nБез миссий и обязательных целей';
   }catch(e){$('status').textContent='Сборка остановлена';$('fatal').textContent=e.stack||e.message}
 })();
