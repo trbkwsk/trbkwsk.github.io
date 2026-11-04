@@ -1,0 +1,12 @@
+'use strict';
+const assert=require('assert');
+const E=require('../play/pool-yard-enhancement.js');
+assert.equal(E.classify('pyFence01_S','level'),'metal');
+assert.equal(E.classify('pyPool01_S','level'),'concrete');
+assert.equal(E.classify('pyTree01_S','level'),'foliage');
+assert.equal(E.classify('Trane Head','actor'),'skin');
+assert.equal(E.classify('Trane Body','actor'),'fabric');
+assert.equal(E.classify('anything','can'),'metal');
+assert(E.policy('metal').metalness>E.policy('concrete').metalness);
+assert(E.policy('glass').roughness<E.policy('fabric').roughness);
+console.log('pool-yard enhancement tests: 8 passed');

@@ -8,10 +8,11 @@
   const $=id=>document.getElementById(id),P=GettingUpScenePlacement,D=GettingUpPaintDriver,
     C=GettingUpWorldCollision,S=GettingUpSpraySimulation;
   const scene=new THREE.Scene();scene.background=new THREE.Color(0x596363);
-  scene.add(new THREE.HemisphereLight(0xd9e3df,0x50504a,1.1));
+  const originalHemisphere=new THREE.HemisphereLight(0xd9e3df,0x50504a,1.1);scene.add(originalHemisphere);
   const sun=new THREE.DirectionalLight(0xfff4db,1);sun.position.set(600,1600,300);scene.add(sun);
   const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.outputEncoding=THREE.sRGBEncoding;renderer.domElement.tabIndex=0;
+  const enhancement=PoolYardEnhancement.create(THREE,scene,renderer,originalHemisphere,sun);
   renderer.domElement.setAttribute('aria-label','Сцена уровня: WASD, Space, Control, IJKL, Escape');$('view').appendChild(renderer.domElement);
   const camera=new THREE.PerspectiveCamera(55,1,.5,12000);
   function resize(){renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix()}
@@ -102,6 +103,7 @@
       native_tag_math_verified:true,native_tag_caller_verified:false,native_d3d_verified:false,original_paint_physics_verified:false,full_remaster_complete:false,basic_actions_connected:true,
       source_level:sandboxPlan.identity.source_level,source_tagging_areas:sandboxPlan.tagging_areas.length,source_ladders:sandboxPlan.ladders.length,
       mission_scripts_enabled:false,mission_completion_required:false,complete_sandbox_verified:false,
+      presentation:enhancement.snapshot(),
       pending_actions:['ladder','crawl','full-animation-selection','authored-graffiti-zones','original-BSP','lighting-parity']};
     $('diagnostics').value=JSON.stringify(lastSnapshot);
   }
@@ -131,6 +133,7 @@
   function toggle(){if(!ready)return;running=!running;pressed.clear();jumpQueued=false;accumulator=0;clock.getDelta();renderer.domElement.focus({preventScroll:true});refresh()}
   $('start').onclick=toggle;$('reset').onclick=()=>{if(ready)reset()};
   $('walk').onclick=()=>{if(ready){walk=!walk;renderer.domElement.focus({preventScroll:true});refresh()}};
+  $('visual').onclick=()=>{if(ready){enhancement.apply(!enhancement.enhanced);$('visual').textContent='Графика: '+(enhancement.enhanced?'Enhanced':'Original');renderer.domElement.focus({preventScroll:true});refresh()}};
   $('camera').onclick=()=>{if(ready){cameraYaw=heading;cameraPitch=.32;cameraUpdate(1,true);refresh()}};
   $('street').onclick=()=>{if(ready){cameraYaw=0;cameraPitch=.32;cameraUpdate(1,true);renderer.domElement.focus({preventScroll:true});refresh()}};
   $('step').onclick=()=>{if(ready&&!running){fixed();cameraUpdate(1,true);refresh()}};
@@ -214,6 +217,7 @@
     canRoot=can.scene.children[0];if(can.scene.children.length!==1||JSON.stringify(canRoot.scale.toArray())!=='[-1,1,1]')throw Error('Исходное отражение предмета обязательно');
     canPlacement=new THREE.Group();canPlacement.matrixAutoUpdate=false;canPlacement.add(can.scene);scene.add(canPlacement);
     placement=new THREE.Group();placement.matrixAutoUpdate=false;placement.add(actor.scene);scene.add(level.scene,world.scene,placement);
+    enhancement.register(level.scene,'level');enhancement.register(world.scene,'level');enhancement.register(actor.scene,'actor');enhancement.register(can.scene,'can');
     sandboxPlan.spawns.forEach((entry,index)=>{
       const option=document.createElement('option');option.value=String(index);
       option.textContent=entry.source_class==='IPointSpawnPlayer'?'Исходный вход · у лестницы':entry.source_id===2241669?'Двор · исходная контрольная точка':'Бассейн · исходная контрольная точка';
@@ -227,7 +231,7 @@
     if(bounds.isEmpty())throw Error('Не удалось измерить видимую модель');
     const height=bounds.max.y-bounds.min.y;capsule={height,radius:height*.14,footOffset:bounds.min.y-position[1],stepHeight:height*.18};
     const triangles=[];addTriangles(world.scene,triangles);addTriangles(level.scene,triangles);collider=new C.World(triangles);
-    ready=true;for(const id of ['start','reset','walk','camera','capture','step','street','spawn','erase'])$(id).disabled=false;reset();
+    ready=true;for(const id of ['start','reset','walk','camera','visual','capture','step','street','spawn','erase'])$(id).disabled=false;reset();
     $('status').textContent='The Pool Yard · свободная прогулка\nБез миссий и обязательных целей';
   }catch(e){$('status').textContent='Сборка остановлена';$('fatal').textContent=e.stack||e.message}
 })();

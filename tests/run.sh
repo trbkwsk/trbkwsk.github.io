@@ -1,8 +1,10 @@
 #!/bin/sh
-# Запуск правил SprayFight без Node — через JavaScriptCore, который есть в macOS.
-# Node на машине не установлен, поэтому `node tests/sprayfight-rules.mjs` не работал
-# и тесты ни разу не выполнялись. Этот раннер подменяет node:assert и console.
+# Правила SprayFight запускаются через системный JavaScriptCore на macOS.
+# Дополнительная проверка Enhanced-пресета использует Node, когда он доступен.
 set -e
+if command -v node >/dev/null 2>&1; then
+  node "$(dirname "$0")/pool-yard-enhancement.test.js"
+fi
 JSC=/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc
 [ -x "$JSC" ] || { echo "jsc не найден"; exit 1; }
 DIR=$(cd "$(dirname "$0")" && pwd)
