@@ -47,7 +47,7 @@
     if(!sim||!canPlacement)return;
     const item=sim.itemMatrix();canPlacement.visible=!!item;
     if(item){canPlacement.matrix.fromArray(P.multiply(item,P.REFLECT));canPlacement.matrixWorldNeedsUpdate=true}
-    if(tagRenderer)tagRenderer.update(sim.panels);
+    if(tagRenderer){tagRenderer.update(sim.panels);enhancement.updatePaint(tagRenderer)}
     scene.updateMatrixWorld(true);
   }
   function cameraUpdate(dt=1,immediate=false){
@@ -125,7 +125,7 @@
         if($('pauseOn').value&&sim.events.includes($('pauseOn').value)){running=false;pressed.clear();jumpQueued=false;accumulator=0;break}}
         if(accumulator>=1/60){droppedSeconds+=accumulator;accumulator=0}
       }catch(e){running=false;pressed.clear();$('fatal').textContent=e.stack||e.message}}
-      cameraUpdate(dt);if(driver.steps%6===0||!running)refresh();
+      enhancement.updateActor(position,grounded);cameraUpdate(dt);if(driver.steps%6===0||!running)refresh();
     }
     renderer.render(scene,camera);
   }

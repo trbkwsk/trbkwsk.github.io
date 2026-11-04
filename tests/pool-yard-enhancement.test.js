@@ -9,4 +9,7 @@ assert.equal(E.classify('Trane Body','actor'),'fabric');
 assert.equal(E.classify('anything','can'),'metal');
 assert(E.policy('metal').metalness>E.policy('concrete').metalness);
 assert(E.policy('glass').roughness<E.policy('fabric').roughness);
-console.log('pool-yard enhancement tests: 8 passed');
+assert(E.policy('skin').roughness<E.policy('fabric').roughness);
+assert(E.wetPaintPolicy().shininess>60);
+assert.equal(E.wetPaintPolicy().specular,0xcfe5ee);
+console.log('pool-yard enhancement tests: 11 passed');
