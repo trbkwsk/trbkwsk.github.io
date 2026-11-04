@@ -1,0 +1,1656 @@
+{
+  "boundaries": [
+    "fixture service/engine and 552818/552bf0 vtables",
+    "original 4e0a80 material templates over preallocated cache/pools",
+    "recording IDirect3DDevice8 and VertexBuffer8 COM, GetRenderState(35)=0",
+    "identity local matrix, otherwise uninitialized camera/driver state",
+    "opaque fixture texture and successful vertex-shader handle"
+  ],
+  "cases": [
+    {
+      "color": [
+        1,
+        0.3,
+        0.4,
+        0.5
+      ],
+      "draws": [
+        {
+          "args": [
+            5,
+            0,
+            2
+          ],
+          "vertex_bytes_sha256": "41ed472b68ebc7a70b3d743b83c8f5e1cbb5e436e5d09db05bda8429f533818e",
+          "vertices": [
+            [
+              -8.0,
+              2.0,
+              0.019999999552965164,
+              0.0,
+              0.0,
+              0.0,
+              4283197055
+            ],
+            [
+              -8.0,
+              -23.0,
+              0.019999999552965164,
+              0.0,
+              0.0,
+              1.0,
+              4283197055
+            ],
+            [
+              8.0,
+              2.0,
+              0.019999999552965164,
+              0.0,
+              1.0,
+              0.0,
+              4283197055
+            ],
+            [
+              8.0,
+              -23.0,
+              0.019999999552965164,
+              0.0,
+              1.0,
+              1.0,
+              4283197055
+            ]
+          ]
+        }
+      ],
+      "events": [
+        {
+          "args": [
+            0,
+            286331153
+          ],
+          "description": "SetTexture(0x0, 0x11111111)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            1,
+            0
+          ],
+          "description": "SetTexture(0x1, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            2,
+            0
+          ],
+          "description": "SetTexture(0x2, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            3,
+            0
+          ],
+          "description": "SetTexture(0x3, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            27,
+            1
+          ],
+          "description": "SetRenderState(ALPHABLENDENABLE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            19,
+            5
+          ],
+          "description": "SetRenderState(SRCBLEND, SRCALPHA)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            20,
+            6
+          ],
+          "description": "SetRenderState(DESTBLEND, INVSRCALPHA)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            15,
+            1
+          ],
+          "description": "SetRenderState(ALPHATESTENABLE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            24,
+            0
+          ],
+          "description": "SetRenderState(ALPHAREF, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            13,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSU, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            14,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSV, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            25,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSW, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            14,
+            0
+          ],
+          "description": "SetRenderState(ZWRITEENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            59,
+            0
+          ],
+          "description": "SetRenderState(59, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            23,
+            4
+          ],
+          "description": "SetRenderState(ZFUNC, 0x4)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            22,
+            1
+          ],
+          "description": "SetRenderState(CULLMODE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            7,
+            0
+          ],
+          "description": "SetRenderState(ZENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            168,
+            15
+          ],
+          "description": "SetRenderState(COLORWRITEENABLE, 0xf)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            524288,
+            520,
+            338,
+            0,
+            11095156
+          ],
+          "description": "CreateVertexBuffer(0x80000, 0x208, 0x152, 0x0, 0xa94c74)",
+          "method": "CreateVertexBuffer"
+        },
+        {
+          "args": [
+            35,
+            11078488
+          ],
+          "description": "GetRenderState(0x23, 0xa90b58)",
+          "method": "GetRenderState"
+        },
+        {
+          "args": [
+            35,
+            0
+          ],
+          "description": "SetRenderState(35, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            11115616,
+            16
+          ],
+          "description": "SetVertexShaderConstant(0x0, 0xa99c60, 0x10)",
+          "method": "SetVertexShaderConstant"
+        },
+        {
+          "args": [
+            8,
+            11115744,
+            8
+          ],
+          "description": "SetVertexShaderConstant(0x8, 0xa99ce0, 0x8)",
+          "method": "SetVertexShaderConstant"
+        },
+        {
+          "args": [
+            6689000,
+            6467744,
+            6689556,
+            0
+          ],
+          "description": "CreateVertexShader(0x6610e8, 0x62b0a0, 0x661314, 0x0)",
+          "method": "CreateVertexShader"
+        },
+        {
+          "args": [
+            305419896
+          ],
+          "description": "SetVertexShader(0x12345678)",
+          "method": "SetVertexShader"
+        },
+        {
+          "args": [
+            0
+          ],
+          "description": "SetPixelShader(0x0)",
+          "method": "SetPixelShader"
+        },
+        {
+          "args": [
+            0,
+            2,
+            0
+          ],
+          "description": "SetTextureStageState(0, COLORARG1, DIFFUSE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            5,
+            0
+          ],
+          "description": "SetTextureStageState(0, ALPHAARG1, DIFFUSE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            1,
+            4
+          ],
+          "description": "SetTextureStageState(0, COLOROP, MODULATE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            4,
+            4
+          ],
+          "description": "SetTextureStageState(0, ALPHAOP, MODULATE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            3,
+            2
+          ],
+          "description": "SetTextureStageState(0, COLORARG2, TEXTURE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            6,
+            2
+          ],
+          "description": "SetTextureStageState(0, ALPHAARG2, TEXTURE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            29,
+            0
+          ],
+          "description": "SetRenderState(SPECULARENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            1946685440,
+            28
+          ],
+          "description": "SetStreamSource(0x0, 0x74081000, 0x1c)",
+          "method": "SetStreamSource"
+        },
+        {
+          "args": [
+            5,
+            0,
+            2
+          ],
+          "description": "DrawPrimitive(0x5, 0x0, 0x2)",
+          "method": "DrawPrimitive"
+        },
+        {
+          "args": [
+            35,
+            0
+          ],
+          "description": "SetRenderState(35, 0x0)",
+          "method": "SetRenderState"
+        }
+      ],
+      "packed_argb": 4283197055,
+      "text_sha256": {
+        "exe": "080bdef749e2be5eb427fe03a9de18be7853056a73538482a5072631f4347716",
+        "gcore": "706dbd5905da7192c8687c59ac253015a2be1778a500e480a1f9b31ad4fbd2f2",
+        "sgl": "39fcd2e9e6698420fa358dd3abb8ed08955a6523fa49bfc0c919736f4194f113"
+      }
+    },
+    {
+      "color": [
+        0.5,
+        1,
+        -0.7,
+        -1
+      ],
+      "draws": [
+        {
+          "args": [
+            5,
+            0,
+            2
+          ],
+          "vertex_bytes_sha256": "a1628d3ba49d0dc4602ec2e029c467c6fbe0b1c73f6c4ef1b3933007e8b2546e",
+          "vertices": [
+            [
+              -8.0,
+              2.0,
+              0.019999999552965164,
+              0.0,
+              0.0,
+              0.0,
+              2147438081
+            ],
+            [
+              -8.0,
+              -23.0,
+              0.019999999552965164,
+              0.0,
+              0.0,
+              1.0,
+              2147438081
+            ],
+            [
+              8.0,
+              2.0,
+              0.019999999552965164,
+              0.0,
+              1.0,
+              0.0,
+              2147438081
+            ],
+            [
+              8.0,
+              -23.0,
+              0.019999999552965164,
+              0.0,
+              1.0,
+              1.0,
+              2147438081
+            ]
+          ]
+        }
+      ],
+      "events": [
+        {
+          "args": [
+            0,
+            286331153
+          ],
+          "description": "SetTexture(0x0, 0x11111111)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            1,
+            0
+          ],
+          "description": "SetTexture(0x1, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            2,
+            0
+          ],
+          "description": "SetTexture(0x2, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            3,
+            0
+          ],
+          "description": "SetTexture(0x3, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            27,
+            1
+          ],
+          "description": "SetRenderState(ALPHABLENDENABLE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            19,
+            5
+          ],
+          "description": "SetRenderState(SRCBLEND, SRCALPHA)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            20,
+            6
+          ],
+          "description": "SetRenderState(DESTBLEND, INVSRCALPHA)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            15,
+            1
+          ],
+          "description": "SetRenderState(ALPHATESTENABLE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            24,
+            0
+          ],
+          "description": "SetRenderState(ALPHAREF, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            13,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSU, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            14,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSV, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            25,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSW, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            14,
+            0
+          ],
+          "description": "SetRenderState(ZWRITEENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            59,
+            0
+          ],
+          "description": "SetRenderState(59, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            23,
+            4
+          ],
+          "description": "SetRenderState(ZFUNC, 0x4)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            22,
+            1
+          ],
+          "description": "SetRenderState(CULLMODE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            7,
+            0
+          ],
+          "description": "SetRenderState(ZENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            168,
+            15
+          ],
+          "description": "SetRenderState(COLORWRITEENABLE, 0xf)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            524288,
+            520,
+            338,
+            0,
+            11095156
+          ],
+          "description": "CreateVertexBuffer(0x80000, 0x208, 0x152, 0x0, 0xa94c74)",
+          "method": "CreateVertexBuffer"
+        },
+        {
+          "args": [
+            35,
+            11078488
+          ],
+          "description": "GetRenderState(0x23, 0xa90b58)",
+          "method": "GetRenderState"
+        },
+        {
+          "args": [
+            35,
+            0
+          ],
+          "description": "SetRenderState(35, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            11115616,
+            16
+          ],
+          "description": "SetVertexShaderConstant(0x0, 0xa99c60, 0x10)",
+          "method": "SetVertexShaderConstant"
+        },
+        {
+          "args": [
+            8,
+            11115744,
+            8
+          ],
+          "description": "SetVertexShaderConstant(0x8, 0xa99ce0, 0x8)",
+          "method": "SetVertexShaderConstant"
+        },
+        {
+          "args": [
+            6689000,
+            6467744,
+            6689556,
+            0
+          ],
+          "description": "CreateVertexShader(0x6610e8, 0x62b0a0, 0x661314, 0x0)",
+          "method": "CreateVertexShader"
+        },
+        {
+          "args": [
+            305419896
+          ],
+          "description": "SetVertexShader(0x12345678)",
+          "method": "SetVertexShader"
+        },
+        {
+          "args": [
+            0
+          ],
+          "description": "SetPixelShader(0x0)",
+          "method": "SetPixelShader"
+        },
+        {
+          "args": [
+            0,
+            2,
+            0
+          ],
+          "description": "SetTextureStageState(0, COLORARG1, DIFFUSE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            5,
+            0
+          ],
+          "description": "SetTextureStageState(0, ALPHAARG1, DIFFUSE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            1,
+            4
+          ],
+          "description": "SetTextureStageState(0, COLOROP, MODULATE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            4,
+            4
+          ],
+          "description": "SetTextureStageState(0, ALPHAOP, MODULATE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            3,
+            2
+          ],
+          "description": "SetTextureStageState(0, COLORARG2, TEXTURE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            6,
+            2
+          ],
+          "description": "SetTextureStageState(0, ALPHAARG2, TEXTURE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            29,
+            0
+          ],
+          "description": "SetRenderState(SPECULARENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            1946685440,
+            28
+          ],
+          "description": "SetStreamSource(0x0, 0x74081000, 0x1c)",
+          "method": "SetStreamSource"
+        },
+        {
+          "args": [
+            5,
+            0,
+            2
+          ],
+          "description": "DrawPrimitive(0x5, 0x0, 0x2)",
+          "method": "DrawPrimitive"
+        },
+        {
+          "args": [
+            35,
+            0
+          ],
+          "description": "SetRenderState(35, 0x0)",
+          "method": "SetRenderState"
+        }
+      ],
+      "packed_argb": 2147438081,
+      "text_sha256": {
+        "exe": "080bdef749e2be5eb427fe03a9de18be7853056a73538482a5072631f4347716",
+        "gcore": "706dbd5905da7192c8687c59ac253015a2be1778a500e480a1f9b31ad4fbd2f2",
+        "sgl": "39fcd2e9e6698420fa358dd3abb8ed08955a6523fa49bfc0c919736f4194f113"
+      }
+    },
+    {
+      "color": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "draws": [
+        {
+          "args": [
+            5,
+            0,
+            2
+          ],
+          "vertex_bytes_sha256": "3eaee68cd18ed73651350ab9b36b630f1a52652808bc25dc2f4873ac113d8702",
+          "vertices": [
+            [
+              -8.0,
+              2.0,
+              0.019999999552965164,
+              0.0,
+              0.0,
+              0.0,
+              0
+            ],
+            [
+              -8.0,
+              -23.0,
+              0.019999999552965164,
+              0.0,
+              0.0,
+              1.0,
+              0
+            ],
+            [
+              8.0,
+              2.0,
+              0.019999999552965164,
+              0.0,
+              1.0,
+              0.0,
+              0
+            ],
+            [
+              8.0,
+              -23.0,
+              0.019999999552965164,
+              0.0,
+              1.0,
+              1.0,
+              0
+            ]
+          ]
+        }
+      ],
+      "events": [
+        {
+          "args": [
+            0,
+            286331153
+          ],
+          "description": "SetTexture(0x0, 0x11111111)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            1,
+            0
+          ],
+          "description": "SetTexture(0x1, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            2,
+            0
+          ],
+          "description": "SetTexture(0x2, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            3,
+            0
+          ],
+          "description": "SetTexture(0x3, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            27,
+            1
+          ],
+          "description": "SetRenderState(ALPHABLENDENABLE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            19,
+            5
+          ],
+          "description": "SetRenderState(SRCBLEND, SRCALPHA)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            20,
+            6
+          ],
+          "description": "SetRenderState(DESTBLEND, INVSRCALPHA)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            15,
+            1
+          ],
+          "description": "SetRenderState(ALPHATESTENABLE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            24,
+            0
+          ],
+          "description": "SetRenderState(ALPHAREF, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            13,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSU, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            14,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSV, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            25,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSW, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            14,
+            0
+          ],
+          "description": "SetRenderState(ZWRITEENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            59,
+            0
+          ],
+          "description": "SetRenderState(59, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            23,
+            4
+          ],
+          "description": "SetRenderState(ZFUNC, 0x4)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            22,
+            1
+          ],
+          "description": "SetRenderState(CULLMODE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            7,
+            0
+          ],
+          "description": "SetRenderState(ZENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            168,
+            15
+          ],
+          "description": "SetRenderState(COLORWRITEENABLE, 0xf)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            524288,
+            520,
+            338,
+            0,
+            11095156
+          ],
+          "description": "CreateVertexBuffer(0x80000, 0x208, 0x152, 0x0, 0xa94c74)",
+          "method": "CreateVertexBuffer"
+        },
+        {
+          "args": [
+            35,
+            11078488
+          ],
+          "description": "GetRenderState(0x23, 0xa90b58)",
+          "method": "GetRenderState"
+        },
+        {
+          "args": [
+            35,
+            0
+          ],
+          "description": "SetRenderState(35, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            11115616,
+            16
+          ],
+          "description": "SetVertexShaderConstant(0x0, 0xa99c60, 0x10)",
+          "method": "SetVertexShaderConstant"
+        },
+        {
+          "args": [
+            8,
+            11115744,
+            8
+          ],
+          "description": "SetVertexShaderConstant(0x8, 0xa99ce0, 0x8)",
+          "method": "SetVertexShaderConstant"
+        },
+        {
+          "args": [
+            6689000,
+            6467744,
+            6689556,
+            0
+          ],
+          "description": "CreateVertexShader(0x6610e8, 0x62b0a0, 0x661314, 0x0)",
+          "method": "CreateVertexShader"
+        },
+        {
+          "args": [
+            305419896
+          ],
+          "description": "SetVertexShader(0x12345678)",
+          "method": "SetVertexShader"
+        },
+        {
+          "args": [
+            0
+          ],
+          "description": "SetPixelShader(0x0)",
+          "method": "SetPixelShader"
+        },
+        {
+          "args": [
+            0,
+            2,
+            0
+          ],
+          "description": "SetTextureStageState(0, COLORARG1, DIFFUSE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            5,
+            0
+          ],
+          "description": "SetTextureStageState(0, ALPHAARG1, DIFFUSE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            1,
+            4
+          ],
+          "description": "SetTextureStageState(0, COLOROP, MODULATE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            4,
+            4
+          ],
+          "description": "SetTextureStageState(0, ALPHAOP, MODULATE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            3,
+            2
+          ],
+          "description": "SetTextureStageState(0, COLORARG2, TEXTURE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            6,
+            2
+          ],
+          "description": "SetTextureStageState(0, ALPHAARG2, TEXTURE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            29,
+            0
+          ],
+          "description": "SetRenderState(SPECULARENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            1946685440,
+            28
+          ],
+          "description": "SetStreamSource(0x0, 0x74081000, 0x1c)",
+          "method": "SetStreamSource"
+        },
+        {
+          "args": [
+            5,
+            0,
+            2
+          ],
+          "description": "DrawPrimitive(0x5, 0x0, 0x2)",
+          "method": "DrawPrimitive"
+        },
+        {
+          "args": [
+            35,
+            0
+          ],
+          "description": "SetRenderState(35, 0x0)",
+          "method": "SetRenderState"
+        }
+      ],
+      "packed_argb": 0,
+      "text_sha256": {
+        "exe": "080bdef749e2be5eb427fe03a9de18be7853056a73538482a5072631f4347716",
+        "gcore": "706dbd5905da7192c8687c59ac253015a2be1778a500e480a1f9b31ad4fbd2f2",
+        "sgl": "39fcd2e9e6698420fa358dd3abb8ed08955a6523fa49bfc0c919736f4194f113"
+      }
+    },
+    {
+      "color": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "draws": [
+        {
+          "args": [
+            5,
+            0,
+            2
+          ],
+          "vertex_bytes_sha256": "92d9fe3619d9e8ead6bcd6ba1bf4007c7eba4df3535d6e5946a65faf292b3ee3",
+          "vertices": [
+            [
+              -8.0,
+              2.0,
+              0.019999999552965164,
+              0.0,
+              0.0,
+              0.0,
+              4294967295
+            ],
+            [
+              -8.0,
+              -23.0,
+              0.019999999552965164,
+              0.0,
+              0.0,
+              1.0,
+              4294967295
+            ],
+            [
+              8.0,
+              2.0,
+              0.019999999552965164,
+              0.0,
+              1.0,
+              0.0,
+              4294967295
+            ],
+            [
+              8.0,
+              -23.0,
+              0.019999999552965164,
+              0.0,
+              1.0,
+              1.0,
+              4294967295
+            ]
+          ]
+        }
+      ],
+      "events": [
+        {
+          "args": [
+            0,
+            286331153
+          ],
+          "description": "SetTexture(0x0, 0x11111111)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            1,
+            0
+          ],
+          "description": "SetTexture(0x1, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            2,
+            0
+          ],
+          "description": "SetTexture(0x2, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            3,
+            0
+          ],
+          "description": "SetTexture(0x3, 0x0)",
+          "method": "SetTexture"
+        },
+        {
+          "args": [
+            27,
+            1
+          ],
+          "description": "SetRenderState(ALPHABLENDENABLE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            19,
+            5
+          ],
+          "description": "SetRenderState(SRCBLEND, SRCALPHA)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            20,
+            6
+          ],
+          "description": "SetRenderState(DESTBLEND, INVSRCALPHA)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            15,
+            1
+          ],
+          "description": "SetRenderState(ALPHATESTENABLE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            24,
+            0
+          ],
+          "description": "SetRenderState(ALPHAREF, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            13,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSU, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            14,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSV, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            25,
+            3
+          ],
+          "description": "SetTextureStageState(0, ADDRESSW, 0x3)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            14,
+            0
+          ],
+          "description": "SetRenderState(ZWRITEENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            59,
+            0
+          ],
+          "description": "SetRenderState(59, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            23,
+            4
+          ],
+          "description": "SetRenderState(ZFUNC, 0x4)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            22,
+            1
+          ],
+          "description": "SetRenderState(CULLMODE, 0x1)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            7,
+            0
+          ],
+          "description": "SetRenderState(ZENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            168,
+            15
+          ],
+          "description": "SetRenderState(COLORWRITEENABLE, 0xf)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            524288,
+            520,
+            338,
+            0,
+            11095156
+          ],
+          "description": "CreateVertexBuffer(0x80000, 0x208, 0x152, 0x0, 0xa94c74)",
+          "method": "CreateVertexBuffer"
+        },
+        {
+          "args": [
+            35,
+            11078488
+          ],
+          "description": "GetRenderState(0x23, 0xa90b58)",
+          "method": "GetRenderState"
+        },
+        {
+          "args": [
+            35,
+            0
+          ],
+          "description": "SetRenderState(35, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            11115616,
+            16
+          ],
+          "description": "SetVertexShaderConstant(0x0, 0xa99c60, 0x10)",
+          "method": "SetVertexShaderConstant"
+        },
+        {
+          "args": [
+            8,
+            11115744,
+            8
+          ],
+          "description": "SetVertexShaderConstant(0x8, 0xa99ce0, 0x8)",
+          "method": "SetVertexShaderConstant"
+        },
+        {
+          "args": [
+            6689000,
+            6467744,
+            6689556,
+            0
+          ],
+          "description": "CreateVertexShader(0x6610e8, 0x62b0a0, 0x661314, 0x0)",
+          "method": "CreateVertexShader"
+        },
+        {
+          "args": [
+            305419896
+          ],
+          "description": "SetVertexShader(0x12345678)",
+          "method": "SetVertexShader"
+        },
+        {
+          "args": [
+            0
+          ],
+          "description": "SetPixelShader(0x0)",
+          "method": "SetPixelShader"
+        },
+        {
+          "args": [
+            0,
+            2,
+            0
+          ],
+          "description": "SetTextureStageState(0, COLORARG1, DIFFUSE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            5,
+            0
+          ],
+          "description": "SetTextureStageState(0, ALPHAARG1, DIFFUSE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            1,
+            4
+          ],
+          "description": "SetTextureStageState(0, COLOROP, MODULATE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            4,
+            4
+          ],
+          "description": "SetTextureStageState(0, ALPHAOP, MODULATE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            3,
+            2
+          ],
+          "description": "SetTextureStageState(0, COLORARG2, TEXTURE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            0,
+            6,
+            2
+          ],
+          "description": "SetTextureStageState(0, ALPHAARG2, TEXTURE)",
+          "method": "SetTextureStageState"
+        },
+        {
+          "args": [
+            29,
+            0
+          ],
+          "description": "SetRenderState(SPECULARENABLE, 0x0)",
+          "method": "SetRenderState"
+        },
+        {
+          "args": [
+            0,
+            1946685440,
+            28
+          ],
+          "description": "SetStreamSource(0x0, 0x74081000, 0x1c)",
+          "method": "SetStreamSource"
+        },
+        {
+          "args": [
+            5,
+            0,
+            2
+          ],
+          "description": "DrawPrimitive(0x5, 0x0, 0x2)",
+          "method": "DrawPrimitive"
+        },
+        {
+          "args": [
+            35,
+            0
+          ],
+          "description": "SetRenderState(35, 0x0)",
+          "method": "SetRenderState"
+        }
+      ],
+      "packed_argb": 4294967295,
+      "text_sha256": {
+        "exe": "080bdef749e2be5eb427fe03a9de18be7853056a73538482a5072631f4347716",
+        "gcore": "706dbd5905da7192c8687c59ac253015a2be1778a500e480a1f9b31ad4fbd2f2",
+        "sgl": "39fcd2e9e6698420fa358dd3abb8ed08955a6523fa49bfc0c919736f4194f113"
+      }
+    }
+  ],
+  "evidence_classes": [
+    "BINARY_CODE",
+    "EMULATION"
+  ],
+  "full_renderer_startup": false,
+  "ghidra": {
+    "immediate-driver.json": {
+      "decompiler_output_retained_local_only": true,
+      "export_sha256": "756ee9f8661f50f0b83282738fcca56558287024dcdaee31125749076acf9607",
+      "functions": [
+        {
+          "body_sha256": "1445e5c20730d196eb08ff54dbbd0350846c3a7a9fb25c374e39234bcf443791",
+          "body_size": 980,
+          "entry": "0x0041c110",
+          "name": "FUN_0041c110"
+        },
+        {
+          "body_sha256": "5470093b1ec947884f05a4c5e36bb14eedefa971d5374f1bf9fb8b36ba11f8b9",
+          "body_size": 123,
+          "entry": "0x004b6cb0",
+          "name": "FUN_004b6cb0"
+        }
+      ],
+      "program": "GettingUp.exe"
+    },
+    "immediate-flush.json": {
+      "decompiler_output_retained_local_only": true,
+      "export_sha256": "3e2679a842ac8e19d132de96caf3c292ec26a85492f6bf5c987f416b9e5882cb",
+      "functions": [
+        {
+          "body_sha256": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4",
+          "body_size": 117,
+          "entry": "0x0042a278",
+          "name": "FUN_0042a278"
+        },
+        {
+          "body_sha256": "c3ec4527dfaae8465d5e6008a4f634e85664da10426fe7b6d99ffd9b9d796fec",
+          "body_size": 106,
+          "entry": "0x004e1260",
+          "name": "FUN_004e1260"
+        },
+        {
+          "body_sha256": "7378a7358fbacd94d94493b936a28534e41db2a1c60589027a3bc84a09824d38",
+          "body_size": 210,
+          "entry": "0x004e1830",
+          "name": "FUN_004e1830"
+        },
+        {
+          "body_sha256": "e92517e2462dc588ce13fb4cafe1ce8b503e700e1816a3c5ec7e7bcb028a4cd8",
+          "body_size": 908,
+          "entry": "0x004e1960",
+          "name": "FUN_004e1960"
+        }
+      ],
+      "program": "GettingUp.exe"
+    },
+    "immediate-init.json": {
+      "decompiler_output_retained_local_only": true,
+      "export_sha256": "aa4283c2ba4542da6416a68e4599bb6a0e953db0bdfd0cc37e3043dd7f539665",
+      "functions": [
+        {
+          "body_sha256": "81c33023439cfde30e5652483bb6e5f9e54a91c8d46c341a3de572bedf7a793c",
+          "body_size": 16,
+          "entry": "0x004e06c0",
+          "name": "FUN_004e06c0"
+        },
+        {
+          "body_sha256": "fb5177eff174555808def31bef417609c8ac0f136980e72db79c1c05f8128e61",
+          "body_size": 66,
+          "entry": "0x004e06e0",
+          "name": "FUN_004e06e0"
+        },
+        {
+          "body_sha256": "fda092165bdcbc4c29b2bf560ba15d9342b8a1a3c636e05b082964b0d22ef884",
+          "body_size": 675,
+          "entry": "0x004e0a80",
+          "name": "FUN_004e0a80"
+        },
+        {
+          "body_sha256": "d09c7540aafd757d4c5daee8902b2df70213870d8a8e1e46f93b9c05a93a7420",
+          "body_size": 65,
+          "entry": "0x004e1910",
+          "name": "FUN_004e1910"
+        },
+        {
+          "body_sha256": "81908454c43872af9e1b0d83a60f5261596b8fae5abdd524730dcdaf6566706e",
+          "body_size": 36,
+          "entry": "0x004f4830",
+          "name": "FUN_004f4830"
+        },
+        {
+          "body_sha256": "c3ea36cbe86964863d688f74d95044a66a4bf9c48410cd7d03d8ea91d24d0a84",
+          "body_size": 28,
+          "entry": "0x004fcbb0",
+          "name": "FUN_004fcbb0"
+        }
+      ],
+      "program": "GettingUp.exe"
+    },
+    "immediate-methods.json": {
+      "decompiler_output_retained_local_only": true,
+      "export_sha256": "5a90c93b976487f4746b0d1831d271f5c3f6ec1a3b7f2f28ad06d6ee535b9191",
+      "functions": [
+        {
+          "body_sha256": "dfb041c8aa65e2407283d95cdc6b588bdd6551e70b3b07974dc2ac48dea39425",
+          "body_size": 60,
+          "entry": "0x004b6a50",
+          "name": "FUN_004b6a50"
+        },
+        {
+          "body_sha256": "cfb6a1a9e633991275e67c9dd92eeb7d0b11df0e1e5b00411e7741ec2444ba83",
+          "body_size": 97,
+          "entry": "0x004b6b80",
+          "name": "FUN_004b6b80"
+        },
+        {
+          "body_sha256": "a2ecc7138f5a74482582cd8d4f4b5463f1d3a27ddc9415b139a8eee42e46093e",
+          "body_size": 40,
+          "entry": "0x004b6bf0",
+          "name": "FUN_004b6bf0"
+        },
+        {
+          "body_sha256": "48924c570b5d583736110265b366b99295d3c9538535ae3f84f3d5ceb61a1dd1",
+          "body_size": 161,
+          "entry": "0x004e1d00",
+          "name": "FUN_004e1d00"
+        },
+        {
+          "body_sha256": "7bc8d1c25d470f659136a18d0e8487778f694709cdf2c0a5860f9c637783fe5e",
+          "body_size": 665,
+          "entry": "0x004e1dc0",
+          "name": "FUN_004e1dc0"
+        },
+        {
+          "body_sha256": "9c6f0c692a259507049250829a4b72e096edb0eb6a1c718c8ff2a3b9c6045e3b",
+          "body_size": 1090,
+          "entry": "0x004e2710",
+          "name": "FUN_004e2710"
+        },
+        {
+          "body_sha256": "d37e3f895aeb45256720a43329b8fb9f10b486a2f8d1edd62a900b8b75e91ede",
+          "body_size": 41,
+          "entry": "0x004e2cb0",
+          "name": "FUN_004e2cb0"
+        },
+        {
+          "body_sha256": "b146677c67edc50787a1f7785a08a15fddca345a3e8b770ceec7b3b5896fc0ed",
+          "body_size": 366,
+          "entry": "0x004e2ce0",
+          "name": "FUN_004e2ce0"
+        }
+      ],
+      "program": "GettingUp.exe"
+    }
+  },
+  "kind": "gettingup-original-immediate-d3d8",
+  "limitation": "Device calls are state deltas on controlled fixture caches; absent alpha-func/filter/mip states are NOT inferred.",
+  "live_runtime_verified": false,
+  "node_argb_cases": 4,
+  "original_d3d_pixels_verified": false,
+  "original_sha256": {
+    "GCore.dll": "dac63a65f201320679fd060c82858e244816b2a16ae64e68b0776b7e9fc368b6",
+    "GettingUp.exe": "b0f76a12499bc2d91e928807c3cd96cb809d2e48e1fbf1617db335b1d1498ed1",
+    "g_Rhapsody.sgl": "3cc4496c8d14d292a0e661585b2a007a7bd574522d7970421b67daf9246f107c"
+  },
+  "our_source_sha256": {
+    "tools/re/graffiti_d3d_probe.py": "db2587eeaf45f3ff667d7881e8f293d54364430bbf26fe2f11fa6c5b8be9fc4a",
+    "viewer/gettingup-spray-controller.js": "db673e138e25ef6a790076cc806b403d048812983c437dbcaa772380c391492f"
+  },
+  "quad_cases": 4,
+  "schema": 1,
+  "text_unchanged": true,
+  "vertices_checked": 16
+}

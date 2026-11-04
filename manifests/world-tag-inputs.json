@@ -1,0 +1,29 @@
+{
+  "local_inputs_bytes": 2357,
+  "local_inputs_sha256": "48bd2c46cba3422343311a90706a364c6380b68612a08ec278339fb5846022ef",
+  "name": "AT_TraneM01_01",
+  "native_amount_caller_verified": false,
+  "original_assets_published": false,
+  "our_source_sha256": {
+    "tools/re/graffiti_tag_reference.py": "7f28f069791fabda14522fc5ee06f48da8a4c93da41a0d07f642c4ea511e7b19",
+    "tools/re/world_tag_inputs.py": "c4be8c9d63290510b637ad074be1e6482df2a80c282977e84b0632dd773f68f3",
+    "tools/st2png.py": "32a6e3a3853270baf62a31156a6e86f54b704e78642f5281d0f6b0255221ad06"
+  },
+  "points": 32,
+  "schema": 1,
+  "source_sha256": {
+    "textures/particlesynth/misc/drip01.st": "3c176e721e0ae6ea623748d1172d51cf53c920a8ba8611703e75e882495b76e9",
+    "textures/particlesynth/misc/drip02.st": "20c19a5d510dd4d304af0a2e4dcae049351cbb43330cb8e13778e1622efdcb1b",
+    "textures/particlesynth/misc/drip03.st": "0faea0bb34eb6d51fa7471b53e116bdf48efcb45deb080f1308ed2dc9aff67e2",
+    "textures/particlesynth/misc/drip04.st": "481b1eac885cafb777807104675e0d0adfc33fa96ee5930486c3a08eb681390b",
+    "textures/particlesynth/misc/splotch01.st": "7ce6b520b8475742ac027c7edbfc8f36fd59a769c60db42273bf40526643d814",
+    "textures/tag_art/at_tranem01_01_f.st": "fb30a6b6aff39cd0eec9190060b501da354e986fc884094391be1e49fae455fc",
+    "textures/tag_art/at_tranem01_01_s.st": "550527a779a08125d63416b8fe814e299b605b7a26e86de02560b7c04bfc2d11",
+    "textures/tag_art/at_tranem01_01_u.st": "4a9ba2e6f10bb8e46ba8d137105f9c4fde7d1c4840cc9e9be741d6321df64dc9"
+  },
+  "tagareas_sha256": "77d7564cae60dc5172059ea6be2f3d3a0b54b12149c3fbfb9b84aaba8460cb39",
+  "tiles": [
+    4,
+    2
+  ]
+}

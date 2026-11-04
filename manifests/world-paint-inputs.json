@@ -1,0 +1,85 @@
+{
+  "added_resources": {
+    "paint_0": {
+      "frames": 41,
+      "root_mode": 1,
+      "sha256": "99532e6d312610e6f238bb76dc96fdf37775b12a07a4890a26cb60d3b1a74e4e",
+      "source": "Trane/TR_Graff_Stand_00.bnm"
+    },
+    "paint_1": {
+      "frames": 41,
+      "root_mode": 1,
+      "sha256": "04d096a748802570f7072aa3e7e6de58a28b98de93a18c13bd97c27803613574",
+      "source": "Trane/TR_Graff_Stand_01.bnm"
+    },
+    "paint_2": {
+      "frames": 41,
+      "root_mode": 1,
+      "sha256": "3a756504931846c0666aa69126470a421ed79211d9a9113cf07a11504ee026e7",
+      "source": "Trane/TR_Graff_Stand_02.bnm"
+    },
+    "paint_3": {
+      "frames": 41,
+      "root_mode": 1,
+      "sha256": "7b854ce0adeee7973160925834510608d5189751e50dc52865b7dc182748d74e",
+      "source": "Trane/TR_Graff_Stand_03.bnm"
+    },
+    "paint_4": {
+      "frames": 41,
+      "root_mode": 1,
+      "sha256": "84d0d3ec0a4740ca30fd5d1b2472212d0427386cf66db2b26e0a1868847fa04b",
+      "source": "Trane/TR_Graff_Stand_04.bnm"
+    },
+    "paint_5": {
+      "frames": 41,
+      "root_mode": 1,
+      "sha256": "735debef9d14fb3ef6ee58f249944e782e59303ad5161676f8e3c8ebc9f49e26",
+      "source": "Trane/TR_Graff_Stand_05.bnm"
+    },
+    "paint_6": {
+      "frames": 41,
+      "root_mode": 1,
+      "sha256": "c569b18dc503a4a8f83ec1e266e721fc8a18d239e39b2b45b6a104110d4e9e01",
+      "source": "Trane/TR_Graff_Stand_06.bnm"
+    },
+    "paint_7": {
+      "frames": 41,
+      "root_mode": 1,
+      "sha256": "e548570027fe4718516addc2ebb3b602818b150a6b39e0f431bf0da81dd15d81",
+      "source": "Trane/TR_Graff_Stand_07.bnm"
+    },
+    "paint_8": {
+      "frames": 41,
+      "root_mode": 1,
+      "sha256": "bc3c301780a624a43eea929aff19a2e659865479149d4a21950300905f356e3f",
+      "source": "Trane/TR_Graff_Stand_08.bnm"
+    }
+  },
+  "base_sidecar_sha256": "271968ca89a3ec1eb1da3e48356a768c5da7c25b7502991ddfb5e5f43accdc2e",
+  "can": {
+    "bytes": 53944,
+    "nozzle_from_mesh_bounds_not_original_spray_offset": true,
+    "nozzle_proxy": [
+      -0.013174176216125488,
+      4.531717777252197,
+      0.023062288761138916
+    ],
+    "sha256": "94361c1711b3eaaec46f0a416c1624248913dbc5518a49b396ae1d29f5c7db9c",
+    "source": "Meshes/Props/Weapons/Paintcan/paintcan.msh",
+    "source_sha256": "29a18baf2cec1f0ee7a9043269f24a4fa22f89b1bc0d1b1ad30e5fae62f29813",
+    "url": "../artifacts/paintcan.glb"
+  },
+  "kind": "gettingup-world-paint-inputs",
+  "local_sidecar_bytes": 714050,
+  "local_sidecar_sha256": "fee5a0b10e13a86ba4ae3b7a2b7b38fa7efeda9898e1a95eb9266f1d7202595d",
+  "model_sha256": "dfa91462fa47a85e343e78b5ed7d3aea977cfeab6e3c46730fd9edea4342f692",
+  "original_assets_published": false,
+  "original_world_painting": false,
+  "paint_proof_sha256": "050e4e7968be1d1c182a66bac333c16f1153e73cb723b82f1ab7d4f898766282",
+  "schema": 1,
+  "source_sha256": {
+    "ban": "6c41b3d7b122413c9d629a23b30a3756f1f52255eac0798a329d2d7d118df73c",
+    "msh": "ecb5c02e9d15377f38c78a78c86f0e74bb3a2e8de42ebaf555b2d635c99896c0"
+  },
+  "total_resources": 21
+}

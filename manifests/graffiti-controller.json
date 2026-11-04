@@ -1,0 +1,336 @@
+{
+  "amount_cases": 72,
+  "boundaries": [
+    "controlled option records from XML",
+    "controlled CRT thread data",
+    "controller fragment 10192500..1019253c before indirect Tag"
+  ],
+  "evidence_classes": [
+    "FILE_FORMAT",
+    "BINARY_CODE",
+    "EMULATION"
+  ],
+  "full_controller_verified": false,
+  "ghidra": {
+    "controller.json": {
+      "decompiler_output_retained_local_only": true,
+      "export_sha256": "674bfb2d9755af59b6a2663768135c3bfb0eeb3ecd2e41581c7ee4d0962a66a4",
+      "functions": [
+        {
+          "body_sha256": "c7f21e59bf82adb6092a117da8c0df4d91e363926433091dcccb9c7767015031",
+          "body_size": 359,
+          "entry": "0x10192eb0",
+          "name": "?Start@ITaggingArea@@QAEX_N@Z"
+        },
+        {
+          "body_sha256": "684bdc1967b53d54ca97ed58da88e2d5ab1aaf1ea65fa57c50328f0de853d047",
+          "body_size": 452,
+          "entry": "0x101935a0",
+          "name": "?Tick@ITaggingArea@@UAEXABUTGTickParams@@@Z"
+        },
+        {
+          "body_sha256": "7eee182c19c751285159bd9d689e1675e4448336c264fea93899ed3766b256c4",
+          "body_size": 22,
+          "entry": "0x101a98c0",
+          "name": "FUN_101a98c0"
+        },
+        {
+          "body_sha256": "f00b7a32fa2a135415f97280b7e6ef6841f002d53a7ef62db87fc0a9ac7063c0",
+          "body_size": 587,
+          "entry": "0x101b86b0",
+          "name": "FUN_101b86b0"
+        }
+      ],
+      "program": "g_Rhapsody.sgl"
+    },
+    "options.json": {
+      "decompiler_output_retained_local_only": true,
+      "export_sha256": "7c30709be98a09fe87e1303093d245c6a110c1a5ad8953ed88feb8c2cab2e8fd",
+      "functions": [
+        {
+          "body_sha256": "de24adfc515de21d0cd6627a9834f3c9c92cf4dfb5c1c6acbc591b390188c223",
+          "body_size": 83,
+          "entry": "0x1019cb50",
+          "name": "?Start@TTaggingTrait@@QAEX_NAAM1@Z"
+        },
+        {
+          "body_sha256": "241d25339359045e688b91dd77b13e3e1e18b2fcb50283e2fb5a59a77fd1c347",
+          "body_size": 99,
+          "entry": "0x101a8630",
+          "name": "FUN_101a8630"
+        }
+      ],
+      "program": "g_Rhapsody.sgl"
+    },
+    "paint-update.json": {
+      "decompiler_output_retained_local_only": true,
+      "export_sha256": "e5846fb5ac8df657700c84bd597730b9ffc2e9226fbd5dfa03c89ad79e318f1b",
+      "functions": [
+        {
+          "body_sha256": "9b8dcca47d3e4050cde03d68e05968ee1a7a3ffee8d5d8e6a79b125e3dc7ccfe",
+          "body_size": 164,
+          "entry": "0x10191d70",
+          "name": "FUN_10191d70"
+        },
+        {
+          "body_sha256": "9c228f955181d9ab851aeb5123501cf1fbcfce826deec8d368cd88e3eefdafb5",
+          "body_size": 370,
+          "entry": "0x10192480",
+          "name": "FUN_10192480"
+        },
+        {
+          "body_sha256": "745bb5c32a61d1b00a74041bcb28a90745fda7d717bd90f996397e7d3832e413",
+          "body_size": 53,
+          "entry": "0x1019e220",
+          "name": "?SetTrait@TTaggingAreaController@@QAEXK@Z"
+        }
+      ],
+      "program": "g_Rhapsody.sgl"
+    }
+  },
+  "kind": "gettingup-spray-controller",
+  "live_runtime_verified": false,
+  "node": {
+    "amount_cases": 72,
+    "options_cases": 12,
+    "rng_cases": 6000,
+    "tag_rng_ordering_cases": 12
+  },
+  "option_results": [
+    {
+      "complex": false,
+      "fast": false,
+      "radius": 17.5,
+      "rate": 2.0,
+      "tool": "Aerosol",
+      "warning": 1.5
+    },
+    {
+      "complex": false,
+      "fast": true,
+      "radius": 17.5,
+      "rate": 8.0,
+      "tool": "Aerosol",
+      "warning": 1.125
+    },
+    {
+      "complex": true,
+      "fast": false,
+      "radius": 17.5,
+      "rate": 1.5,
+      "tool": "Aerosol",
+      "warning": 1.25
+    },
+    {
+      "complex": true,
+      "fast": true,
+      "radius": 17.5,
+      "rate": 6.0,
+      "tool": "Aerosol",
+      "warning": 0.9375
+    },
+    {
+      "complex": false,
+      "fast": false,
+      "radius": 15.0,
+      "rate": 4.0,
+      "tool": "Roller",
+      "warning": 1.5
+    },
+    {
+      "complex": false,
+      "fast": true,
+      "radius": 15.0,
+      "rate": 32.0,
+      "tool": "Roller",
+      "warning": 1.125
+    },
+    {
+      "complex": true,
+      "fast": false,
+      "radius": 15.0,
+      "rate": 1.5,
+      "tool": "Roller",
+      "warning": 1.25
+    },
+    {
+      "complex": true,
+      "fast": true,
+      "radius": 15.0,
+      "rate": 12.0,
+      "tool": "Roller",
+      "warning": 0.9375
+    },
+    {
+      "complex": false,
+      "fast": false,
+      "radius": 12.5,
+      "rate": 4.0,
+      "tool": "Wheatpaste",
+      "warning": 1.5
+    },
+    {
+      "complex": false,
+      "fast": true,
+      "radius": 12.5,
+      "rate": 32.0,
+      "tool": "Wheatpaste",
+      "warning": 1.125
+    },
+    {
+      "complex": true,
+      "fast": false,
+      "radius": 12.5,
+      "rate": 1.5,
+      "tool": "Wheatpaste",
+      "warning": 1.25
+    },
+    {
+      "complex": true,
+      "fast": true,
+      "radius": 12.5,
+      "rate": 12.0,
+      "tool": "Wheatpaste",
+      "warning": 0.9375
+    }
+  ],
+  "options_cases": 12,
+  "options_table": {
+    "Aerosol": {
+      "Complex": {
+        "DripWarningTime": 1.25,
+        "PaintFillRate": 1.5
+      },
+      "MadPaintMultiplier": {
+        "DripWarningTime": 0.75,
+        "PaintFillRate": 4.0
+      },
+      "PaintRadius": 17.5,
+      "Simple": {
+        "DripWarningTime": 1.5,
+        "PaintFillRate": 2.0
+      }
+    },
+    "Roller": {
+      "Complex": {
+        "DripWarningTime": 1.25,
+        "PaintFillRate": 1.5
+      },
+      "MadPaintMultiplier": {
+        "DripWarningTime": 0.75,
+        "PaintFillRate": 8.0
+      },
+      "PaintRadius": 15.0,
+      "Simple": {
+        "DripWarningTime": 1.5,
+        "PaintFillRate": 4.0
+      }
+    },
+    "Wheatpaste": {
+      "Complex": {
+        "DripWarningTime": 1.25,
+        "PaintFillRate": 1.5
+      },
+      "MadPaintMultiplier": {
+        "DripWarningTime": 0.75,
+        "PaintFillRate": 8.0
+      },
+      "PaintRadius": 12.5,
+      "Simple": {
+        "DripWarningTime": 1.5,
+        "PaintFillRate": 4.0
+      }
+    }
+  },
+  "original_d3d_pixels_verified": false,
+  "original_sha256": {
+    "GCore.dll": "dac63a65f201320679fd060c82858e244816b2a16ae64e68b0776b7e9fc368b6",
+    "GettingUp.exe": "b0f76a12499bc2d91e928807c3cd96cb809d2e48e1fbf1617db335b1d1498ed1",
+    "g_Rhapsody.sgl": "3cc4496c8d14d292a0e661585b2a007a7bd574522d7970421b67daf9246f107c",
+    "msvcr71.dll": "8094af5ee310714caebccaeee7769ffb08048503ba478b879edfef5f1a24fefe"
+  },
+  "our_source_sha256": {
+    "tools/re/graffiti_controller_probe.py": "35f4abfa5b24b641bce7e469ccf5d603bc419d6aa1f418ae32e8a15b383a468c",
+    "tools/re/graffiti_controller_reference.py": "a8c7009b5b943e8dd65f10a71d22b3e36cbb1bca7199255657a32e2bcba1f596",
+    "viewer/gettingup-spray-controller.js": "db673e138e25ef6a790076cc806b403d048812983c437dbcaa772380c391492f"
+  },
+  "rng_cases": 6000,
+  "schema": 1,
+  "tag_rng_ordering": [
+    {
+      "choice": 3,
+      "selected": 0,
+      "state": 11519557,
+      "stored": 3
+    },
+    {
+      "choice": 0,
+      "selected": 0,
+      "state": 26255348,
+      "stored": 3
+    },
+    {
+      "choice": 1,
+      "selected": 0,
+      "state": 1171099367,
+      "stored": 3
+    },
+    {
+      "choice": 0,
+      "selected": 0,
+      "state": 1969769998,
+      "stored": 3
+    },
+    {
+      "choice": 3,
+      "selected": 0,
+      "state": 1054043289,
+      "stored": 3
+    },
+    {
+      "choice": 3,
+      "selected": 0,
+      "state": 2991586552,
+      "stored": 3
+    },
+    {
+      "choice": 0,
+      "selected": 1,
+      "state": 525371355,
+      "stored": 3
+    },
+    {
+      "choice": 0,
+      "selected": 1,
+      "state": 2648453938,
+      "stored": 3
+    },
+    {
+      "choice": 1,
+      "selected": 1,
+      "state": 1036078381,
+      "stored": 3
+    },
+    {
+      "choice": 1,
+      "selected": 1,
+      "state": 2263460668,
+      "stored": 3
+    },
+    {
+      "choice": 1,
+      "selected": 1,
+      "state": 2123992335,
+      "stored": 3
+    },
+    {
+      "choice": 2,
+      "selected": 1,
+      "state": 4110349206,
+      "stored": 3
+    }
+  ],
+  "tag_rng_ordering_cases": 12,
+  "tagareas_sha256": "77d7564cae60dc5172059ea6be2f3d3a0b54b12149c3fbfb9b84aaba8460cb39",
+  "text_unchanged": true
+}

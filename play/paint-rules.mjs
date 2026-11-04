@@ -405,4 +405,3 @@ export const RUN_SPEED = speedFromClip(CLIP_UNITS_PER_FRAME.run);
 // Старт МЕДЛЕННЕЕ ровного шага: 0.751 / 1.330 = 0.565.
 export const START_PHASE_SCALE =
   CLIP_UNITS_PER_FRAME.idleToWalk/CLIP_UNITS_PER_FRAME.walk;
-
