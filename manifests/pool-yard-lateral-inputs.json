@@ -1,0 +1,713 @@
+{
+  "actual_browser_verified": false,
+  "bindings": [
+    {
+      "animation": "TR_Ledge_IdleIntoRight",
+      "attribute_flags_low32": 5122,
+      "category": "",
+      "descriptor_sha256": "acaa2f52d9b1553d0b8e9b0082fb5e57535411049bfa888b0a2f411155176b43",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": 742,
+          "range": "0..24"
+        },
+        {
+          "event": 743,
+          "range": "25"
+        },
+        {
+          "event": 746,
+          "range": "26..last"
+        }
+      ],
+      "entry": "0x10188d20",
+      "frames": 33,
+      "key": "right_enter",
+      "mode": 0,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1c1a",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "LedgeRight",
+      "sequence_ticks": 33
+    },
+    {
+      "animation": "TR_Ledge_IdleIntoLeft",
+      "attribute_flags_low32": 5122,
+      "category": "",
+      "descriptor_sha256": "acaa2f52d9b1553d0b8e9b0082fb5e57535411049bfa888b0a2f411155176b43",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": 853,
+          "range": "0..24"
+        },
+        {
+          "event": 854,
+          "range": "25"
+        },
+        {
+          "event": 857,
+          "range": "26..last"
+        }
+      ],
+      "entry": "0x101895a0",
+      "frames": 33,
+      "key": "left_enter",
+      "mode": 0,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1c0e",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "LedgeLeft",
+      "sequence_ticks": 33
+    },
+    {
+      "animation": "TR_Ledge_Left",
+      "attribute_flags_low32": 7170,
+      "category": "",
+      "descriptor_sha256": "6bc43bf349c1ee6e9fd95b36caab7146b9516f9e19b0ed692a79ca97e21a97e5",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10171fe0",
+      "frames": 51,
+      "key": "left_loop",
+      "mode": 0,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1c0a",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "LedgeLeft_B",
+      "sequence_ticks": 50
+    },
+    {
+      "animation": "TR_Ledge_Right",
+      "attribute_flags_low32": 7170,
+      "category": "",
+      "descriptor_sha256": "f051593d7e2cdd16fd5d09d9c36cf45e26aedeaca4ffcab94704371a9a73d85e",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10171bb0",
+      "frames": 53,
+      "key": "right_loop",
+      "mode": 0,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1c16",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "LedgeRight_B",
+      "sequence_ticks": 52
+    },
+    {
+      "animation": "TR_Ledge_LeftIntoIdle",
+      "attribute_flags_low32": 5122,
+      "category": "",
+      "descriptor_sha256": "54142f4bfe1d07d563d6ddd7e7970515ef8885057c8fdf58dddab5f98d8acfbb",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101899d0",
+      "frames": 49,
+      "key": "left_exit",
+      "mode": 0,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1c0c",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "LedgeLeft_C",
+      "sequence_ticks": 49
+    },
+    {
+      "animation": "TR_Ledge_RightIntoIdle",
+      "attribute_flags_low32": 5122,
+      "category": "",
+      "descriptor_sha256": "54142f4bfe1d07d563d6ddd7e7970515ef8885057c8fdf58dddab5f98d8acfbb",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10189150",
+      "frames": 49,
+      "key": "right_exit",
+      "mode": 0,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1c18",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "LedgeRight_C",
+      "sequence_ticks": 49
+    },
+    {
+      "animation": "TR_Ledge_Settle_R",
+      "attribute_flags_low32": 5122,
+      "category": "",
+      "descriptor_sha256": "fc0343de6da15c06b377d936d0d7a1164026df5653553c7feda8c2ebf2cd4623",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        }
+      ],
+      "entry": "0x10189360",
+      "frames": 43,
+      "key": "right_end",
+      "mode": 0,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1c1c",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "LedgeRight_End",
+      "sequence_ticks": 43
+    },
+    {
+      "animation": "TR_Ledge_Settle_L",
+      "attribute_flags_low32": 5122,
+      "category": "",
+      "descriptor_sha256": "fc0343de6da15c06b377d936d0d7a1164026df5653553c7feda8c2ebf2cd4623",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        }
+      ],
+      "entry": "0x10189be0",
+      "frames": 43,
+      "key": "left_end",
+      "mode": 0,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1c10",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "LedgeLeft_End",
+      "sequence_ticks": 43
+    }
+  ],
+  "bones_sha256": "874bab487fa82d87b6e70e020b36b3d37dbb447df90bd78d8f007fd896f191ad",
+  "bytes": 410926,
+  "code": {
+    "decompiler_output_retained_local_only": true,
+    "export_sha256": "8a5c4655d4239d225b50ff2aa7ea0f0db43462a2f0f31f5aef73837c32f6eb1a",
+    "functions": [
+      {
+        "body_sha256": "e5cd54079702d606f8caf8cf2c90b95aef66d305c5781f3e3399264dfdb59526",
+        "body_size": 1358,
+        "entry": "0x1016ee90",
+        "name": "FUN_1016ee90"
+      },
+      {
+        "body_sha256": "289c4420ee1187ff08614b31fd86482fe171069406d9156265e00937f380bfaa",
+        "body_size": 1058,
+        "entry": "0x10171bb0",
+        "name": "FUN_10171bb0"
+      },
+      {
+        "body_sha256": "43875b67018ffbb4dbe04f261a57a6441434cdc82644e3223b0f7f4b76918f7f",
+        "body_size": 1090,
+        "entry": "0x10171fe0",
+        "name": "FUN_10171fe0"
+      },
+      {
+        "body_sha256": "752a25c4c08a05f3af994e5e052735d0c01bb8e848fc32527168439e0bb1af15",
+        "body_size": 1069,
+        "entry": "0x10188d20",
+        "name": "FUN_10188d20"
+      },
+      {
+        "body_sha256": "eabefe2181353bb17eed38fc830c91901e015770d97a1a9cf81db1f748928b15",
+        "body_size": 522,
+        "entry": "0x10189150",
+        "name": "FUN_10189150"
+      },
+      {
+        "body_sha256": "29d191061bb42840c1f88a37914dcae1e652723b3283ca1ed4c4ccccbb06c24d",
+        "body_size": 562,
+        "entry": "0x10189360",
+        "name": "FUN_10189360"
+      },
+      {
+        "body_sha256": "3808a01ac1702d200c0a691b248e1d6ef0caa90cc506943d7f2d261c018de255",
+        "body_size": 1069,
+        "entry": "0x101895a0",
+        "name": "FUN_101895a0"
+      },
+      {
+        "body_sha256": "b5c998a36e48df010170ddc12cb7feff8b19656e77a37e86afb134286c090831",
+        "body_size": 522,
+        "entry": "0x101899d0",
+        "name": "FUN_101899d0"
+      },
+      {
+        "body_sha256": "765a0c610b8b32abd40ac2b0833eca65b9feab61b2d542820c9a7854a83ba684",
+        "body_size": 562,
+        "entry": "0x10189be0",
+        "name": "FUN_10189be0"
+      }
+    ],
+    "program": "GScript_Rhapsody.dll"
+  },
+  "evidence_classes": [
+    "BINARY_CODE",
+    "FILE_FORMAT"
+  ],
+  "full_loading_calls": 16,
+  "kind": "pool-yard-original-lateral-inputs",
+  "model_sha256": "dfa91462fa47a85e343e78b5ed7d3aea977cfeab6e3c46730fd9edea4342f692",
+  "native_range_calls": 8,
+  "original_crt_sha256": "8094af5ee310714caebccaeee7769ffb08048503ba478b879edfef5f1a24fefe",
+  "original_geometry_controller_verified": false,
+  "original_input_selection_verified": false,
+  "original_script_sha256": "07ca7bb8ce55d6e73d319ddcc22c5e5bea02146ef55804bc8aeabebfe994e5ed",
+  "phases": {
+    "left_end": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 42,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "LedgeLeft_End",
+      "source": "Animation/Trane/TR_Ledge_Settle_L.bnm",
+      "source_sha256": "2cd7e84d80dfdf3f14ee52afdcf63fe4d3ff04a6e05bf8d3f4a10288479df90d"
+    },
+    "left_enter": {
+      "codes": [
+        853,
+        854,
+        857
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 24,
+          "kind": 0,
+          "next_frame": 25,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 25,
+          "kind": 0,
+          "next_frame": 26,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 25,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 32,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 26,
+          "token": 2
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "LedgeLeft",
+      "source": "Animation/Trane/TR_Ledge_IdleIntoLeft.bnm",
+      "source_sha256": "33b06ace3b2874b7a10d131fe391768bd269a394e06e21b6e1d54ef7bd9380a2"
+    },
+    "left_exit": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 48,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "LedgeLeft_C",
+      "source": "Animation/Trane/TR_Ledge_LeftIntoIdle.bnm",
+      "source_sha256": "73901a49251709d9f518b90fce2ccdb97c54a0afad8beda2a6a6005e260011f8"
+    },
+    "left_loop": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 49,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "LedgeLeft_B",
+      "source": "Animation/Trane/TR_Ledge_Left.bnm",
+      "source_sha256": "3b495ffd61e332243bf4337d76f0be57075f02c1f263b7ec15a3711a15367f08"
+    },
+    "right_end": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 42,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "LedgeRight_End",
+      "source": "Animation/Trane/TR_Ledge_Settle_R.bnm",
+      "source_sha256": "b96debffe2c84a998266a3163e3dd044d8b4ed9fb41442a2fe1a556df2900210"
+    },
+    "right_enter": {
+      "codes": [
+        742,
+        743,
+        746
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 24,
+          "kind": 0,
+          "next_frame": 25,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 25,
+          "kind": 0,
+          "next_frame": 26,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 25,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 32,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 26,
+          "token": 2
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "LedgeRight",
+      "source": "Animation/Trane/TR_Ledge_IdleIntoRight.bnm",
+      "source_sha256": "14e0013e34163ef5572616201aeaee52e81810eb7c9b6177bd2a36b353f33de0"
+    },
+    "right_exit": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 48,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "LedgeRight_C",
+      "source": "Animation/Trane/TR_Ledge_RightIntoIdle.bnm",
+      "source_sha256": "7bf6438d4a140c1439363d5ffa18ef055982a425761a8976f62fb37cb858654b"
+    },
+    "right_loop": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 51,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "LedgeRight_B",
+      "source": "Animation/Trane/TR_Ledge_Right.bnm",
+      "source_sha256": "f5b42c530ac2437930f1dc7fc6d1c5f1d436776778009b5a75fab42cb8fff670"
+    }
+  },
+  "runtime_callback_calls": 12,
+  "schema": 1,
+  "sha256": "298609a51b7ba2e79844acac744010936d52ac74edba089930bdadda4ec00159",
+  "source_exporter_sha256": "669ff454fdb729007b12c62085e8a03eb1feacc817ff64fa767fa6c8bee89a43",
+  "source_sha256": {
+    "ban": "6c41b3d7b122413c9d629a23b30a3756f1f52255eac0798a329d2d7d118df73c",
+    "msh": "ecb5c02e9d15377f38c78a78c86f0e74bb3a2e8de42ebaf555b2d635c99896c0"
+  },
+  "transitions": [
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [
+        {
+          "flags": 0,
+          "period": 0,
+          "target": "left_loop"
+        }
+      ],
+      "event": -1,
+      "key": "left_enter",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 0,
+      "key": "left_enter",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [
+        {
+          "flags": 0,
+          "period": 0,
+          "target": "right_loop"
+        }
+      ],
+      "event": -1,
+      "key": "right_enter",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 0,
+      "key": "right_enter",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [
+        {
+          "flags": 0,
+          "period": 0,
+          "target": "ledge_hang"
+        }
+      ],
+      "event": -1,
+      "key": "left_exit",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 0,
+      "key": "left_exit",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [
+        {
+          "flags": 0,
+          "period": 12,
+          "target": "ledge_hang"
+        }
+      ],
+      "event": -1,
+      "key": "right_exit",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 0,
+      "key": "right_exit",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [
+        {
+          "flags": 0,
+          "period": 0,
+          "target": "ledge_hang"
+        }
+      ],
+      "event": -1,
+      "key": "left_end",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 0,
+      "key": "left_end",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [
+        {
+          "flags": 0,
+          "period": 0,
+          "target": "ledge_hang"
+        }
+      ],
+      "event": -1,
+      "key": "right_end",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 0,
+      "key": "right_end",
+      "original_text_unchanged": true
+    }
+  ],
+  "url": "../artifacts/pool-yard-lateral-v1/inputs.json"
+}

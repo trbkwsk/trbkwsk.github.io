@@ -95,7 +95,7 @@
     const piece=sim.paintAnchor,tiles=piece?.grid.data.tiles||sim.selectedData().tiles;
     $('artHUD').textContent=artTitle(piece?.grid.data.name||sim.tagData.name)+' · '+tiles.join('×')+((piece?.goBig||!piece&&sim.sizeMode===2)?' · Go Big':'')+(piece?' · '+Math.min(100,Math.round(piece.grid.summary().coverage*100))+'% / '+Math.round(piece.area.threshold*100)+'%':' · Tab — инвентарь');
     $('start').textContent=running?'Пауза':'Начать прогулку';$('walk').textContent='Режим: '+(walk?'ходьба':'бег');
-    const labels={punch:'удар рукой · CrossR',kick:'удар ногой · SnapKickL',evade_left:'уход влево · SnsL',evade_right:'уход вправо · SnsR',duck_enter:'опуститься в присед',duck_exit:'подняться из приседа',duck_idle:'ожидание в приседе',duck_walk:'движение в приседе',idle:'ожидание',walk:'ходьба',run:'бег',sneak_idle:'приседание',sneak_forward:'красться',stand_takeoff:'отрыв стоя',run_takeoff:'отрыв с разбега',stand_air:'полёт',run_air:'полёт с разбега',stand_land:'приземление',run_land:'приземление с разбега',ledge_grab:'захват уступа',ledge_hang:'вис на уступе',ledge_up:'подъём на уступ',...Object.fromEntries(Array.from({length:9},(_,i)=>['paint_'+i,'рисование · '+inputs.paint_phases['paint_'+i].sequence.replace('Aerosol_Stand_','')]))};
+    const labels={punch:'удар рукой · CrossR',kick:'удар ногой · SnapKickL',evade_left:'уход влево · SnsL',evade_right:'уход вправо · SnsR',duck_enter:'опуститься в присед',duck_exit:'подняться из приседа',duck_idle:'ожидание в приседе',duck_walk:'движение в приседе',idle:'ожидание',walk:'ходьба',run:'бег',sneak_idle:'приседание',sneak_forward:'красться',stand_takeoff:'отрыв стоя',run_takeoff:'отрыв с разбега',stand_air:'полёт',run_air:'полёт с разбега',stand_land:'приземление',run_land:'приземление с разбега',ledge_grab:'захват уступа',ledge_hang:'вис на уступе',ledge_up:'подъём на уступ',...Object.fromEntries(['left','right'].flatMap(side=>['enter','loop','exit','end'].map(part=>['ledge_'+side+'_'+part,(side==='left'?'Влево':'Вправо')+' вдоль уступа · '+{enter:'начало',loop:'движение',exit:'остановка',end:'край'}[part]]))),...Object.fromEntries(Array.from({length:9},(_,i)=>['paint_'+i,'рисование · '+inputs.paint_phases['paint_'+i].sequence.replace('Aerosol_Stand_','')]))};
     const stanceName={reach:'вытянуться',stand:'стоя',crouch:'наклон'},custom=/^(?:wall_)?(reach|stand|crouch)_/.exec(s.mode||'');
     const action=labels[s.mode]||(custom?(s.mode.startsWith('wall_')?'Шаг вдоль стены':'Рисование')+' · '+stanceName[custom[1]]:s.mode);
     $('stats').textContent='Действие: '+action+' · кадр '+s.frame.toFixed(2)+'\n'+
@@ -108,6 +108,7 @@
     $('focusHint').textContent=running?'WASD — движение · у стены держи V · U/O — краска · WASD — поза кисти':'Уровень на паузе. Можно продолжить или сделать один шаг.';
     if(demoCursor>=0)$('focusHint').textContent='Трейн идёт к стене · WASD — перехватить управление';
     else if(!running)$('focusHint').textContent='Pool Yard · без миссий и обязательных целей';
+    else if(sim.anchor&&!sim.anchor.released)$('focusHint').textContent='A/D — вдоль уступа · W или Space — подтянуться · S — отпустить';
     else if(sim.paintAnchor)$('focusHint').textContent='U/O — краска · A/D — шаги · W/S — от наклона до вытянутой руки · отпустить V — выйти';
     else $('focusHint').textContent='U — удар рукой · O — ногой · E/Q + направление — уклонение · V у стены — граффити';
     if(sim.notice)$('focusHint').textContent=sim.notice;
@@ -124,7 +125,7 @@
       local_inputs_sha256:inputProof.local_sidecar_sha256,tag_inputs_sha256:inputs.tagProofSHA,executed_js_sha256:executedJS,
       executed_modules_sha256:executedModules,controller_config_sha256:inputs.controllerProofSHA,
       pool_control_inputs_sha256:inputs.poolControlProofSHA,pool_lighting_config_sha256:lightingConfigSHA,pool_lighting:lightingState,
-      pool_combat_inputs_sha256:controlResources.combatSHA,pool_locomotion_inputs_sha256:controlResources.locomotionSHA,native_material_state_count:nativeMaterials.size,
+      pool_lateral_inputs_sha256:controlResources.lateralSHA,pool_combat_inputs_sha256:controlResources.combatSHA,pool_locomotion_inputs_sha256:controlResources.locomotionSHA,native_material_state_count:nativeMaterials.size,
       actor_placement:placement.matrixWorld.elements.slice(),actual_bone_world:bones.map(b=>b.matrixWorld.elements.slice()),
       actual_bone_local:bones.map(b=>({quaternion:b.quaternion.toArray(),position:b.position.toArray()})),
       original_reflections_preserved:[actorRoot,levelRoot].every(n=>JSON.stringify(n.scale.toArray())==='[-1,1,1]'),
@@ -270,7 +271,7 @@
     executedModules={};for(const [key,code] of Object.entries({driver:D.moduleSource,simulation:S.moduleSource,climb_driver:GettingUpClimbDriver.moduleSource,climb_simulation:GettingUpClimbSimulation.moduleSource,paint_surface:GettingUpPaintSurface.moduleSource,collision:C.moduleSource,
       base_simulation:GettingUpPlaySimulation.moduleSource,traversal:GettingUpTraversalDriver.moduleSource,walk:GettingUpWalkDriver.moduleSource,
       ledge_query:GettingUpLedgeQuery.moduleSource,
-      mixed:GettingUpCompiledMixed.moduleSource,jump:GettingUpJumpRules.moduleSource,tag:GettingUpTag.moduleSource,spray_controller:GettingUpSprayController.moduleSource,tag_simulation:GettingUpSpraySimulation.moduleSource,tag_renderer:GettingUpSprayRenderer.Renderer.toString(),pool_artwork_renderer:GettingUpPoolArtworkRenderer.moduleSource,pool_original_rules:GettingUpPoolRules.moduleSource,pool_combat:GettingUpPoolCombat.moduleSource,pool_normal_actions:GettingUpPoolNormalActions.moduleSource,pool_turn:GettingUpPoolTurn.moduleSource,navigation_turn:GettingUpNavigationTurn.moduleSource,pool_materials:GettingUpPoolMaterials.moduleSource,pool_lighting:Lighting.moduleSource,pool_source_lights:GettingUpPoolSourceLights.moduleSource,area_controller:GettingUpAreaController.moduleSource}))executedModules[key]=await digest(new TextEncoder().encode(code));
+      mixed:GettingUpCompiledMixed.moduleSource,jump:GettingUpJumpRules.moduleSource,tag:GettingUpTag.moduleSource,spray_controller:GettingUpSprayController.moduleSource,tag_simulation:GettingUpSpraySimulation.moduleSource,tag_renderer:GettingUpSprayRenderer.Renderer.toString(),pool_artwork_renderer:GettingUpPoolArtworkRenderer.moduleSource,pool_original_rules:GettingUpPoolRules.moduleSource,pool_combat:GettingUpPoolCombat.moduleSource,pool_lateral:GettingUpPoolLateral.moduleSource,pool_normal_actions:GettingUpPoolNormalActions.moduleSource,pool_turn:GettingUpPoolTurn.moduleSource,navigation_turn:GettingUpNavigationTurn.moduleSource,pool_materials:GettingUpPoolMaterials.moduleSource,pool_lighting:Lighting.moduleSource,pool_source_lights:GettingUpPoolSourceLights.moduleSource,area_controller:GettingUpAreaController.moduleSource}))executedModules[key]=await digest(new TextEncoder().encode(code));
     const poolProof=decoded(await fetchBytes('../manifests/pool-yard-scene.json'));
     const controlProof=decoded(await fetchBytes('../manifests/pool-yard-control-inputs.json'));
     const controlRaw=await fetchBytes(controlProof.url);if(await digest(controlRaw)!==controlProof.sha256)throw Error('SHA-256 ресурсов управления не совпал');
@@ -287,6 +288,10 @@
     if(await digest(combatRaw)!==combatProof.sha256)throw Error('Original combat resource SHA-256 mismatch');
     controlResources.combat=decoded(combatRaw);controlResources.combatSHA=combatProof.sha256;
     if(controlResources.combat.kind!=='pool-yard-original-combat-inputs'||controlResources.combat.model_sha256!==controlResources.model_sha256||controlResources.combat.bones_sha256!==controlResources.locomotion.bones_sha256)throw Error('Combat model/rig binding differs');
+    const lateralProof=decoded(await fetchBytes('../manifests/pool-yard-lateral-inputs.json')),lateralRaw=await fetchBytes(lateralProof.url);
+    if(await digest(lateralRaw)!==lateralProof.sha256)throw Error('Original lateral resource SHA-256 mismatch');
+    controlResources.lateral=GettingUpPoolLateral.validate(decoded(lateralRaw));controlResources.lateralSHA=lateralProof.sha256;
+    if(controlResources.lateral.model_sha256!==controlResources.model_sha256||controlResources.lateral.bones_sha256!==controlResources.locomotion.bones_sha256)throw Error('Lateral model/rig binding differs');
     previewConfig=decoded(await fetchBytes('pool-yard-preview.json'));
     if(previewConfig.kind!=='pool-yard-browser-preview'||previewConfig.source_level_sha256!==poolProof.source_level_sha256)throw Error('Требуются исходные настройки Pool Yard');
     const lightingRaw=await fetchBytes('pool-yard-lighting.json');lightingConfig=decoded(lightingRaw);lightingConfigSHA=await digest(lightingRaw);

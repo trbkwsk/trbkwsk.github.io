@@ -6,9 +6,9 @@
  const api=factory(get('gettingup-spray-simulation','GettingUpSpraySimulation'),get('gettingup-paint-driver','GettingUpPaintDriver'),
   get('gettingup-script-actor','GettingUpScriptActor'),get('gettingup-character-motion','GettingUpCharacterMotion'),
   get('gettingup-play-simulation','GettingUpPlaySimulation'),get('gettingup-paint-surface','GettingUpPaintSurface'),get('gettingup-ledge-query','GettingUpLedgeQuery'),
-  get('gettingup-area-controller','GettingUpAreaController'),get('gettingup-wall-paint-controller','GettingUpWallPaint'),get('pool-yard-original-rules','GettingUpPoolRules'),get('gettingup-compiled-mixed','GettingUpCompiledMixed'),get('pool-yard-combat','GettingUpPoolCombat'),get('pool-yard-normal-actions','GettingUpPoolNormalActions'),get('pool-yard-turn','GettingUpPoolTurn'));
+  get('gettingup-area-controller','GettingUpAreaController'),get('gettingup-wall-paint-controller','GettingUpWallPaint'),get('pool-yard-original-rules','GettingUpPoolRules'),get('gettingup-compiled-mixed','GettingUpCompiledMixed'),get('pool-yard-combat','GettingUpPoolCombat'),get('pool-yard-normal-actions','GettingUpPoolNormalActions'),get('pool-yard-turn','GettingUpPoolTurn'),get('pool-yard-lateral','GettingUpPoolLateral'));
  if(node)module.exports=api;else root.GettingUpPoolControls=api;
-})(typeof globalThis!=='undefined'?globalThis:this,function poolControlsModule(S,D,A,M,B,G,Q,Area,Wall,Rules,Mixed,Combat,Normal,Turn){'use strict';
+})(typeof globalThis!=='undefined'?globalThis:this,function poolControlsModule(S,D,A,M,B,G,Q,Area,Wall,Rules,Mixed,Combat,Normal,Turn,Lateral){'use strict';
  const dot=(a,b)=>a.reduce((n,v,i)=>n+v*b[i],0),sub=(a,b)=>a.map((v,i)=>v-b[i]);
  const zero=()=>({translation:[0,0,0],rotation:[0,0,0,1]});
  // Historical shaft bounds identify the omitted mission entry. They no longer
@@ -16,7 +16,7 @@
  const shaft=Object.freeze({minX:860,maxX:1060,minZ:1140,maxZ:1380});
  const inShaft=p=>p[0]>shaft.minX&&p[0]<shaft.maxX&&p[2]>shaft.minZ&&p[2]<shaft.maxZ;
  class Driver extends D.Driver{
-  constructor(data,clips,wallPhases,locomotion,combat){super(data);this.extraClips=clips;this.wallPhases=wallPhases;this.locomotion=locomotion;this.combat=combat;this.combatName=null;this.combatFinished=false;this.combatCount=0;this.nativeActionEvents=[];this.duckPhase='standing';this.customName=null;this.previewMode=null;this.crouchRequested=false;this.wallDirection=0}
+  constructor(data,clips,wallPhases,locomotion,combat,lateral){super(data);this.extraClips=clips;this.wallPhases=wallPhases;this.locomotion=locomotion;this.combat=combat;this.combatName=null;this.combatFinished=false;this.combatCount=0;this.nativeActionEvents=[];this.duckPhase='standing';this.customName=null;this.previewMode=null;this.crouchRequested=false;this.wallDirection=0;this.lateral=lateral?new Lateral.Driver(this,lateral):null}
   custom(name,phase,rate=1,{loop=true,period=5,seek=null}={}){
    const c=this.controller,clip=this.combat?.clips[name]||this.locomotion?.clips[name]||this.extraClips[name];if(!clip||![0,1].includes(clip.mode))throw Error('verified preview clip required');
    const definition=this.combat?.phases[name]||this.locomotion?.phases[name]||this.wallPhases?.[name];
@@ -68,6 +68,7 @@
    return super.collisionResolved(grounded,descending,wasGrounded);
   }
   step(mode,controls={}){
+   if(this.lateral?.active){const out=this.lateral.step();if(out)return out}
    if(this.combatName){const action=this.combatStep();if(action)return action}
    const paint=controls.paint;
    if(Number.isInteger(paint)){
@@ -85,13 +86,15 @@
  class Simulation extends S.Simulation{
   constructor(data,world,spawn,yaw,shape,resources){
    if(resources?.kind!=='pool-yard-control-resources'||resources.artworks?.length<2)throw Error('local Pool Yard controls required');
-   super(data,world,spawn,yaw,shape);this.driver=new Driver(data,resources.clips,resources.wallPhases,resources.locomotion,resources.combat);this.resources=resources;this.combatInput=new Combat.Input();
+   super(data,world,spawn,yaw,shape);this.driver=new Driver(data,resources.clips,resources.wallPhases,resources.locomotion,resources.combat,resources.lateral);this.resources=resources;this.combatInput=new Combat.Input();
    this.artworks=resources.artworks.map(a=>({...a,controllerOptions:data.tagData.controllerOptions}));this.artworkIndex=0;this.sizeIndex=0;this.sizeMode=1;this.nextPanelId=0;this.wallPosition=13;this.wallCooldown=0;this.waitRelease=false;this.completedPieces=0;
-   this.tagData=this.artworks[0];this.standingShape={...shape};this.crouched=false;this.standBlocked=false;this.wallDistance=0;this.shaftBlocks=0;this.notice='';this.noticeTTL=0;this.jumpBuffer=0;this.pullUpRequested=false;this.lowLedgePullups=0;
+   this.tagData=this.artworks[0];this.standingShape={...shape};this.crouched=false;this.standBlocked=false;this.wallDistance=0;this.shaftBlocks=0;this.notice='';this.noticeTTL=0;this.jumpBuffer=0;this.pullUpRequested=false;this.lowLedgePullups=0;this.ledgeSideDistance=0;
+   if(this.driver.lateral)this.driver.lateral.accept=request=>this.shiftLedge(request);
   }
   message(text){this.notice=text;this.noticeTTL=180}
   clearActionInput(){this.combatInput=new Combat.Input();this.jumpBuffer=0;this.pullUpRequested=false}
   drop(reason,crossed=false){
+   if(this.driver.lateral?.active)this.driver.lateral.cancel();
    // On the 96-unit pool rim the full hang pose puts the feet into the floor.
    // When the player requests up, continue with the already bound LedgeUp
    // clip instead of cancelling on that proxy conflict. This is OUR scene
@@ -104,6 +107,23 @@
     }
    }
    return super.drop(reason,crossed);
+  }
+  shiftLedge(request){
+   const a=this.anchor;if(!a||a.released)return false;
+   const forward=[Math.sin(this.heading),0,Math.cos(this.heading)],tangent=[-forward[2],0,forward[0]],v=B.displayVector(request,this.heading,this.position),distance=dot(v,tangent);
+   if(Math.abs(distance)<1e-7)return true;
+   if(Math.abs(distance)>8)return false;
+   const delta=tangent.map(v=>v*distance),at=this.position.map((v,i)=>v+delta[i]),palms=this.palms().map((v,i)=>v+delta[i]),wanted=a.contact.map((v,i)=>v+delta[i]);
+   // Test the next hand contact, not the animated torso's lateral offset.
+   const along=dot(sub(wanted,at),tangent),probe=at.map((v,i)=>v+tangent[i]*along);
+   const found=Q.find(this.world,probe,forward,palms,this.standingShape,false);
+   if(!found||dot(found.outward,a.outward)<.99||Math.hypot(...sub(found.contact,wanted))>.5)return false;
+   // OUR conservative end clearance: leave two standing-capsule radii for
+   // the settle pose instead of accepting a grip up to the very last point.
+   // This is not the original cylinder-trace CanMove implementation.
+   const ahead=tangent.map(v=>v*Math.sign(distance)*this.standingShape.radius*2),future=Q.find(this.world,probe.map((v,i)=>v+ahead[i]),forward,palms.map((v,i)=>v+ahead[i]),this.standingShape,false);
+   if(!future||dot(future.outward,a.outward)<.99||Math.hypot(...sub(future.contact,wanted.map((v,i)=>v+ahead[i])))>.5)return false;
+   this.anchor={...found,released:false};this.ledgeSideDistance+=Math.abs(distance);return true;
   }
   stepTurning(input){
    // Keep the sealed shared simulation bytes intact. In this synchronous Sns
@@ -151,6 +171,11 @@
    this.heading=Math.atan2(-panel.frame.normal[0],-panel.frame.normal[2]);
   }
   step(input){
+   const lateral=this.driver.lateral;
+   if(lateral){lateral.setInput(input.x);
+    if(lateral.active&&this.anchor&&input.z<0){lateral.cancel();this.driver.enter('ledge_hang')}
+    if(this.anchor&&!this.anchor.released&&this.driver.phase==='ledge_hang'&&input.x&&!input.v&&!input.crouch)lateral.start(input.x);
+   }
    this.pullUpRequested=!input.v&&!input.crouch&&(input.jump||input.z>0);
    if(input.jump&&!input.v&&!input.crouch)this.jumpBuffer=12;
    if(this.noticeTTL>0&&!--this.noticeTTL)this.notice='';
@@ -230,7 +255,7 @@
   }
   snapshot(){return {...super.snapshot(),crouched:!!this.crouched,stand_blocked:!!this.standBlocked,selected_artwork:this.artworks?.[this.artworkIndex]?.name||null,
    selected_size_mode:this.sizeMode||1,selected_tiles:this.artworks?this.selectedData().tiles:null,active_artwork:this.paintAnchor?.grid.data?.name||null,wall_travel_distance:this.wallDistance||0,shaft_blocks:this.shaftBlocks||0,
-   wall_pose_position:this.wallPosition??13,completed_pieces:this.completedPieces||0,low_ledge_pullups:this.lowLedgePullups||0,jump_buffer_frames:this.jumpBuffer||0,
+   wall_pose_position:this.wallPosition??13,completed_pieces:this.completedPieces||0,low_ledge_pullups:this.lowLedgePullups||0,jump_buffer_frames:this.jumpBuffer||0,ledge_side_distance:this.ledgeSideDistance||0,lateral_controller:this.driver?.lateral?.snapshot()||null,
    graffiti_lifecycle:(this.panels||[]).filter(p=>p.area).map(p=>({id:p.id,name:p.grid.data.name,tiles:p.grid.data.tiles,goBig:p.goBig,threshold:p.area.threshold,state:p.area.state,render_phase:p.renderPhase,render_timer:p.renderTimer,layer:p.area.layer,elapsed:p.area.elapsed,budget:p.area.budget,score_flags:p.area.score_flags,preview:p.previewVisible,coverage:p.grid.summary().coverage})),
    active_piece_progress:this.paintAnchor?Math.min(1,Math.max(0,this.paintAnchor.grid.summary().coverage)):null,navigation_turn:this.turnBridge?.snapshot()||null,preview_controls_policy:true,notice:this.notice||''}}
  }
