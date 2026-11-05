@@ -1,6 +1,6 @@
 {
   "browser_gpu_verified": false,
-  "bytes": 98751190,
+  "bytes": 100943864,
   "files": [
     {
       "bytes": 53944,
@@ -49,6 +49,174 @@
       "path": "artifacts/pool-yard/world.glb",
       "sha256": "0c4bd5c221a1bc8b74a94f7623cb9eb5666cf65e926a2e37b1ef1d19c7606858",
       "source": "artifacts/pool-yard/world.glb"
+    },
+    {
+      "bytes": 1676747,
+      "path": "artifacts/pool-yard-audio-v1/ambient_city_distant.mp3",
+      "sha256": "74071751c4f01fd6946587f716e83cae280299697183baefae910f002b07a1e2",
+      "source": "artifacts/pool-yard-audio-v1/ambient_city_distant.mp3"
+    },
+    {
+      "bytes": 23508,
+      "path": "artifacts/pool-yard-audio-v1/body_fall_cement_1.wav",
+      "sha256": "fb4b1f249ec5a6ee2ca61207ea961ee8198b444052b15b71349d1cd962e4cb9c",
+      "source": "artifacts/pool-yard-audio-v1/body_fall_cement_1.wav"
+    },
+    {
+      "bytes": 21978,
+      "path": "artifacts/pool-yard-audio-v1/body_fall_cement_2.wav",
+      "sha256": "1be0f114deea7ffa3130ed646a009abde3313d3978da0bc2f39148f21106c70b",
+      "source": "artifacts/pool-yard-audio-v1/body_fall_cement_2.wav"
+    },
+    {
+      "bytes": 21126,
+      "path": "artifacts/pool-yard-audio-v1/body_impact_cement_1.wav",
+      "sha256": "61d8acace2b2bb067c78c568b04aeea287374523b994101ce5a14ff6514e7123",
+      "source": "artifacts/pool-yard-audio-v1/body_impact_cement_1.wav"
+    },
+    {
+      "bytes": 14046,
+      "path": "artifacts/pool-yard-audio-v1/clothing_scrape_cement_1.wav",
+      "sha256": "06aeb2835eed5175f30e5c2b3115b3c0be689bf0330cbf15b11852ec954354cc",
+      "source": "artifacts/pool-yard-audio-v1/clothing_scrape_cement_1.wav"
+    },
+    {
+      "bytes": 12388,
+      "path": "artifacts/pool-yard-audio-v1/clothing_scrape_cement_2.wav",
+      "sha256": "920dbece05d5af73842f0da61b7a371bf03f286f878e37a5c10e3d7bdeb4ee05",
+      "source": "artifacts/pool-yard-audio-v1/clothing_scrape_cement_2.wav"
+    },
+    {
+      "bytes": 7886,
+      "path": "artifacts/pool-yard-audio-v1/footstep_cloth_walk_1.wav",
+      "sha256": "4a3636a0accf899ea38932f9fffbadfc05b2e6a4f5bd61ac28d64083d475b34a",
+      "source": "artifacts/pool-yard-audio-v1/footstep_cloth_walk_1.wav"
+    },
+    {
+      "bytes": 7948,
+      "path": "artifacts/pool-yard-audio-v1/footstep_cloth_walk_2.wav",
+      "sha256": "009b6c60bce6b371b97ca1f827315f593bcee8d77de65a7382a6f2dd2865ae91",
+      "source": "artifacts/pool-yard-audio-v1/footstep_cloth_walk_2.wav"
+    },
+    {
+      "bytes": 8108,
+      "path": "artifacts/pool-yard-audio-v1/footstep_cloth_walk_2wav.wav",
+      "sha256": "bf163a28f31e4d1216daf86641f386b1d557a7ac5db501cc4e7c07c6edb78bc1",
+      "source": "artifacts/pool-yard-audio-v1/footstep_cloth_walk_2wav.wav"
+    },
+    {
+      "bytes": 11260,
+      "path": "artifacts/pool-yard-audio-v1/footstep_jump_cement_1.wav",
+      "sha256": "2a511e0281ec385194fb298e92de885333385253a0e929a9d0845af8a8d6b345",
+      "source": "artifacts/pool-yard-audio-v1/footstep_jump_cement_1.wav"
+    },
+    {
+      "bytes": 11202,
+      "path": "artifacts/pool-yard-audio-v1/footstep_jump_cement_2.wav",
+      "sha256": "3edb2b9832e90e0c8464d97b6fd095c9752f8448d9846e0d9f9e6996a8ae980d",
+      "source": "artifacts/pool-yard-audio-v1/footstep_jump_cement_2.wav"
+    },
+    {
+      "bytes": 14304,
+      "path": "artifacts/pool-yard-audio-v1/footstep_run_cement_1.wav",
+      "sha256": "0055fc2002b35619284d5690e75a4f82826e2a51e6c7ae1e8b6bd01aeaed1265",
+      "source": "artifacts/pool-yard-audio-v1/footstep_run_cement_1.wav"
+    },
+    {
+      "bytes": 8352,
+      "path": "artifacts/pool-yard-audio-v1/footstep_run_cement_2.wav",
+      "sha256": "3d5409a8e60327afa7760999424f6289cd01ffcd3923017d224f3bbbed5810e0",
+      "source": "artifacts/pool-yard-audio-v1/footstep_run_cement_2.wav"
+    },
+    {
+      "bytes": 12626,
+      "path": "artifacts/pool-yard-audio-v1/footstep_run_cement_3.wav",
+      "sha256": "5a5dbaa99497b69d94b06b13f59a7db61039e21d2315bc39c2ea6e9ae9536ce1",
+      "source": "artifacts/pool-yard-audio-v1/footstep_run_cement_3.wav"
+    },
+    {
+      "bytes": 12950,
+      "path": "artifacts/pool-yard-audio-v1/footstep_run_cement_4.wav",
+      "sha256": "cc8f1134b144ca273118ef5a01e7c63596078b370effb42eeccb6f1aa03e4a8a",
+      "source": "artifacts/pool-yard-audio-v1/footstep_run_cement_4.wav"
+    },
+    {
+      "bytes": 6220,
+      "path": "artifacts/pool-yard-audio-v1/footstep_run_cement_5.wav",
+      "sha256": "897ccb13843866f75349910091e69a8c359de01971bec20d7b4794e30e349719",
+      "source": "artifacts/pool-yard-audio-v1/footstep_run_cement_5.wav"
+    },
+    {
+      "bytes": 13938,
+      "path": "artifacts/pool-yard-audio-v1/footstep_run_cement_6.wav",
+      "sha256": "35ca00c89a658a10ae18544f42cfdd7acf4f7d295096702575576183ceddf075",
+      "source": "artifacts/pool-yard-audio-v1/footstep_run_cement_6.wav"
+    },
+    {
+      "bytes": 30774,
+      "path": "artifacts/pool-yard-audio-v1/footstep_slide_cement_1.wav",
+      "sha256": "658b232887d01a9f30afc2c8c46b0b36aad0451fd7a8e90f2e90a06d2dcc2de7",
+      "source": "artifacts/pool-yard-audio-v1/footstep_slide_cement_1.wav"
+    },
+    {
+      "bytes": 7942,
+      "path": "artifacts/pool-yard-audio-v1/footstep_walk_cement_1.wav",
+      "sha256": "b206b562e3ef336616c28d1c636c2c85fe997345c1800f7dd337d0552091c50b",
+      "source": "artifacts/pool-yard-audio-v1/footstep_walk_cement_1.wav"
+    },
+    {
+      "bytes": 6078,
+      "path": "artifacts/pool-yard-audio-v1/footstep_walk_cement_2.wav",
+      "sha256": "28e5701ced82fbbfc525a371a160d405af421ad877577208794549a620de63b2",
+      "source": "artifacts/pool-yard-audio-v1/footstep_walk_cement_2.wav"
+    },
+    {
+      "bytes": 5808,
+      "path": "artifacts/pool-yard-audio-v1/footstep_walk_cement_3.wav",
+      "sha256": "f5fc284be3fb9dcbec6e86bbb98230745faa9c5f51e35c72edcc6c146099d651",
+      "source": "artifacts/pool-yard-audio-v1/footstep_walk_cement_3.wav"
+    },
+    {
+      "bytes": 6262,
+      "path": "artifacts/pool-yard-audio-v1/footstep_walk_cement_4.wav",
+      "sha256": "fb79285cec62ce84b7f70bda6d847a667a5422fbfcb6616519b21bea564130db",
+      "source": "artifacts/pool-yard-audio-v1/footstep_walk_cement_4.wav"
+    },
+    {
+      "bytes": 11950,
+      "path": "artifacts/pool-yard-audio-v1/hand_grab_cement_1.wav",
+      "sha256": "96dca51f3d6b27c0444aa48bce827e74e98405e838b454780a9bbdea7cfa6f88",
+      "source": "artifacts/pool-yard-audio-v1/hand_grab_cement_1.wav"
+    },
+    {
+      "bytes": 10188,
+      "path": "artifacts/pool-yard-audio-v1/hand_slide_cement_1.wav",
+      "sha256": "7bd94ab17fa40e782d0e3755f2639d7fbc209212e1e1262bb8c3c30bd8721bd4",
+      "source": "artifacts/pool-yard-audio-v1/hand_slide_cement_1.wav"
+    },
+    {
+      "bytes": 23272,
+      "path": "artifacts/pool-yard-audio-v1/hand_slide_cement_2.wav",
+      "sha256": "bc9fcab4ab9b59fb3ea39c898d96a103bebcc80148a14e45509693006616deba",
+      "source": "artifacts/pool-yard-audio-v1/hand_slide_cement_2.wav"
+    },
+    {
+      "bytes": 13740,
+      "path": "artifacts/pool-yard-audio-v1/inputs.json",
+      "sha256": "42387f8afd2fc5b7fc7299ff19617319a8dbce559a25b5b87d1ed9e6b7230eb5",
+      "source": "artifacts/pool-yard-audio-v1/inputs.json"
+    },
+    {
+      "bytes": 13900,
+      "path": "artifacts/pool-yard-audio-v1/ledge_grab.wav",
+      "sha256": "323a3c65dd2d3d04e6f7a20f456b618d889027112805c045aae28850bba6a3ea",
+      "source": "artifacts/pool-yard-audio-v1/ledge_grab.wav"
+    },
+    {
+      "bytes": 24552,
+      "path": "artifacts/pool-yard-audio-v1/spray_can_loop.wav",
+      "sha256": "d15b6506f894631063f59d5d0391fe9da00248f3f86ca3e0b4d9f6790f5cf2fb",
+      "source": "artifacts/pool-yard-audio-v1/spray_can_loop.wav"
     },
     {
       "bytes": 764960,
@@ -543,6 +711,12 @@
       "source": "artifacts/pool-yard-locomotion-v1/inputs.json"
     },
     {
+      "bytes": 131957,
+      "path": "artifacts/pool-yard-normal-v1/inputs.json",
+      "sha256": "421697fde75f7c561dae6ff14bfe51c6f8aa8a82de7752ac6d23b37f4150e70d",
+      "source": "artifacts/pool-yard-normal-v1/inputs.json"
+    },
+    {
       "bytes": 83106904,
       "path": "artifacts/trane-act1-game.glb",
       "sha256": "dfa91462fa47a85e343e78b5ed7d3aea977cfeab6e3c46730fd9edea4342f692",
@@ -615,6 +789,12 @@
       "source": "manifests/graffiti-controller.json"
     },
     {
+      "bytes": 4119,
+      "path": "manifests/pool-yard-audio-inputs.json",
+      "sha256": "4a931456894dfed180a24dcaf01c3b5427fc2e4786824cb84fea5ea5a618e177",
+      "source": "manifests/pool-yard-audio-inputs.json"
+    },
+    {
       "bytes": 29194,
       "path": "manifests/pool-yard-combat-inputs.json",
       "sha256": "e6c916eede5c7220cab031c478202e328681f78ae9adf96256290703e71dd3c1",
@@ -643,6 +823,12 @@
       "path": "manifests/pool-yard-locomotion-inputs.json",
       "sha256": "e04b9b695df161e4e31384e692b7685bb1b9aeda6f80f377d438da293630c1fb",
       "source": "manifests/pool-yard-locomotion-inputs.json"
+    },
+    {
+      "bytes": 6892,
+      "path": "manifests/pool-yard-normal-inputs.json",
+      "sha256": "d38b76f4054d52e64050feeae80213bba9eb5412ed31b8e3decae15f11090890",
+      "source": "manifests/pool-yard-normal-inputs.json"
     },
     {
       "bytes": 3931,
@@ -915,9 +1101,9 @@
       "source": "viewer/gettingup-world-collision.js"
     },
     {
-      "bytes": 10456,
+      "bytes": 10582,
       "path": "play/index.html",
-      "sha256": "c9fcd7e4cb13c961dec451b017747aa4b88d1f7c78d353cf8ce179b3e7f56618",
+      "sha256": "92bfeb945c70b80ad23a0f5187d322c3af86bfc6c5bad230c4e5010da2a62275",
       "source": "viewer/pool-yard.html"
     },
     {
@@ -927,15 +1113,21 @@
       "source": "viewer/pool-yard-artwork-renderer.js"
     },
     {
+      "bytes": 7148,
+      "path": "play/pool-yard-audio.js",
+      "sha256": "c96ed3d99f3365ec5d8960bba8618eaf3a53fa5131e84c7ddf739a5a4b48a68d",
+      "source": "viewer/pool-yard-audio.js"
+    },
+    {
       "bytes": 3391,
       "path": "play/pool-yard-combat.js",
       "sha256": "5fecba49a16a4038e122bfc645961f24612f252a4ca14b421db14f4ef45ffbf8",
       "source": "viewer/pool-yard-combat.js"
     },
     {
-      "bytes": 25343,
+      "bytes": 25579,
       "path": "play/pool-yard-controls.js",
-      "sha256": "dbe24919ef9e79c8426e0504e7037bd6a85460d02b568cd80e6c5d8958af390a",
+      "sha256": "41abf6b7b750fd147cceba2e1dd16958852a020cca5243c1b4f3da338190057e",
       "source": "viewer/pool-yard-controls.js"
     },
     {
@@ -987,6 +1179,12 @@
       "source": "viewer/pool-yard-normal-actions.js"
     },
     {
+      "bytes": 1662,
+      "path": "play/pool-yard-normal-locomotion.js",
+      "sha256": "48b536638431b97a29230254cb3f0990ba30c2040edd2855723f6bdc26f2d290",
+      "source": "viewer/pool-yard-normal-locomotion.js"
+    },
+    {
       "bytes": 1680,
       "path": "play/pool-yard-original-rules.js",
       "sha256": "b007bc1b2280f46984411ce68d62b20b812f03b9f678f2fb70912181870ed036",
@@ -1023,9 +1221,9 @@
       "source": "viewer/pool-yard.css"
     },
     {
-      "bytes": 44493,
+      "bytes": 45974,
       "path": "play/pool-yard.js",
-      "sha256": "2ffc563a9851f629fe8b3e25c27fee3d37f2359bec15e6f2def7bafcedd078b8",
+      "sha256": "29b29ee20dd53a90e639206c91fb6c0926769c514c189523badfb0e97dc7b5b5",
       "source": "viewer/pool-yard.js"
     },
     {
@@ -1041,12 +1239,11 @@
       "source": "viewer/vendor/three-r128/three.min.js"
     }
   ],
-  "files_count": 173,
+  "files_count": 206,
   "kind": "pool-yard-public-runtime",
   "legacy_preserved": true,
-  "previous_site_commit": "2fa2042a38efcbdba1f67c1d4a074a24fa687563",
+  "previous_site_commit": "d13d877b60f8fb76a7ad46af16cb97dd35a3aa09",
   "raw_game_corpus_included": false,
   "schema": 1,
-  "source_re_baseline": "61494a0b7a8ed74a74f5ae2adc6880fa3d352aaf",
-  "source_re_commit": "863b79223c24cd34cf6a51640348a769b0fe755e"
+  "source_commit": "b11df07be301b2a032e8ed7db84281b5cf634bcc"
 }

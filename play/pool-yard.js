@@ -34,7 +34,7 @@
   let demoFrames=null,demoCursor=-1,demoComplete=false,resumeAfterHelp=false,resumeAfterPicker=false,cameraClearance=205;
   const actorMaterials=[],nativeMaterials=new Map();
   let ready=false,running=false,walk=false,driver,inputs,plan,worldPlan,inputProof,level,actor,world,can,canRoot,canPlacement,
-    placement,bones,collider,capsule,spawnPosition,spawnYaw,actorRoot,levelRoot,executedJS,executedModules,sim;
+    placement,bones,collider,capsule,spawnPosition,spawnYaw,actorRoot,levelRoot,executedJS,executedModules,sim,audio,audioInputsSHA;
   let position=[0,0,0],heading=0,vertical=0,grounded=false,cameraYaw=0,cameraPitch=.17,cameraDistance=205,accumulator=0;
   let jumpQueued=false,droppedSeconds=0,totalContacts=0,lastCollision=null,lastSnapshot;
   let tagRenderer;
@@ -75,16 +75,18 @@
     const kept=keepPaint&&sim?sim.panels.slice():[],random=keepPaint&&sim?sim.rng:null;
     const chosen=sim?.artworkIndex||0,size=sim?.sizeMode??1;
     if(!keepPaint&&tagRenderer)tagRenderer.clear();
-    running=false;pressed.clear();sim?.clearActionInput?.();walk=false;jumpQueued=false;sim=new S.Simulation(inputs,collider,spawnPosition,spawnYaw,capsule,controlResources);sim.selectArtwork(chosen);sim.sizeMode=size;sim.sizeIndex=size-1;driver=sim.driver;position=spawnPosition.slice();heading=spawnYaw;
+    running=false;audio?.reset();pressed.clear();sim?.clearActionInput?.();walk=false;jumpQueued=false;sim=new S.Simulation(inputs,collider,spawnPosition,spawnYaw,capsule,controlResources);sim.selectArtwork(chosen);sim.sizeMode=size;sim.sizeIndex=size-1;driver=sim.driver;position=spawnPosition.slice();heading=spawnYaw;
     if(kept.length){sim.panels=kept.filter(p=>p.grid.samples);sim.rng=random;sim.nextPanelId=Math.max(0,...kept.map(p=>p.id+1));sim.completedPieces=kept.filter(p=>p.area?.state>=2).length;for(const p of kept){p.previewVisible=false;p.area?.stop()}}
     vertical=0;grounded=false;droppedSeconds=0;totalContacts=0;lastCollision=null;accumulator=0;$('fatal').textContent='';
     demoCursor=-1;demoFrames=null;demoComplete=false;
     resumeAfterHelp=false;resumeAfterPicker=false;
     cameraYaw=spawnYaw;cameraPitch=.17;cameraDistance=205;
     if(settle){let supported=0;for(let i=0;i<180&&supported<3;i++){fixed({x:0,z:0,walk:false,jump:false,cameraYaw:spawnYaw,v:false,spray:false,fast:false});supported=grounded?supported+1:0}}
+    audio?.update(driver,controlResources,position,sim.spraying);
     updatePlacement();applyPose();cameraUpdate(1,true);refresh();
   }
   function refresh(){
+    audio?.setRunning(running);
     if(!ready)return;const s=driver.snapshot(),distance=Math.hypot(position[0]-spawnPosition[0],position[2]-spawnPosition[2]);
     document.body.dataset.ready='true';document.body.dataset.running=String(running);
     $('entry').hidden=running||!$('help').hidden||!$('artPicker').hidden;
@@ -125,7 +127,7 @@
       local_inputs_sha256:inputProof.local_sidecar_sha256,tag_inputs_sha256:inputs.tagProofSHA,executed_js_sha256:executedJS,
       executed_modules_sha256:executedModules,controller_config_sha256:inputs.controllerProofSHA,
       pool_control_inputs_sha256:inputs.poolControlProofSHA,pool_lighting_config_sha256:lightingConfigSHA,pool_lighting:lightingState,
-      pool_lateral_inputs_sha256:controlResources.lateralSHA,pool_combat_inputs_sha256:controlResources.combatSHA,pool_locomotion_inputs_sha256:controlResources.locomotionSHA,native_material_state_count:nativeMaterials.size,
+      pool_audio_inputs_sha256:audioInputsSHA,pool_audio:audio?.snapshot(),pool_normal_inputs_sha256:controlResources.normalSHA,pool_lateral_inputs_sha256:controlResources.lateralSHA,pool_combat_inputs_sha256:controlResources.combatSHA,pool_locomotion_inputs_sha256:controlResources.locomotionSHA,native_material_state_count:nativeMaterials.size,
       actor_placement:placement.matrixWorld.elements.slice(),actual_bone_world:bones.map(b=>b.matrixWorld.elements.slice()),
       actual_bone_local:bones.map(b=>({quaternion:b.quaternion.toArray(),position:b.position.toArray()})),
       original_reflections_preserved:[actorRoot,levelRoot].every(n=>JSON.stringify(n.scale.toArray())==='[-1,1,1]'),
@@ -154,6 +156,7 @@
     position=state.position;heading=state.heading;vertical=state.vertical;grounded=state.grounded;
     lastCollision=state.last_collision;totalContacts+=lastCollision.contacts.length;
     if(position[1]<spawnPosition[1]-2000){running=false;pressed.clear();sim?.clearActionInput?.();$('fatal').textContent='Выход за восстановленную поверхность. Можно вернуться к исходному spawn.'}
+    audio?.update(driver,controlResources,position,sim.spraying);
     updatePlacement();applyPose();
     if(demoCursor>=0&&demoCursor===demoFrames.length){demoCursor=-1;demoComplete=true;running=false;pressed.clear();sim?.clearActionInput?.();refresh()}
   }
@@ -171,7 +174,7 @@
     renderer.clear();renderer.render(skyScene,camera);renderer.clearDepth();renderer.render(scene,camera);
   }
   frame();
-  function toggle(){if(!ready)return;running=!running;if(!running)menuScreen='pause';pressed.clear();sim?.clearActionInput?.();jumpQueued=false;accumulator=0;clock.getDelta();renderer.domElement.focus({preventScroll:true});refresh()}
+  function toggle(){if(!ready)return;running=!running;audio?.setRunning(running);if(running)audio?.unlock();if(!running)menuScreen='pause';pressed.clear();sim?.clearActionInput?.();jumpQueued=false;accumulator=0;clock.getDelta();renderer.domElement.focus({preventScroll:true});refresh()}
   $('start').onclick=toggle;$('enter').onclick=toggle;$('reset').onclick=()=>{if(ready){$('help').hidden=true;reset()}};
   function help(open){
     if(open){resumeAfterHelp=running;if(running)menuScreen='pause';running=false;pressed.clear();sim?.clearActionInput?.();jumpQueued=false;$('help').hidden=false;$('helpClose').focus()}
@@ -271,7 +274,10 @@
     executedModules={};for(const [key,code] of Object.entries({driver:D.moduleSource,simulation:S.moduleSource,climb_driver:GettingUpClimbDriver.moduleSource,climb_simulation:GettingUpClimbSimulation.moduleSource,paint_surface:GettingUpPaintSurface.moduleSource,collision:C.moduleSource,
       base_simulation:GettingUpPlaySimulation.moduleSource,traversal:GettingUpTraversalDriver.moduleSource,walk:GettingUpWalkDriver.moduleSource,
       ledge_query:GettingUpLedgeQuery.moduleSource,
-      mixed:GettingUpCompiledMixed.moduleSource,jump:GettingUpJumpRules.moduleSource,tag:GettingUpTag.moduleSource,spray_controller:GettingUpSprayController.moduleSource,tag_simulation:GettingUpSpraySimulation.moduleSource,tag_renderer:GettingUpSprayRenderer.Renderer.toString(),pool_artwork_renderer:GettingUpPoolArtworkRenderer.moduleSource,pool_original_rules:GettingUpPoolRules.moduleSource,pool_combat:GettingUpPoolCombat.moduleSource,pool_lateral:GettingUpPoolLateral.moduleSource,pool_normal_actions:GettingUpPoolNormalActions.moduleSource,pool_turn:GettingUpPoolTurn.moduleSource,navigation_turn:GettingUpNavigationTurn.moduleSource,pool_materials:GettingUpPoolMaterials.moduleSource,pool_lighting:Lighting.moduleSource,pool_source_lights:GettingUpPoolSourceLights.moduleSource,area_controller:GettingUpAreaController.moduleSource}))executedModules[key]=await digest(new TextEncoder().encode(code));
+      mixed:GettingUpCompiledMixed.moduleSource,jump:GettingUpJumpRules.moduleSource,tag:GettingUpTag.moduleSource,spray_controller:GettingUpSprayController.moduleSource,tag_simulation:GettingUpSpraySimulation.moduleSource,tag_renderer:GettingUpSprayRenderer.Renderer.toString(),pool_artwork_renderer:GettingUpPoolArtworkRenderer.moduleSource,pool_original_rules:GettingUpPoolRules.moduleSource,pool_combat:GettingUpPoolCombat.moduleSource,pool_lateral:GettingUpPoolLateral.moduleSource,pool_normal_locomotion:GettingUpPoolNormalLocomotion.moduleSource,pool_audio:GettingUpPoolAudio.moduleSource,pool_normal_actions:GettingUpPoolNormalActions.moduleSource,pool_turn:GettingUpPoolTurn.moduleSource,navigation_turn:GettingUpNavigationTurn.moduleSource,pool_materials:GettingUpPoolMaterials.moduleSource,pool_lighting:Lighting.moduleSource,pool_source_lights:GettingUpPoolSourceLights.moduleSource,area_controller:GettingUpAreaController.moduleSource}))executedModules[key]=await digest(new TextEncoder().encode(code));
+    const audioProof=decoded(await fetchBytes('../manifests/pool-yard-audio-inputs.json')),audioRaw=await fetchBytes(audioProof.url);
+    if(await digest(audioRaw)!==audioProof.sha256)throw Error('Original audio input SHA-256 differs');
+    audioInputsSHA=audioProof.sha256;audio=await GettingUpPoolAudio.load(decoded(audioRaw),fetchBytes,digest,()=>new (window.AudioContext||window.webkitAudioContext)());
     const poolProof=decoded(await fetchBytes('../manifests/pool-yard-scene.json'));
     const controlProof=decoded(await fetchBytes('../manifests/pool-yard-control-inputs.json'));
     const controlRaw=await fetchBytes(controlProof.url);if(await digest(controlRaw)!==controlProof.sha256)throw Error('SHA-256 ресурсов управления не совпал');
@@ -284,6 +290,10 @@
     controlResources.locomotion=decoded(locomotionRaw);
     controlResources.locomotionSHA=locomotionProof.sha256;
     if(controlResources.locomotion.kind!=='pool-yard-original-locomotion-inputs'||controlResources.locomotion.model_sha256!==controlResources.model_sha256)throw Error('Locomotion model binding differs');
+    const normalProof=decoded(await fetchBytes('../manifests/pool-yard-normal-inputs.json')),normalRaw=await fetchBytes(normalProof.url);
+    if(await digest(normalRaw)!==normalProof.sha256)throw Error('Native Trane normal input SHA-256 differs');
+    controlResources.normal=GettingUpPoolNormalLocomotion.validate(decoded(normalRaw));controlResources.normalSHA=normalProof.sha256;
+    if(controlResources.normal.model_sha256!==controlResources.model_sha256||controlResources.normal.bones_sha256!==controlResources.locomotion.bones_sha256)throw Error('Normal model/rig identity differs');
     const combatProof=decoded(await fetchBytes('../manifests/pool-yard-combat-inputs.json')),combatRaw=await fetchBytes(combatProof.url);
     if(await digest(combatRaw)!==combatProof.sha256)throw Error('Original combat resource SHA-256 mismatch');
     controlResources.combat=decoded(combatRaw);controlResources.combatSHA=combatProof.sha256;

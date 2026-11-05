@@ -6,9 +6,9 @@
  const api=factory(get('gettingup-spray-simulation','GettingUpSpraySimulation'),get('gettingup-paint-driver','GettingUpPaintDriver'),
   get('gettingup-script-actor','GettingUpScriptActor'),get('gettingup-character-motion','GettingUpCharacterMotion'),
   get('gettingup-play-simulation','GettingUpPlaySimulation'),get('gettingup-paint-surface','GettingUpPaintSurface'),get('gettingup-ledge-query','GettingUpLedgeQuery'),
-  get('gettingup-area-controller','GettingUpAreaController'),get('gettingup-wall-paint-controller','GettingUpWallPaint'),get('pool-yard-original-rules','GettingUpPoolRules'),get('gettingup-compiled-mixed','GettingUpCompiledMixed'),get('pool-yard-combat','GettingUpPoolCombat'),get('pool-yard-normal-actions','GettingUpPoolNormalActions'),get('pool-yard-turn','GettingUpPoolTurn'),get('pool-yard-lateral','GettingUpPoolLateral'));
+  get('gettingup-area-controller','GettingUpAreaController'),get('gettingup-wall-paint-controller','GettingUpWallPaint'),get('pool-yard-original-rules','GettingUpPoolRules'),get('gettingup-compiled-mixed','GettingUpCompiledMixed'),get('pool-yard-combat','GettingUpPoolCombat'),get('pool-yard-normal-actions','GettingUpPoolNormalActions'),get('pool-yard-turn','GettingUpPoolTurn'),get('pool-yard-lateral','GettingUpPoolLateral'),get('pool-yard-normal-locomotion','GettingUpPoolNormalLocomotion'));
  if(node)module.exports=api;else root.GettingUpPoolControls=api;
-})(typeof globalThis!=='undefined'?globalThis:this,function poolControlsModule(S,D,A,M,B,G,Q,Area,Wall,Rules,Mixed,Combat,Normal,Turn,Lateral){'use strict';
+})(typeof globalThis!=='undefined'?globalThis:this,function poolControlsModule(S,D,A,M,B,G,Q,Area,Wall,Rules,Mixed,Combat,Normal,Turn,Lateral,NormalLocomotion){'use strict';
  const dot=(a,b)=>a.reduce((n,v,i)=>n+v*b[i],0),sub=(a,b)=>a.map((v,i)=>v-b[i]);
  const zero=()=>({translation:[0,0,0],rotation:[0,0,0,1]});
  // Historical shaft bounds identify the omitted mission entry. They no longer
@@ -16,7 +16,7 @@
  const shaft=Object.freeze({minX:860,maxX:1060,minZ:1140,maxZ:1380});
  const inShaft=p=>p[0]>shaft.minX&&p[0]<shaft.maxX&&p[2]>shaft.minZ&&p[2]<shaft.maxZ;
  class Driver extends D.Driver{
-  constructor(data,clips,wallPhases,locomotion,combat,lateral){super(data);this.extraClips=clips;this.wallPhases=wallPhases;this.locomotion=locomotion;this.combat=combat;this.combatName=null;this.combatFinished=false;this.combatCount=0;this.nativeActionEvents=[];this.duckPhase='standing';this.customName=null;this.previewMode=null;this.crouchRequested=false;this.wallDirection=0;this.lateral=lateral?new Lateral.Driver(this,lateral):null}
+  constructor(data,clips,wallPhases,locomotion,combat,lateral,normal){super(normal?NormalLocomotion.resources(data,normal):data);this.extraClips=clips;this.wallPhases=wallPhases;this.locomotion=locomotion;this.combat=combat;this.combatName=null;this.combatFinished=false;this.combatCount=0;this.nativeActionEvents=[];this.duckPhase='standing';this.customName=null;this.previewMode=null;this.crouchRequested=false;this.wallDirection=0;this.lateral=lateral?new Lateral.Driver(this,lateral):null;this.nativeNormal=normal||null;if(normal)NormalLocomotion.bind(this.walk,normal)}
   custom(name,phase,rate=1,{loop=true,period=5,seek=null}={}){
    const c=this.controller,clip=this.combat?.clips[name]||this.locomotion?.clips[name]||this.extraClips[name];if(!clip||![0,1].includes(clip.mode))throw Error('verified preview clip required');
    const definition=this.combat?.phases[name]||this.locomotion?.phases[name]||this.wallPhases?.[name];
@@ -86,7 +86,7 @@
  class Simulation extends S.Simulation{
   constructor(data,world,spawn,yaw,shape,resources){
    if(resources?.kind!=='pool-yard-control-resources'||resources.artworks?.length<2)throw Error('local Pool Yard controls required');
-   super(data,world,spawn,yaw,shape);this.driver=new Driver(data,resources.clips,resources.wallPhases,resources.locomotion,resources.combat,resources.lateral);this.resources=resources;this.combatInput=new Combat.Input();
+   super(data,world,spawn,yaw,shape);this.driver=new Driver(data,resources.clips,resources.wallPhases,resources.locomotion,resources.combat,resources.lateral,resources.normal);this.resources=resources;this.combatInput=new Combat.Input();
    this.artworks=resources.artworks.map(a=>({...a,controllerOptions:data.tagData.controllerOptions}));this.artworkIndex=0;this.sizeIndex=0;this.sizeMode=1;this.nextPanelId=0;this.wallPosition=13;this.wallCooldown=0;this.waitRelease=false;this.completedPieces=0;
    this.tagData=this.artworks[0];this.standingShape={...shape};this.crouched=false;this.standBlocked=false;this.wallDistance=0;this.shaftBlocks=0;this.notice='';this.noticeTTL=0;this.jumpBuffer=0;this.pullUpRequested=false;this.ledgePullUpQueued=false;this.lowLedgePullups=0;this.ledgeSideDistance=0;
    if(this.driver.lateral)this.driver.lateral.accept=request=>this.shiftLedge(request);

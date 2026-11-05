@@ -1,0 +1,279 @@
+{
+  "bindings": [
+    {
+      "animation": "TR_Walk",
+      "attribute_flags_low32": 33556480,
+      "category": "walking",
+      "compiled_ticks": 58,
+      "descriptor_sha256": "1b488d4edfa7e8f569672afcfbf8caabc6542762f2d6090e17d0bee585ce6f0c",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": 32,
+          "range": "0..11"
+        },
+        {
+          "event": 33,
+          "range": "12"
+        },
+        {
+          "event": 35,
+          "range": "13..42"
+        },
+        {
+          "event": 36,
+          "range": "43"
+        },
+        {
+          "event": 38,
+          "range": "44..last"
+        }
+      ],
+      "entry": "0x10007680",
+      "frames": 59,
+      "key": "walk",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "3268",
+      "rate": 1.149999976158142,
+      "rate_word": "3f933333",
+      "sequence": "Trane_WalkF"
+    },
+    {
+      "animation": "TR_2nd_Gear",
+      "attribute_flags_low32": 33556480,
+      "category": "running",
+      "compiled_ticks": 46,
+      "descriptor_sha256": "638c167bc82b354b316755f718d3519451f2733941e51fa7e90b8cab2ea9608f",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 53,
+          "range": "0"
+        },
+        {
+          "event": 54,
+          "range": "1"
+        },
+        {
+          "event": 58,
+          "range": "2..20"
+        },
+        {
+          "event": 59,
+          "range": "21"
+        },
+        {
+          "event": 63,
+          "range": "22..last"
+        }
+      ],
+      "entry": "0x10007a80",
+      "frames": 47,
+      "key": "run",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "326e",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Trane_RunF"
+    }
+  ],
+  "bones_sha256": "874bab487fa82d87b6e70e020b36b3d37dbb447df90bd78d8f007fd896f191ad",
+  "bytes": 131957,
+  "code": {
+    "decompiler_output_retained_local_only": true,
+    "export_sha256": "953574b48f5a30791d458a7af258b9b592c7ed2381d4e8f7347cc92e43d2b40a",
+    "functions": [
+      {
+        "body_sha256": "dd7b8aa2d7b2785cc842a9b9428b630c3f040f37bfc8eebc0ad903ff5d868ecb",
+        "body_size": 299,
+        "entry": "0x10007680",
+        "name": "FUN_10007680"
+      },
+      {
+        "body_sha256": "d1fab6569da0b12a519b0467eecdaaf558fc731084aa2fca1282cd82e65b55d9",
+        "body_size": 950,
+        "entry": "0x10007a80",
+        "name": "FUN_10007a80"
+      }
+    ],
+    "program": "GScript_Rhapsody.dll"
+  },
+  "kind": "pool-yard-original-normal-inputs",
+  "model_sha256": "dfa91462fa47a85e343e78b5ed7d3aea977cfeab6e3c46730fd9edea4342f692",
+  "native_full_loading_calls": 4,
+  "native_range_compilations": 2,
+  "original_crt_sha256": "8094af5ee310714caebccaeee7769ffb08048503ba478b879edfef5f1a24fefe",
+  "original_dynamic_rate_callbacks_verified": false,
+  "original_navigation_selection_verified": false,
+  "original_script_sha256": "07ca7bb8ce55d6e73d319ddcc22c5e5bea02146ef55804bc8aeabebfe994e5ed",
+  "phases": {
+    "run": {
+      "codes": [
+        53,
+        54,
+        58,
+        59,
+        63
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 0,
+          "kind": 0,
+          "next_frame": 1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 1,
+          "kind": 0,
+          "next_frame": 2,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 1,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 20,
+          "kind": 0,
+          "next_frame": 21,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 2,
+          "token": 2
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 21,
+          "kind": 0,
+          "next_frame": 22,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 21,
+          "token": 3
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 45,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 22,
+          "token": 4
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "Trane_RunF",
+      "source": "Animation/Trane/TR_2nd_Gear.bnm",
+      "source_sha256": "bcf22d5afa1f479106efc0ed038d7803f0388bb893240ae4874e98a55fdf7827"
+    },
+    "walk": {
+      "codes": [
+        32,
+        33,
+        35,
+        36,
+        38
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 11,
+          "kind": 0,
+          "next_frame": 12,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 12,
+          "kind": 0,
+          "next_frame": 13,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 12,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 42,
+          "kind": 0,
+          "next_frame": 43,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 13,
+          "token": 2
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 43,
+          "kind": 0,
+          "next_frame": 44,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 43,
+          "token": 3
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 57,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 44,
+          "token": 4
+        }
+      ],
+      "rate": 1.149999976158142,
+      "sequence": "Trane_WalkF",
+      "source": "Animation/Trane/TR_Walk.bnm",
+      "source_sha256": "235866b785d5e82a10c2eac5eead262c392af4769b3e5fa664b3188b0a3751d6"
+    }
+  },
+  "schema": 1,
+  "sha256": "421697fde75f7c561dae6ff14bfe51c6f8aa8a82de7752ac6d23b37f4150e70d",
+  "source_exporter_sha256": "a696fa8ecdf667ce98ea7807de4520429a755a64c0900c04a3786fac447ef6ff",
+  "source_sha256": {
+    "ban": "6c41b3d7b122413c9d629a23b30a3756f1f52255eac0798a329d2d7d118df73c",
+    "msh": "ecb5c02e9d15377f38c78a78c86f0e74bb3a2e8de42ebaf555b2d635c99896c0"
+  },
+  "url": "../artifacts/pool-yard-normal-v1/inputs.json"
+}
