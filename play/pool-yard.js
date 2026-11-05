@@ -347,6 +347,7 @@
       if(!n.isMesh)return;n.castShadow=root===actor.scene||root===can.scene;n.receiveShadow=true;
       for(const material of [].concat(n.material||[])){
         if(Number.isInteger(material.userData.mode)&&!nativeMaterials.has(material))nativeMaterials.set(material,GettingUpPoolMaterials.apply(material,THREE));
+        GettingUpPoolMaterials.overlay(material,THREE);
         if(material.map)material.map.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
         if(!material.map&&(material.userData.stageTextures||[]).some(s=>/mblack$/i.test(s)))material.color.setRGB(0,0,0);
         if(root===actor.scene&&!actorMaterials.some(r=>r.material===material))actorMaterials.push({material,opacity:material.opacity,transparent:material.transparent,depthWrite:material.depthWrite});
@@ -380,15 +381,6 @@
     // Camera fade must reference the replacement actor materials.
     actorMaterials.length=0;actor.scene.traverse(n=>{if(n.isMesh)for(const material of [].concat(n.material))
       if(!actorMaterials.some(r=>r.material===material))actorMaterials.push({material,opacity:material.opacity,transparent:material.transparent,depthWrite:material.depthWrite})});
-    // Visible cover identifies the closed mission-only ladder shaft.
-    const closed=S.shaft,cover=new THREE.Group();cover.name='Closed service shaft';
-    let metal;world.scene.traverse(n=>{if(!metal&&n.isMesh)for(const m of [].concat(n.material))if(m.map&&(m.userData.stageTextures||[]).some(t=>/metal|steel|plate/i.test(t)))metal=m.clone()});
-    metal=metal||new THREE.MeshStandardMaterial({color:0x525850,roughness:.85,metalness:.4});
-    const width=closed.maxX-closed.minX,depth=closed.maxZ-closed.minZ;
-    const lid=new THREE.Mesh(new THREE.BoxGeometry(width,3,depth),metal);lid.receiveShadow=true;cover.add(lid);
-    const stripeMaterial=new THREE.MeshStandardMaterial({color:0xbaa54a,roughness:.9});
-    for(const sign of [-1,1]){const stripe=new THREE.Mesh(new THREE.BoxGeometry(Math.hypot(width-12,depth-12),.8,4),stripeMaterial);stripe.position.y=2;stripe.rotation.y=sign*Math.atan2(depth-12,width-12);cover.add(stripe)}
-    cover.position.set((closed.minX+closed.maxX)/2,-1021,(closed.minZ+closed.maxZ)/2);scene.add(cover);
     sandboxPlan.spawns.forEach((entry,index)=>{
       if(entry.source_class==='IPointSpawnPlayer')return;
       const option=document.createElement('option');option.value=String(index);

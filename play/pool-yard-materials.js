@@ -14,5 +14,15 @@
   material.needsUpdate=true;
   return {mode:r.mode,depth_write:material.depthWrite,blend:r.blend?.slice()||null,transparent:material.transparent};
  }
- return Object.freeze({apply,moduleSource:poolMaterials.toString()});
+ function overlay(material,T){
+  const r=material.userData,name=(r?.stageTextures?.[0]||'').split(/[\\/]/).pop().toLowerCase();
+  if(r?.mode!==1||!['pypoolcap01_m01','py_edging1_m01'].includes(name))return null;
+  // Coplanar cosmetic overlays in the original pool mesh. Native depth bias
+  // is not yet recovered: keep this bounded WebGL correction explicit.
+  material.alphaTest=Math.max(material.alphaTest,.5/255);material.depthWrite=false;
+  material.polygonOffset=true;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-2;
+  r.poolYardVisualOverlay=true;material.needsUpdate=true;
+  return {preview_depth_bias:true,original_depth_bias_verified:false,source_zwrite:r.zwrite};
+ }
+ return Object.freeze({apply,overlay,moduleSource:poolMaterials.toString()});
 });

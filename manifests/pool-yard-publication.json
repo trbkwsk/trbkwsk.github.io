@@ -1,6 +1,6 @@
 {
   "browser_gpu_verified": false,
-  "bytes": 98313207,
+  "bytes": 98313941,
   "files": [
     {
       "bytes": 53944,
@@ -905,7 +905,7 @@
     {
       "bytes": 10232,
       "path": "play/index.html",
-      "sha256": "b2a859b9c2f561511986be042a7377e047108557aea79b43fc83c96ffdee6324",
+      "sha256": "19d3d1a56a935a8603d49eece5fac881a2474c0c981fcff0c86f631fa0dbf713",
       "source": "viewer/pool-yard.html"
     },
     {
@@ -921,9 +921,9 @@
       "source": "viewer/pool-yard-combat.js"
     },
     {
-      "bytes": 21567,
+      "bytes": 22584,
       "path": "play/pool-yard-controls.js",
-      "sha256": "e2d71255e5e525a7c1a23f744da6dbcc345f0a651b0d4ddf73f40e4889b06e4d",
+      "sha256": "fc1f319a95b608dde226992d30f1c3d94130620e64b0305f9739ca410b268924",
       "source": "viewer/pool-yard-controls.js"
     },
     {
@@ -957,9 +957,9 @@
       "source": "viewer/pool-yard-lighting.json"
     },
     {
-      "bytes": 1351,
+      "bytes": 2053,
       "path": "play/pool-yard-materials.js",
-      "sha256": "8e1f6900f7990fb785b70d765af9b7d861220b5a26c842d2b50662ecbf24aa88",
+      "sha256": "7f8dcb21a5a65b00dcd109802288701795e76112c09f56d5721968fd2257f655",
       "source": "viewer/pool-yard-materials.js"
     },
     {
@@ -1005,9 +1005,9 @@
       "source": "viewer/pool-yard.css"
     },
     {
-      "bytes": 44313,
+      "bytes": 43328,
       "path": "play/pool-yard.js",
-      "sha256": "155d5173ffa189c75a32b60d6ebd623abd4059c8c19b446d77eb31f3d30ee48b",
+      "sha256": "29d24c7786a873716ae2178bd98e467e9da3cc5cee5f0669fe715fa919ca5e6f",
       "source": "viewer/pool-yard.js"
     },
     {
@@ -1026,9 +1026,9 @@
   "files_count": 170,
   "kind": "pool-yard-public-runtime",
   "legacy_preserved": true,
-  "previous_site_commit": "10c02448a39afde5d346b3fd99ec9df944971db2",
+  "previous_site_commit": "f315bdf916fcd7e0bc09cee463ad8361e31d25a9",
   "raw_game_corpus_included": false,
   "schema": 1,
-  "source_re_baseline": "277b4c8a488917a0c3c7b9aca91b5fdb30a05bfa",
-  "source_re_commit": "435de5c5c1633abf0351be4c1a69405de2b56d0a"
+  "source_re_baseline": "b3af532ffe744e8e1bd27efc80105769f779b379",
+  "source_re_commit": "7d9a94537b6cbb25598c07211a06535912936846"
 }

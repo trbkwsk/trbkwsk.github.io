@@ -11,7 +11,8 @@
 })(typeof globalThis!=='undefined'?globalThis:this,function poolControlsModule(S,D,A,M,B,G,Q,Area,Wall,Rules,Mixed,Combat,Normal,Turn){'use strict';
  const dot=(a,b)=>a.reduce((n,v,i)=>n+v*b[i],0),sub=(a,b)=>a.map((v,i)=>v-b[i]);
  const zero=()=>({translation:[0,0,0],rotation:[0,0,0,1]});
- // The mission-only ladder shaft is outside this sandbox's playable domain.
+ // Historical shaft bounds identify the omitted mission entry. They no longer
+ // prohibit walking across the already supported original surface above it.
  const shaft=Object.freeze({minX:860,maxX:1060,minZ:1140,maxZ:1380});
  const inShaft=p=>p[0]>shaft.minX&&p[0]<shaft.maxX&&p[2]>shaft.minZ&&p[2]<shaft.maxZ;
  class Driver extends D.Driver{
@@ -86,10 +87,24 @@
    if(resources?.kind!=='pool-yard-control-resources'||resources.artworks?.length<2)throw Error('local Pool Yard controls required');
    super(data,world,spawn,yaw,shape);this.driver=new Driver(data,resources.clips,resources.wallPhases,resources.locomotion,resources.combat);this.resources=resources;this.combatInput=new Combat.Input();
    this.artworks=resources.artworks.map(a=>({...a,controllerOptions:data.tagData.controllerOptions}));this.artworkIndex=0;this.sizeIndex=0;this.sizeMode=1;this.nextPanelId=0;this.wallPosition=13;this.wallCooldown=0;this.waitRelease=false;this.completedPieces=0;
-   this.tagData=this.artworks[0];this.standingShape={...shape};this.crouched=false;this.standBlocked=false;this.wallDistance=0;this.shaftBlocks=0;this.notice='';this.noticeTTL=0;
+   this.tagData=this.artworks[0];this.standingShape={...shape};this.crouched=false;this.standBlocked=false;this.wallDistance=0;this.shaftBlocks=0;this.notice='';this.noticeTTL=0;this.jumpBuffer=0;this.pullUpRequested=false;this.lowLedgePullups=0;
   }
   message(text){this.notice=text;this.noticeTTL=180}
-  clearActionInput(){this.combatInput=new Combat.Input()}
+  clearActionInput(){this.combatInput=new Combat.Input();this.jumpBuffer=0;this.pullUpRequested=false}
+  drop(reason,crossed=false){
+   // On the 96-unit pool rim the full hang pose puts the feet into the floor.
+   // When the player requests up, continue with the already bound LedgeUp
+   // clip instead of cancelling on that proxy conflict. This is OUR scene
+   // transition, not a recovered native low-ledge selection predicate.
+   const a=this.anchor,h=a?a.contact[1]-(this.position[1]+this.standingShape.footOffset):Infinity;
+   if(reason==='grip-obstructed'&&this.pullUpRequested&&a&&!a.released&&h>0&&h<=this.standingShape.height*1.4){
+    const clear=this.world.move(a.standing,[0,0,0],this.standingShape);
+    if(Math.hypot(...sub(clear.position,a.standing))<.05){
+     this.driver.enter('ledge_up');a.released=true;this.lastGripError=null;this.lowLedgePullups++;this.events.push('pool-low-ledge-pullup');return;
+    }
+   }
+   return super.drop(reason,crossed);
+  }
   stepTurning(input){
    // Keep the sealed shared simulation bytes intact. In this synchronous Sns
    // interval only, hand the original matrix-transformed request to the same
@@ -136,6 +151,8 @@
    this.heading=Math.atan2(-panel.frame.normal[0],-panel.frame.normal[2]);
   }
   step(input){
+   this.pullUpRequested=!input.v&&!input.crouch&&(input.jump||input.z>0);
+   if(input.jump&&!input.v&&!input.crouch)this.jumpBuffer=12;
    if(this.noticeTTL>0&&!--this.noticeTTL)this.notice='';
    if(input.use!==undefined&&typeof input.use!=='boolean')throw Error('boolean use/evade input required');
    const enabled=!!this.resources.combat&&!input.v&&!input.crouch&&!this.paintAnchor&&this.grounded;
@@ -168,7 +185,6 @@
    if(this.paintAnchor&&!effectiveV){this.paintAnchor.area.stop();this.paintAnchor.previewVisible=false;
     if(!this.paintAnchor.grid.samples)this.panels=this.panels.filter(p=>p!==this.paintAnchor);
    }
-   const before=this.position.slice(),wasGrounded=this.grounded;
    this.driver.wallDirection=effectiveV&&this.paintAnchor?input.x:0;
    if(effectiveV&&this.paintAnchor){const height=this.paintAnchor.grid.data.tiles[1];
     const bounds=Wall.bounds({f5a0:1,f5a4:1,f5ea:height>1,f5eb:true,f5ec:height>2,f5cc:this.wallPosition});
@@ -181,8 +197,9 @@
     this.paintIndex=this.wallPosition%9;this.driver.wallPosition=this.wallPosition;this.paintAnchor.wallPosition=this.wallPosition;this.paintAnchor.previewVisible=true;
    }
    // A/D move Trane, W/S select hand height. Paint is applied after movement.
-   const raw={...input,v:effectiveV&&!!this.paintAnchor,jump:input.jump&&!this.crouched&&!this.driver.combatName,x:effectiveV?0:input.x,z:effectiveV?0:input.z,spray:false,fast:false};
+   const raw={...input,v:effectiveV&&!!this.paintAnchor,jump:this.jumpBuffer>0&&!this.crouched&&!this.driver.combatName&&!effectiveV,x:effectiveV?0:input.x,z:effectiveV?0:input.z,spray:false,fast:false};
    if(this.turnBridge)this.stepTurning(raw);else super.step(raw);
+   if(this.driver.phase.endsWith('_takeoff')||this.anchor||effectiveV||this.crouched)this.jumpBuffer=0;else this.jumpBuffer=Math.max(0,this.jumpBuffer-1);
    this.spraying=false;
    for(const panel of this.panels){if(!panel.area)continue;panel.renderPhase=panel.area.state;
     if(panel.area.state===1)panel.area.elapsed=Math.fround(panel.area.elapsed+Math.fround(1/60));
@@ -197,7 +214,7 @@
      const at=dot(sub(this.position,f.origin),f.right),next=Math.max(-f.width/2-28,Math.min(f.width/2+28,at+lateral));
      const result=this.world.advance(this.position,[f.right[0]*(next-at),-.12,f.right[2]*(next-at)],this.shape,this.grounded);
      const chest=[result.position[0],f.origin[1],result.position[2]],hit=Q.ray(this.world,chest,chest.map((v,i)=>v-f.normal[i]*55));
-     if(result.grounded&&hit.hit&&dot(hit.normal,f.normal)>.99&&Math.abs(dot(sub(hit.point,f.origin),f.normal))<.1&&!inShaft(result.position)){this.wallDistance+=Math.hypot(result.position[0]-this.position[0],result.position[2]-this.position[2]);this.position=result.position;this.lastCollision={contacts:result.contacts,substeps:result.substeps,stepped:result.stepped}}
+     if(result.grounded&&hit.hit&&dot(hit.normal,f.normal)>.99&&Math.abs(dot(sub(hit.point,f.origin),f.normal))<.1){this.wallDistance+=Math.hypot(result.position[0]-this.position[0],result.position[2]-this.position[2]);this.position=result.position;this.lastCollision={contacts:result.contacts,substeps:result.substeps,stepped:result.stepped}}
     }
     const item=this.itemMatrix();this.lastPaintHit=item?G.project(this.world,f,requirePoint(item,this.data.can.nozzle_proxy)):null;
     const distance=dot(sub(this.position,f.origin),f.normal),hit=this.lastPaintHit;
@@ -209,12 +226,11 @@
      }
     }else if(panel.area.state===1)panel.area.stop();
    }
-   if(inShaft(this.position)){this.position=before;this.vertical=0;this.horizontal=[0,0];this.grounded=wasGrounded;this.driver.collisionResolved(wasGrounded,true,wasGrounded);this.shaftBlocks++;this.events.push('sandbox-shaft-closed');this.message('Служебный спуск закрыт. Продолжай прогулку по двору')}
    if(this.history.length)this.history[this.history.length-1]={...input};return this.snapshot();
   }
   snapshot(){return {...super.snapshot(),crouched:!!this.crouched,stand_blocked:!!this.standBlocked,selected_artwork:this.artworks?.[this.artworkIndex]?.name||null,
    selected_size_mode:this.sizeMode||1,selected_tiles:this.artworks?this.selectedData().tiles:null,active_artwork:this.paintAnchor?.grid.data?.name||null,wall_travel_distance:this.wallDistance||0,shaft_blocks:this.shaftBlocks||0,
-   wall_pose_position:this.wallPosition??13,completed_pieces:this.completedPieces||0,
+   wall_pose_position:this.wallPosition??13,completed_pieces:this.completedPieces||0,low_ledge_pullups:this.lowLedgePullups||0,jump_buffer_frames:this.jumpBuffer||0,
    graffiti_lifecycle:(this.panels||[]).filter(p=>p.area).map(p=>({id:p.id,name:p.grid.data.name,tiles:p.grid.data.tiles,goBig:p.goBig,threshold:p.area.threshold,state:p.area.state,render_phase:p.renderPhase,render_timer:p.renderTimer,layer:p.area.layer,elapsed:p.area.elapsed,budget:p.area.budget,score_flags:p.area.score_flags,preview:p.previewVisible,coverage:p.grid.summary().coverage})),
    active_piece_progress:this.paintAnchor?Math.min(1,Math.max(0,this.paintAnchor.grid.summary().coverage)):null,navigation_turn:this.turnBridge?.snapshot()||null,preview_controls_policy:true,notice:this.notice||''}}
  }
