@@ -37,5 +37,15 @@
   material.toneMapped=false;material.userData.poolYardSkyAmbient=row.ambient.slice();
   return material;
  }
- return Object.freeze({validate,configure,sky,moduleSource:poolLighting.toString()});
+ function skyMotion(row){
+  if(![2216719,2216720,2216721,2216722,2216723,2216724].includes(row?.source_id)||
+     !Number.isFinite(row.u_scroll)||!Number.isFinite(row.v_scroll))throw Error('authored Pool Yard sky motion row required');
+  // Bounded WebGL fix: a finite sun quad cannot scroll a repeated disc without
+  // exposing clipped copies at its edges. The gradient must keep its horizon.
+  // Authored speeds stay intact in the metadata; native c87 gating is unresolved.
+  const fixed=row.source_id===2216722||row.source_id===2216724;
+  return {u:fixed?0:row.u_scroll,v:fixed||row.source_id===2216719?0:row.v_scroll,
+   clamp_u:fixed,clamp_v:fixed||row.source_id===2216719,native_scroll_gating_verified:false};
+ }
+ return Object.freeze({validate,configure,sky,skyMotion,moduleSource:poolLighting.toString()});
 });

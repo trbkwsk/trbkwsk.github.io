@@ -359,7 +359,11 @@
         n.material=[].concat(n.material).map(old=>{const m=new THREE.MeshBasicMaterial({map:old.map?.clone()||null,color:old.color,opacity:old.opacity,transparent:old.transparent,alphaTest:old.alphaTest,side:THREE.DoubleSide,depthWrite:false,depthTest:false,fog:false});
           m.userData={...old.userData};GettingUpPoolMaterials.apply(m,THREE);m.depthWrite=false;
           Lighting.sky(m,row.name,lightingConfig);
-          if(m.map){m.map.needsUpdate=true;skyScroll.push({texture:m.map,u:row.u_scroll,v:row.v_scroll})}return m});if(n.material.length===1)n.material=n.material[0];
+          if(m.map){const motion=Lighting.skyMotion(row);
+            if(motion.clamp_u)m.map.wrapS=THREE.ClampToEdgeWrapping;
+            if(motion.clamp_v)m.map.wrapT=THREE.ClampToEdgeWrapping;
+            m.map.needsUpdate=true;skyScroll.push({texture:m.map,u:motion.u,v:motion.v});
+          }return m});if(n.material.length===1)n.material=n.material[0];
       });
     }
     const glowTextures={};
