@@ -1,0 +1,815 @@
+{
+  "control_resource_sha256": "eec595b0b9b72af7032b60845457441b9c9bf473d2249c3183404a7391432230",
+  "evidence": [
+    "BINARY_CODE",
+    "FILE_FORMAT",
+    "EMULATION"
+  ],
+  "full_loading_calls": 36,
+  "independent_decoder": "MinGW i686 objdump",
+  "kind": "pool-yard-native-wall-bindings",
+  "native_range_factory_calls": 18,
+  "original_crt_sha256": "8094af5ee310714caebccaeee7769ffb08048503ba478b879edfef5f1a24fefe",
+  "original_game_started": false,
+  "original_runtime_handlers_executed": false,
+  "original_script_sha256": "07ca7bb8ce55d6e73d319ddcc22c5e5bea02146ef55804bc8aeabebfe994e5ed",
+  "phases": {
+    "wall_crouch_left_0": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Bend_High_StepL",
+      "source": "Animation/Trane/TR_Graff_StepL_Crouch_00.bnm",
+      "source_sha256": "3dcee05521ed28def8ca94379c47f632abf5e4c8cf38059f3844b5d0792e3bd6"
+    },
+    "wall_crouch_left_1": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Bend_Mid_StepL",
+      "source": "Animation/Trane/TR_Graff_StepL_Crouch_03.bnm",
+      "source_sha256": "a76e3016a27dc083919705ca4994939f4184776214b18021b7d84520920dfa9b"
+    },
+    "wall_crouch_left_2": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Bend_Low_StepL",
+      "source": "Animation/Trane/TR_Graff_StepL_Crouch_06.bnm",
+      "source_sha256": "aadf0c4f88bf8f01992dd2973c4c27ed8f78ee975fbfefa797f4cbdd25e22adf"
+    },
+    "wall_crouch_right_0": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Bend_High_StepR",
+      "source": "Animation/Trane/TR_Graff_StepR_Crouch_02.bnm",
+      "source_sha256": "9956927b31744105469091db76d6f82e5de7b043dee8688f2346255d88c02b6d"
+    },
+    "wall_crouch_right_1": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Bend_Mid_StepR",
+      "source": "Animation/Trane/TR_Graff_StepR_Crouch_05.bnm",
+      "source_sha256": "7d048b9d2bc7b263e3ba4b0a24a174d076b107a91be4664f0ec8565b02d866b3"
+    },
+    "wall_crouch_right_2": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Bend_Low_StepR",
+      "source": "Animation/Trane/TR_Graff_StepR_Crouch_08.bnm",
+      "source_sha256": "eb4706f625bf92cba400682e850d6672f29bc4fb45bee8a92bfd5efd1e2fac57"
+    },
+    "wall_reach_left_0": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Reach_High_StepL",
+      "source": "Animation/Trane/TR_Graff_StepL_Reach_00.bnm",
+      "source_sha256": "e609f92cceb2772d9d8d0afe70a5fb478ac2ecca5666d86723c5e8341835b11a"
+    },
+    "wall_reach_left_1": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Reach_Mid_StepL",
+      "source": "Animation/Trane/TR_Graff_StepL_Reach_03.bnm",
+      "source_sha256": "bd25f94f20081e0317af75d0a08a5ee9ae4c25f052e635723c9e7047a61dcd0c"
+    },
+    "wall_reach_left_2": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Reach_Low_StepL",
+      "source": "Animation/Trane/TR_Graff_StepL_Reach_06.bnm",
+      "source_sha256": "1c7fb83a4f95be908dcf34b88458742455c4c93d2fb52f4e623d5123f9d7d48a"
+    },
+    "wall_reach_right_0": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Reach_High_StepR",
+      "source": "Animation/Trane/TR_Graff_StepR_Reach_02.bnm",
+      "source_sha256": "2520e4f8cf5fc82fbf3502e62a37008c6bb6e7a74a983855c1d1ecb8dca269a5"
+    },
+    "wall_reach_right_1": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Reach_Mid_StepR",
+      "source": "Animation/Trane/TR_Graff_StepR_Reach_05.bnm",
+      "source_sha256": "2ced1d233abe912e0d68c7479afdd660378a19b9f7580c7b1ed925c4b0f327c6"
+    },
+    "wall_reach_right_2": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Reach_Low_StepR",
+      "source": "Animation/Trane/TR_Graff_StepR_Reach_08.bnm",
+      "source_sha256": "49b9903ad2f5e84707560b1004ba25eb1338d5244edc64c5f403a6f6949f33c4"
+    },
+    "wall_stand_left_0": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Stand_High_StepL",
+      "source": "Animation/Trane/TR_Graff_StepL_Stand_00.bnm",
+      "source_sha256": "1d9167504fbc4184dd9efc53c629abe8c2ef5b01261c980de5121ad22257b436"
+    },
+    "wall_stand_left_1": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Stand_Mid_StepL",
+      "source": "Animation/Trane/TR_Graff_StepL_Stand_03.bnm",
+      "source_sha256": "bf8ebd99a9c1f7422f2cb196c9fbdba63277417eb5747e74ec326e01cfb468bf"
+    },
+    "wall_stand_left_2": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Stand_Low_StepL",
+      "source": "Animation/Trane/TR_Graff_StepL_Stand_06.bnm",
+      "source_sha256": "751b9b05d911ebc53e064a56bef2b5771ef1a37ce41d45aae583612fa952ceb1"
+    },
+    "wall_stand_right_0": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Stand_High_StepR",
+      "source": "Animation/Trane/TR_Graff_StepR_Stand_02.bnm",
+      "source_sha256": "b7868e5e62ac89dd9973f9408f35da05634f9ae44e2016a7a82bdb4743a756f6"
+    },
+    "wall_stand_right_1": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Stand_Mid_StepR",
+      "source": "Animation/Trane/TR_Graff_StepR_Stand_05.bnm",
+      "source_sha256": "53438d3cdbc733adf0e9bcda6e25a17adf0a61b0e7ac901c1fc77c0ed8d1732c"
+    },
+    "wall_stand_right_2": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 59,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 61,
+      "rate": 1.0,
+      "sequence": "Aerosol_Stand_Low_StepR",
+      "source": "Animation/Trane/TR_Graff_StepR_Stand_08.bnm",
+      "source_sha256": "84e8d03d59827a97dae305205965cd0eaf127e70a2dab4183c6622058129b45e"
+    }
+  },
+  "raw_original_keys_published": false,
+  "rows": [
+    {
+      "animation": "TR_Graff_StepL_Reach_00",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "951bca3a11cc5ffac789b96fb6ab63c09e33b38ce600eb50fc8397cceedfec34",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101773b0",
+      "key": "wall_reach_left_0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e08",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Reach_High_StepL",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepR_Reach_02",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "3ca0bf1d763790169b5274ab9bfbcb918749de1b3aedf81d06625e2291f544b1",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101774b0",
+      "key": "wall_reach_right_0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e0a",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Reach_High_StepR",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepL_Reach_03",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "e6b633e45e21bd5e57eda73cf2fa71ea6960f5abfae618a4b4351f9ece69233b",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101775b0",
+      "key": "wall_reach_left_1",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e12",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Reach_Mid_StepL",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepR_Reach_05",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "a7f739b56c66ca016f17e5560516e4a912350f477345ebe799734051c348541a",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101776b0",
+      "key": "wall_reach_right_1",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e14",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Reach_Mid_StepR",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepL_Reach_06",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "0eb253468f82ca39c2a6a977024092c51e1df7c143f84833940ee705ed1b431e",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101777b0",
+      "key": "wall_reach_left_2",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e1c",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Reach_Low_StepL",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepR_Reach_08",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "517561a549b938d71869d04c999d7ef1d7469db9581ef666abb1297a019dfab8",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101778b0",
+      "key": "wall_reach_right_2",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e1e",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Reach_Low_StepR",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepL_Stand_00",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "dd2c2074a349af426c7303dc26afd2c23a085d73167761dbdbcb9f622645760d",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101779b0",
+      "key": "wall_stand_left_0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e26",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Stand_High_StepL",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepR_Stand_02",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "773f5db679ec4cd73e1b90edabe0e48e367729e7a93de72932fdd3ddd10e8bdd",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10177ab0",
+      "key": "wall_stand_right_0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e28",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Stand_High_StepR",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepL_Stand_03",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "56c6acfe8bccb9624a7b1b8229d20eeef4e0a45b5b83c314c5d180556da4a62d",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10177bb0",
+      "key": "wall_stand_left_1",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e30",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Stand_Mid_StepL",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepR_Stand_05",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "17f74a8b57f41db2b3d8cbff12bc58792260286aaea7a511ab4036c36322404f",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10177cb0",
+      "key": "wall_stand_right_1",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e32",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Stand_Mid_StepR",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepL_Stand_06",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "64340b87a766a06176dd28149aa71da926872ca813d003a18eabefcb70241fe8",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10177db0",
+      "key": "wall_stand_left_2",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e3a",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Stand_Low_StepL",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepR_Stand_08",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "ef6b6c8a6e8c980a61b8495e3659b7a2eb1a3c49700784c7bf6f46dbc4515dfe",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10177eb0",
+      "key": "wall_stand_right_2",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e3c",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Stand_Low_StepR",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepL_Crouch_00",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "27ca8465572b241aef8a66557b710bdf2b38f61884f64512b699b60135103953",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10177fb0",
+      "key": "wall_crouch_left_0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e44",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Bend_High_StepL",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepR_Crouch_02",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "a8cf95c9f9ae6891c5ce965bb22828bab5ca9dcc11a4347edde2c008b933302b",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101780b0",
+      "key": "wall_crouch_right_0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e46",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Bend_High_StepR",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepL_Crouch_03",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "6cdf5b9ceceaeed7167ed50e53d48c8092afbbbc7bfa80ebf53b0c4c7f08d24b",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101781b0",
+      "key": "wall_crouch_left_1",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e4e",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Bend_Mid_StepL",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepR_Crouch_05",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "5058b477dfe8556ab260784a6e81be11d5dda3cfd7c352b0efc9b9be6182a95e",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101782b0",
+      "key": "wall_crouch_right_1",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e50",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Bend_Mid_StepR",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepL_Crouch_06",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "6d8c74d81a72846a56283ccf5fba8bb987de44bcc7daed3f2fca067af2b935b1",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101783b0",
+      "key": "wall_crouch_left_2",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e58",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Bend_Low_StepL",
+      "sequence_ticks": 60
+    },
+    {
+      "animation": "TR_Graff_StepR_Crouch_08",
+      "attribute_flags_low32": 33557506,
+      "body_sha256": "0a34787a1295321473b29943ac9782a4d9760ca0893d8f1efd8bbabfbc1e658b",
+      "category": "",
+      "descriptor_sha256": "83d13ac6bb0368a145fdae9cec811621d96ff90c94fe0562ec03eb7788e6fe12",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101784b0",
+      "key": "wall_crouch_right_2",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e5a",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Aerosol_Bend_Low_StepR",
+      "sequence_ticks": 60
+    }
+  ],
+  "schema": 1,
+  "source_sha256": "dbf38add80c8ad2cd62936b072ce0cae7ac221e53e9d7a536809ad0d8f2de06b"
+}

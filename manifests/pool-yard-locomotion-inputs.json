@@ -1,0 +1,504 @@
+{
+  "actual_browser_verified": false,
+  "bindings": [
+    {
+      "animation": "TR_Crouch_TransToIdle",
+      "attribute_flags_low32": 537395200,
+      "body_sha256": "531c9ab36f9e7f229b59198c0f58c7f89b65b31221f8c7c9790c03995a4cec70",
+      "category": "ducking",
+      "descriptor_sha256": "dd5cc2ea2622546df9f61e5c1e0d7f200fcae4871092416d92a154653cbe3699",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x10115660",
+      "frames": 27,
+      "key": "duck_enter",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "120e",
+      "rate": 1.5,
+      "rate_word": "3fc00000",
+      "sequence": "Duck_FromStand",
+      "sequence_ticks": 27
+    },
+    {
+      "animation": "TR_Crouch_TransToIdle",
+      "attribute_flags_low32": 537395200,
+      "body_sha256": "2db1242e39930906c3edf9b6d8b157f08baf135b6fbbee0e0e49a11d796a1832",
+      "category": "ducking",
+      "descriptor_sha256": "164c26ac27b9fe8a918f05ac32dd71d0c4550b68a591e2e124ef9a2d8b3e0d39",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": 38,
+          "range": "last..0"
+        }
+      ],
+      "entry": "0x101156d0",
+      "frames": 27,
+      "key": "duck_exit",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1210",
+      "rate": 1.5,
+      "rate_word": "3fc00000",
+      "sequence": "Duck_ToStand",
+      "sequence_ticks": 27
+    },
+    {
+      "animation": "TR_Crouch_Idle",
+      "attribute_flags_low32": 534528,
+      "body_sha256": "8b85d313557f24dcffe2ff06787c93394d118f520acacc698a3c25552279082d",
+      "category": "ducking",
+      "descriptor_sha256": "30b318cc54d1c60b0f0b31e3823b7790bf0ef1443ce451d3f5e737aba1aaf582",
+      "emitted_events": [],
+      "entry": "0x10115760",
+      "frames": 121,
+      "key": "duck_idle",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1212",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Duck_Idle",
+      "sequence_ticks": 120
+    },
+    {
+      "animation": "TR_Crouch_TransToWalk",
+      "attribute_flags_low32": 524288,
+      "body_sha256": "ddbd126e50382fab5594b39d8c535e7d928539763d6a7b074fe3b820e7421953",
+      "category": "ducking",
+      "descriptor_sha256": "0476ca911ac2806fb71282aa3bff62725b1053315439bcd61f33033de9e88a02",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        }
+      ],
+      "entry": "0x101157a0",
+      "frames": 25,
+      "key": "duck_to_walk",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1214",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Duck_ToShuffle",
+      "sequence_ticks": 25
+    },
+    {
+      "animation": "TR_Crouch_Walk",
+      "attribute_flags_low32": 524288,
+      "body_sha256": "52ef3d8c61d4a97a0b9c771c6f6bfafd2d7ed4df245c51c268e86ef63361c81a",
+      "category": "ducking",
+      "descriptor_sha256": "8e0873d5b7f51b3deb3807296c102c4855bdc7f94073cbd299ac8747df119288",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        }
+      ],
+      "entry": "0x10115840",
+      "frames": 47,
+      "key": "duck_walk",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1216",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Duck_Shuffle",
+      "sequence_ticks": 47
+    },
+    {
+      "animation": "TR_Crouch_Walk",
+      "attribute_flags_low32": 524288,
+      "body_sha256": "3ee1625d785d5a691f6a5701102bd505dc0e46114dbf6ac04ec6c4f5ca9743b9",
+      "category": "ducking",
+      "descriptor_sha256": "9a4348b6de3938edffc681f1e32115215424462caf98be896f61f87b3e062802",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": 102,
+          "range": "last..0"
+        }
+      ],
+      "entry": "0x101158b0",
+      "frames": 47,
+      "key": "duck_back",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1218",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "Duck_ShuffleBack",
+      "sequence_ticks": 47
+    },
+    {
+      "animation": "TR_Sneak_Idle",
+      "attribute_flags_low32": 10240,
+      "body_sha256": "7644da4117296e4df9b8eaf30419aa987dfc15f7dd7db5d437fc78cfe5e1b503",
+      "category": "sneak",
+      "descriptor_sha256": "9a1720ec4bfed389b6eed4e15461a48b10e0b4e1a836c04de5386825ae3ac96e",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        }
+      ],
+      "entry": "0x10139180",
+      "frames": 119,
+      "key": "sneak_idle",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "128a",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "SneakI",
+      "sequence_ticks": 118
+    },
+    {
+      "animation": "TR_SneakF",
+      "attribute_flags_low32": 2048,
+      "body_sha256": "41c44d565ff600fe55d2b1b8b31169c0e1f3544766637e6f80e4d85fa6e0232e",
+      "category": "sneak",
+      "descriptor_sha256": "459a1bd52ad2841534fa2edbf7ba690b7c3ae93543dd5def3265e1664aaaca3f",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        }
+      ],
+      "entry": "0x10139200",
+      "frames": 59,
+      "key": "sneak_forward",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "128c",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "SneakF",
+      "sequence_ticks": 58
+    }
+  ],
+  "bytes": 296782,
+  "event_transitions": [
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [
+        {
+          "flags": 0,
+          "period": 0,
+          "target": "duck_idle"
+        }
+      ],
+      "event": -1,
+      "key": "duck_enter",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 38,
+      "key": "duck_enter",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 0,
+      "key": "duck_enter",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [
+        {
+          "flags": 0,
+          "period": 10,
+          "target": "roam_idle"
+        }
+      ],
+      "event": -1,
+      "key": "duck_exit",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 38,
+      "key": "duck_exit",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 0,
+      "key": "duck_exit",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [
+        {
+          "flags": 1,
+          "period": 1,
+          "target": "duck_walk"
+        }
+      ],
+      "event": -1,
+      "key": "duck_to_walk",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 38,
+      "key": "duck_to_walk",
+      "original_text_unchanged": true
+    },
+    {
+      "Trans_is_recording_boundary": true,
+      "calls": [],
+      "event": 0,
+      "key": "duck_to_walk",
+      "original_text_unchanged": true
+    }
+  ],
+  "full_loading_calls": 16,
+  "kind": "pool-yard-original-locomotion-inputs",
+  "model_sha256": "dfa91462fa47a85e343e78b5ed7d3aea977cfeab6e3c46730fd9edea4342f692",
+  "native_range_calls": 8,
+  "original_assets_tracked": false,
+  "original_crt_sha256": "8094af5ee310714caebccaeee7769ffb08048503ba478b879edfef5f1a24fefe",
+  "original_physics_verified": false,
+  "original_player_state_selection": false,
+  "original_runtime_handler_event_calls": 9,
+  "original_script_sha256": "07ca7bb8ce55d6e73d319ddcc22c5e5bea02146ef55804bc8aeabebfe994e5ed",
+  "our_source_sha256": "17a942aa4b2990ba42594a5efabb4ee88b7f113423df4cf3756bf87678184965",
+  "phases": {
+    "duck_back": {
+      "codes": [
+        102
+      ],
+      "descriptors": [
+        {
+          "direction": -1,
+          "duration": 0,
+          "end": 0,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 46,
+          "token": 0
+        }
+      ],
+      "frames": 47,
+      "rate": 1.0,
+      "sequence": "Duck_ShuffleBack",
+      "source": "Animation/Trane/TR_Crouch_Walk.bnm",
+      "source_sha256": "fe91e9ab49c9239660a8c3ebc26a4b1589421a38900550b14bfe6339a24d055e"
+    },
+    "duck_enter": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 26,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 27,
+      "rate": 1.5,
+      "sequence": "Duck_FromStand",
+      "source": "Animation/Trane/TR_Crouch_TransToIdle.bnm",
+      "source_sha256": "4a0c41159a285bc93bb07dd3f9c34a3c9aea8a1977362fce3db59b5d3d4c98df"
+    },
+    "duck_exit": {
+      "codes": [
+        38
+      ],
+      "descriptors": [
+        {
+          "direction": -1,
+          "duration": 0,
+          "end": 0,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 26,
+          "token": 0
+        }
+      ],
+      "frames": 27,
+      "rate": 1.5,
+      "sequence": "Duck_ToStand",
+      "source": "Animation/Trane/TR_Crouch_TransToIdle.bnm",
+      "source_sha256": "4a0c41159a285bc93bb07dd3f9c34a3c9aea8a1977362fce3db59b5d3d4c98df"
+    },
+    "duck_idle": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 119,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 121,
+      "rate": 1.0,
+      "sequence": "Duck_Idle",
+      "source": "Animation/Trane/TR_Crouch_Idle.bnm",
+      "source_sha256": "0f491995d057956a6d9d0e6d7339f717d28672e2918e61b49880a9b65d53e578"
+    },
+    "duck_to_walk": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 24,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 25,
+      "rate": 1.0,
+      "sequence": "Duck_ToShuffle",
+      "source": "Animation/Trane/TR_Crouch_TransToWalk.bnm",
+      "source_sha256": "d321b6c5cfd7d6c1f2e329a849bd53253794abcc5fdb6c8bfac6dbe9f170a00d"
+    },
+    "duck_walk": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 46,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 47,
+      "rate": 1.0,
+      "sequence": "Duck_Shuffle",
+      "source": "Animation/Trane/TR_Crouch_Walk.bnm",
+      "source_sha256": "fe91e9ab49c9239660a8c3ebc26a4b1589421a38900550b14bfe6339a24d055e"
+    },
+    "sneak_forward": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 57,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 59,
+      "rate": 1.0,
+      "sequence": "SneakF",
+      "source": "Animation/Trane/TR_SneakF.bnm",
+      "source_sha256": "ee8381c3a125da8fd1a137e9b83983358dab93409533633b62b78686011d92a3"
+    },
+    "sneak_idle": {
+      "codes": [
+        0
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 117,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        }
+      ],
+      "frames": 119,
+      "rate": 1.0,
+      "sequence": "SneakI",
+      "source": "Animation/Trane/TR_Sneak_Idle.bnm",
+      "source_sha256": "19e754355fbcbedac4d143685c51b7c56696bf93a7f897b21dd2909822609c86"
+    }
+  },
+  "schema": 1,
+  "sha256": "770d1d7030b9a23e6be50cd2c38ba72bff266412ee681f0315f6279c8566b361",
+  "source_sha256": {
+    "ban": "6c41b3d7b122413c9d629a23b30a3756f1f52255eac0798a329d2d7d118df73c",
+    "msh": "ecb5c02e9d15377f38c78a78c86f0e74bb3a2e8de42ebaf555b2d635c99896c0"
+  },
+  "url": "../artifacts/pool-yard-locomotion-v1/inputs.json"
+}

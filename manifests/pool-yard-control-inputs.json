@@ -1,0 +1,622 @@
+{
+  "artworks": [
+    {
+      "name": "AT_TraneM01_01",
+      "tiles": [
+        4,
+        2
+      ]
+    },
+    {
+      "name": "AT_TraneM01_02",
+      "tiles": [
+        4,
+        2
+      ]
+    },
+    {
+      "name": "AT_TraneM01_03",
+      "tiles": [
+        4,
+        2
+      ]
+    },
+    {
+      "name": "AT_TraneM01_04",
+      "tiles": [
+        4,
+        2
+      ]
+    }
+  ],
+  "bytes": 1227788,
+  "kind": "pool-yard-control-resources",
+  "model_sha256": "dfa91462fa47a85e343e78b5ed7d3aea977cfeab6e3c46730fd9edea4342f692",
+  "native_paint_bindings": [
+    {
+      "animation": "TR_Graff_Reach_00",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162900",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e02",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Reach_High_L"
+    },
+    {
+      "animation": "TR_Graff_Reach_01",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162950",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e04",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Reach_High_C"
+    },
+    {
+      "animation": "TR_Graff_Reach_02",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x101629a0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e06",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Reach_High_R"
+    },
+    {
+      "animation": "TR_Graff_Reach_03",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x101629f0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e0c",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Reach_Mid_L"
+    },
+    {
+      "animation": "TR_Graff_Reach_04",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162a40",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e0e",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Reach_Mid_C"
+    },
+    {
+      "animation": "TR_Graff_Reach_05",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162a90",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e10",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Reach_Mid_R"
+    },
+    {
+      "animation": "TR_Graff_Reach_06",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162ae0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e16",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Reach_Low_L"
+    },
+    {
+      "animation": "TR_Graff_Reach_07",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162b30",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e18",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Reach_Low_C"
+    },
+    {
+      "animation": "TR_Graff_Reach_08",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162b80",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e1a",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Reach_Low_R"
+    },
+    {
+      "animation": "TR_Graff_Stand_00",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162bd0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e20",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Stand_High_L"
+    },
+    {
+      "animation": "TR_Graff_Stand_01",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162c20",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e22",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Stand_High_C"
+    },
+    {
+      "animation": "TR_Graff_Stand_02",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162c70",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e24",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Stand_High_R"
+    },
+    {
+      "animation": "TR_Graff_Stand_03",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162cc0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e2a",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Stand_Mid_L"
+    },
+    {
+      "animation": "TR_Graff_Stand_04",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162d10",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e2c",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Stand_Mid_C"
+    },
+    {
+      "animation": "TR_Graff_Stand_05",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162d60",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e2e",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Stand_Mid_R"
+    },
+    {
+      "animation": "TR_Graff_Stand_06",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162db0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e34",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Stand_Low_L"
+    },
+    {
+      "animation": "TR_Graff_Stand_07",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162e00",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e36",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Stand_Low_C"
+    },
+    {
+      "animation": "TR_Graff_Stand_08",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162e50",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e38",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Stand_Low_R"
+    },
+    {
+      "animation": "TR_Graff_Crouch_00",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162ea0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e3e",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Bend_High_L"
+    },
+    {
+      "animation": "TR_Graff_Crouch_01",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162ef0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e40",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Bend_High_C"
+    },
+    {
+      "animation": "TR_Graff_Crouch_02",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162f40",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e42",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Bend_High_R"
+    },
+    {
+      "animation": "TR_Graff_Crouch_03",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162f90",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e48",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Bend_Mid_L"
+    },
+    {
+      "animation": "TR_Graff_Crouch_04",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10162fe0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e4a",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Bend_Mid_C"
+    },
+    {
+      "animation": "TR_Graff_Crouch_05",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10163030",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e4c",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Bend_Mid_R"
+    },
+    {
+      "animation": "TR_Graff_Crouch_06",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10163080",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e52",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Bend_Low_L"
+    },
+    {
+      "animation": "TR_Graff_Crouch_07",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x101630d0",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e54",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Bend_Low_C"
+    },
+    {
+      "animation": "TR_Graff_Crouch_08",
+      "attribute_flags_low32": 33557506,
+      "category": "",
+      "emitted_events": [],
+      "entry": "0x10163120",
+      "original_loading_handler_text_unchanged": true,
+      "owner_id_offset": "1e56",
+      "rate": 0.5,
+      "rate_word": "3f000000",
+      "sequence": "Aerosol_Bend_Low_R"
+    }
+  ],
+  "original_assets_tracked": false,
+  "original_controller_parity": false,
+  "original_script_sha256": "07ca7bb8ce55d6e73d319ddcc22c5e5bea02146ef55804bc8aeabebfe994e5ed",
+  "resources": {
+    "crouch_paint_0": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Crouch_00.bnm",
+      "source_sha256": "df02da03a3c10734b72f58d964e25096d04986e29f0d4db5f5fc5ba9703135d6"
+    },
+    "crouch_paint_1": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Crouch_01.bnm",
+      "source_sha256": "230ab5500ef76ca3207c60b3767382b9b33d002be24ed0a44f47f152966fa9bc"
+    },
+    "crouch_paint_2": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Crouch_02.bnm",
+      "source_sha256": "241683119d0dd3c792807a03c2d66f838709b246b9a0f2426cb48ddff4ff5107"
+    },
+    "crouch_paint_3": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Crouch_03.bnm",
+      "source_sha256": "930e23fbfe1172066d203fb6e586c97a7843aafb1f4ba0186e1b264d85cc21a4"
+    },
+    "crouch_paint_4": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Crouch_04.bnm",
+      "source_sha256": "0265c9268225032e437eadd323fbb53486256abe3d80ce7031c84ceb21126b63"
+    },
+    "crouch_paint_5": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Crouch_05.bnm",
+      "source_sha256": "51f11e973c545374ee3238f41e33ddb11b2c8766cf2b53784cf2c1a6c823a3ac"
+    },
+    "crouch_paint_6": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Crouch_06.bnm",
+      "source_sha256": "9dfaf964137f69fb52252d23ae2b15e58885484d84f6b88ad2a011bfd8b92f96"
+    },
+    "crouch_paint_7": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Crouch_07.bnm",
+      "source_sha256": "958cda9422dee96451af8f7e9f5fe1e801130a44cfa211d30c761749aa05c42a"
+    },
+    "crouch_paint_8": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Crouch_08.bnm",
+      "source_sha256": "b337bbc1cf4df29fb443eec22b733e999afa755ebfcc8418f68b6400f16cd34e"
+    },
+    "reach_paint_0": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Reach_00.bnm",
+      "source_sha256": "d4ef9051ed4bc65d9b103af53201cb43212c42303d33dce64093b50ed2d7969b"
+    },
+    "reach_paint_1": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Reach_01.bnm",
+      "source_sha256": "2388facb9b4f79cdd9905fd83be240d962597302043c73446568ea43cc646456"
+    },
+    "reach_paint_2": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Reach_02.bnm",
+      "source_sha256": "c96132c79328a3fbb66a53370dd33c91aad9754cedae2ca16ec0aa9537ceaa9c"
+    },
+    "reach_paint_3": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Reach_03.bnm",
+      "source_sha256": "05b076084d130e706df2b4a7bbe7b1b550b5212f16c44c827864ff9e2ecdc982"
+    },
+    "reach_paint_4": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Reach_04.bnm",
+      "source_sha256": "08fed54f230aedd6a9e0331353baded54ec50855dae307e61582e2c2aafb6402"
+    },
+    "reach_paint_5": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Reach_05.bnm",
+      "source_sha256": "784ce6649ab78af34fde22d14c4e177802423f3b6f93ba7dfe1e5ad13253601e"
+    },
+    "reach_paint_6": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Reach_06.bnm",
+      "source_sha256": "df6367ae1287e0f4667e4d0177de213d03e10caecc3cfc82191c79c9a03f4386"
+    },
+    "reach_paint_7": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Reach_07.bnm",
+      "source_sha256": "d809f71390ac7568ce98c5edcae85b598f9256e402e14524db6f787ead8384b1"
+    },
+    "reach_paint_8": {
+      "frames": 41,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_Reach_08.bnm",
+      "source_sha256": "1d32dfce46b442203367be33178c6f1ed54d27dee2c4abc69058f14fa68b3a78"
+    },
+    "sneak_forward": {
+      "frames": 59,
+      "mode": 1,
+      "source": "Animation/Trane/TR_SneakF.bnm",
+      "source_sha256": "ee8381c3a125da8fd1a137e9b83983358dab93409533633b62b78686011d92a3"
+    },
+    "sneak_idle": {
+      "frames": 119,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Sneak_Idle.bnm",
+      "source_sha256": "19e754355fbcbedac4d143685c51b7c56696bf93a7f897b21dd2909822609c86"
+    },
+    "wall_crouch_left_0": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepL_Crouch_00.bnm",
+      "source_sha256": "3dcee05521ed28def8ca94379c47f632abf5e4c8cf38059f3844b5d0792e3bd6"
+    },
+    "wall_crouch_left_1": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepL_Crouch_03.bnm",
+      "source_sha256": "a76e3016a27dc083919705ca4994939f4184776214b18021b7d84520920dfa9b"
+    },
+    "wall_crouch_left_2": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepL_Crouch_06.bnm",
+      "source_sha256": "aadf0c4f88bf8f01992dd2973c4c27ed8f78ee975fbfefa797f4cbdd25e22adf"
+    },
+    "wall_crouch_right_0": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepR_Crouch_02.bnm",
+      "source_sha256": "9956927b31744105469091db76d6f82e5de7b043dee8688f2346255d88c02b6d"
+    },
+    "wall_crouch_right_1": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepR_Crouch_05.bnm",
+      "source_sha256": "7d048b9d2bc7b263e3ba4b0a24a174d076b107a91be4664f0ec8565b02d866b3"
+    },
+    "wall_crouch_right_2": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepR_Crouch_08.bnm",
+      "source_sha256": "eb4706f625bf92cba400682e850d6672f29bc4fb45bee8a92bfd5efd1e2fac57"
+    },
+    "wall_reach_left_0": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepL_Reach_00.bnm",
+      "source_sha256": "e609f92cceb2772d9d8d0afe70a5fb478ac2ecca5666d86723c5e8341835b11a"
+    },
+    "wall_reach_left_1": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepL_Reach_03.bnm",
+      "source_sha256": "bd25f94f20081e0317af75d0a08a5ee9ae4c25f052e635723c9e7047a61dcd0c"
+    },
+    "wall_reach_left_2": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepL_Reach_06.bnm",
+      "source_sha256": "1c7fb83a4f95be908dcf34b88458742455c4c93d2fb52f4e623d5123f9d7d48a"
+    },
+    "wall_reach_right_0": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepR_Reach_02.bnm",
+      "source_sha256": "2520e4f8cf5fc82fbf3502e62a37008c6bb6e7a74a983855c1d1ecb8dca269a5"
+    },
+    "wall_reach_right_1": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepR_Reach_05.bnm",
+      "source_sha256": "2ced1d233abe912e0d68c7479afdd660378a19b9f7580c7b1ed925c4b0f327c6"
+    },
+    "wall_reach_right_2": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepR_Reach_08.bnm",
+      "source_sha256": "49b9903ad2f5e84707560b1004ba25eb1338d5244edc64c5f403a6f6949f33c4"
+    },
+    "wall_stand_left_0": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepL_Stand_00.bnm",
+      "source_sha256": "1d9167504fbc4184dd9efc53c629abe8c2ef5b01261c980de5121ad22257b436"
+    },
+    "wall_stand_left_1": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepL_Stand_03.bnm",
+      "source_sha256": "bf8ebd99a9c1f7422f2cb196c9fbdba63277417eb5747e74ec326e01cfb468bf"
+    },
+    "wall_stand_left_2": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepL_Stand_06.bnm",
+      "source_sha256": "751b9b05d911ebc53e064a56bef2b5771ef1a37ce41d45aae583612fa952ceb1"
+    },
+    "wall_stand_right_0": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepR_Stand_02.bnm",
+      "source_sha256": "b7868e5e62ac89dd9973f9408f35da05634f9ae44e2016a7a82bdb4743a756f6"
+    },
+    "wall_stand_right_1": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepR_Stand_05.bnm",
+      "source_sha256": "53438d3cdbc733adf0e9bcda6e25a17adf0a61b0e7ac901c1fc77c0ed8d1732c"
+    },
+    "wall_stand_right_2": {
+      "frames": 61,
+      "mode": 1,
+      "source": "Animation/Trane/TR_Graff_StepR_Stand_08.bnm",
+      "source_sha256": "84e8d03d59827a97dae305205965cd0eaf127e70a2dab4183c6622058129b45e"
+    }
+  },
+  "schema": 1,
+  "sha256": "eec595b0b9b72af7032b60845457441b9c9bf473d2249c3183404a7391432230",
+  "source_exporter_sha256": "e8fd48d49449f2f02ad3d6abd5ff78f9ec50aa471e84461a5d4add1a7089fc8c",
+  "source_sha256": {
+    "Interfc/gui/icon_boltcutters.st": "a0fb89fdcf5bee47f69213da70caf78d65ba9d94b9cee2e35b74b4b76bc895cf",
+    "Interfc/gui/icon_crowbar.st": "d4f74bea17c3041871f74808e0418cdf10fe510171fe4f54989382acdeb6bde4",
+    "Interfc/gui/icon_rollerweapon.st": "9146ab15c11e5dfaab17dad11053c5796f012f02bfc8d5a8a259cfed97daaa74",
+    "Interfc/gui/icon_shoepolish.st": "2bf337a35810e470955d5d90b002293c5269c0b704486ede316ce358a381e2f0",
+    "Interfc/gui/icon_spraypaint_001.st": "b5d5f765bcf952f874d99e789bbe6100cef44ca88399d18aafc4af96603024b0",
+    "Interfc/gui/icon_squeegeeposter.st": "19dc201ccec0b29fa339a6e5ee9230251565f874267201ad86dfbef7fdb50d05",
+    "Interfc/gui/icon_stencile.st": "e596041a6b5a4125cbc3d681e37586707763ddf3a7d18cf8b44c66da16b0ff93",
+    "Interfc/gui/icon_sticker.st": "1deb17451440b8f96f5aa65bc5c6ba84a646c5d890fb88734b6ccd76ef5b0d75",
+    "ban": "6c41b3d7b122413c9d629a23b30a3756f1f52255eac0798a329d2d7d118df73c",
+    "msh": "ecb5c02e9d15377f38c78a78c86f0e74bb3a2e8de42ebaf555b2d635c99896c0",
+    "textures/tag_art/at_tranem01_01_f.st": "fb30a6b6aff39cd0eec9190060b501da354e986fc884094391be1e49fae455fc",
+    "textures/tag_art/at_tranem01_01_s.st": "550527a779a08125d63416b8fe814e299b605b7a26e86de02560b7c04bfc2d11",
+    "textures/tag_art/at_tranem01_01_u.st": "4a9ba2e6f10bb8e46ba8d137105f9c4fde7d1c4840cc9e9be741d6321df64dc9",
+    "textures/tag_art/at_tranem01_02_f.st": "a6375c2a60f5707d276de72b1db05966c637896afee99b2e7924e83730569d60",
+    "textures/tag_art/at_tranem01_02_s.st": "9ee2e5faf63dff5d81adbab1d53a9d688c10c98e8e8bf40b8560c9a35c09e81d",
+    "textures/tag_art/at_tranem01_02_u.st": "d53662cfe0ba45504323dcc3d095153e01907c41cad0b949a9aae0181961fce8",
+    "textures/tag_art/at_tranem01_03_f.st": "58dd97c16ca31e6165673fd960f00e57082f17be31de96c2e4f4ca82f7fa8cbb",
+    "textures/tag_art/at_tranem01_03_s.st": "8cf5be210f12c68b19eb5ecaf79c035f2d21541e02569ba7b9b0ad0f0ccaf7cd",
+    "textures/tag_art/at_tranem01_03_u.st": "9d92eb725ab8999c0bf22df71cc4c1daf15893aa726bd89bad5af0961401b3e3",
+    "textures/tag_art/at_tranem01_04_f.st": "0bb7dedae0e823656cfceed53f0a3bc66721a22a1c1b4ef975dd9687ee3c80f2",
+    "textures/tag_art/at_tranem01_04_s.st": "dd4bcd696e095180a63e43bafafa537010c7bec39983bbf1a81c7d0b6368f12a",
+    "textures/tag_art/at_tranem01_04_u.st": "ef4cfae2e1f8b8268f2718a04b4bfa54d14c4fd0bd43334834b0c268a7eece9c"
+  },
+  "url": "../artifacts/pool-yard-controls-v4/inputs.json"
+}

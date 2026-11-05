@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Getting Up — The Pool Yard</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#111714;color:#edf1e9;font:14px system-ui,sans-serif}#view{position:fixed;inset:0}canvas{display:block;outline:none}aside{position:absolute;left:18px;top:18px;width:290px;padding:18px;background:#111914eb;border:1px solid #425140;border-radius:10px;max-height:94vh;overflow:auto}h1{font-size:21px;margin:6px 0 14px}p{line-height:1.5;color:#c0cdbf}.badge{color:#c3ec84;font-size:11px;letter-spacing:.1em}button{font:inherit;background:#34452b;color:#f3ffe8;border:1px solid #687e52;border-radius:5px;padding:9px 11px;cursor:pointer}button:disabled{opacity:.4;cursor:default}.row{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}kbd{font:12px ui-monospace,monospace;border:1px solid #637158;background:#293322;border-radius:3px;padding:2px 4px}#status{white-space:pre-line;color:#c3ec84}#stats{font:12px/1.6 ui-monospace,monospace;white-space:pre-line;color:#c3ccba}#fatal{white-space:pre-wrap;color:#ffb9a2}summary{cursor:pointer}.small{font-size:12px}textarea{width:100%;height:120px;background:#10160d;color:#b9c8a4;font:10px monospace}a{color:#bedf9a}#focusHint{position:absolute;right:20px;bottom:20px;background:#111b14dd;padding:12px 18px;border-radius:7px;max-width:390px;color:#d5e6c4;pointer-events:none}@media(max-width:650px){aside{left:8px;top:8px;width:240px;padding:12px;max-height:48vh}h1{font-size:17px}#focusHint{right:8px;bottom:8px;font-size:12px;max-width:250px}}
+  </style>
+</head>
+<body>
+  <div id="view" aria-label="Интерактивная трёхмерная прогулка"></div>
+  <aside>
+    <div class="badge">WELCOME TO NEW RADIUS · SANDBOX</div>
+    <h1>The Pool Yard</h1>
+    <div id="status" role="status">Проверка локальных ресурсов…</div><div id="fatal" role="alert"></div>
+    <div class="row"><button id="start" disabled>Начать прогулку</button><button id="reset" disabled>Вернуть персонажа</button></div>
+    <div class="row"><button id="walk" disabled>Режим: бег</button><button id="camera" disabled>Камера за спину</button></div>
+    <p class="small"><label for="spawn">Точка прогулки</label><br><select id="spawn" disabled></select></p>
+    <div class="row"><button id="street" disabled>Обзор двора</button><button id="erase" disabled>Стереть рисунки</button></div>
+    <p class="small">Свободная прогулка без прохождения миссии. Возврат персонажа сохраняет рисунки текущей сессии.</p>
+    <p><kbd>W A S D</kbd> — движение<br><kbd>Space</kbd> — прыжок<br><kbd>Ctrl</kbd> — ходьба / бег<br><kbd>I K J L</kbd> — камера ↑ ↓ ← →<br><kbd>Esc</kbd> — пауза</p>
+    <p><kbd>V</kbd> — удерживать у стены<br><kbd>V + U</kbd> — рисовать<br><kbd>V + O</kbd> — быстрая подача<br>При V: <kbd>W/S</kbd> — высота, <kbd>A/D</kbd> — поза влево/вправо</p>
+    <p class="small">В прыжке держи W у подходящего уступа — захват. В висе W или Space — подняться, S — отпустить.</p>
+    <p class="small">Камера — перетаскивание по сцене. Колесо или жест трекпада — расстояние. Нажми «Начать», затем двигайся.</p>
+    <p class="small">RNG: MSVCR71 · контролируемый seed 1. U — normal, O — fast. Повторное нанесение на существующий потёк тоже расходует RNG. <a href="../manifests/graffiti-d3d.json">Трасса D3D8 и границы доказательства</a></p><div id="stats"></div>
+    <details><summary>Что ещё восстанавливается</summary>
+      <p class="small">Это отдельная сборка исходной локации. Подключены базовые движения и граффити, но лестница, ползание, все игровые действия, исходные зоны рисунков и полное освещение ещё не завершены. Вход у лестницы сохранён; для прогулки по двору выбрана исходная контрольная точка. Коллизии пока используют видимые треугольники, а не полный оригинальный BSP.</p>
+    </details>
+    <details><summary>Снимок проверки</summary>
+      <p class="small"><label for="pauseOn">Пауза на событии</label><br><select id="pauseOn"><option value="">Не останавливать</option><option value="takeoff">Начало прыжка</option><option value="launch">Отрыв</option><option value="air">Полёт</option><option value="land">Приземление</option><option value="ledge-caught">Захват уступа</option><option value="ledge_hang">Вис</option><option value="authored-pullup">Начало подъёма</option><option value="climb-supported">Подъём с опорой</option><option value="ledge-drop">Отпустить уступ</option><option value="paint-enter">Вход в рисование</option><option value="paint-ready">Готов к рисованию без подачи</option><option value="paint-stroke">После 30 нанесений</option><option value="paint-normal">Обычная краска</option><option value="paint-fast">Быстрая краска</option><option value="tag-drip-trigger">Сработал потёк</option><option value="paint-exit">Выход от стены</option><option value="roam">Возврат к движению</option></select></p>
+      <div class="row"><button id="step" disabled>Один шаг на паузе</button></div>
+      <div class="row"><button id="capture" disabled>Скачать снимок</button></div>
+      <textarea id="diagnostics" readonly aria-label="JSON текущего состояния"></textarea>
+    </details>
+    <p class="small"><a href="world-tag.html">Прежнее рисование без изменений</a> · <a href="graffiti-lab.html">Лаборатория слоёв</a> · <a href="world-level.html">Проверочный viewer</a></p>
+  </aside>
+  <div id="focusHint">Загрузка The Pool Yard…</div>
+  <script src="vendor/three-r128/three.min.js"></script>
+  <script src="vendor/three-r128/GLTFLoader.js"></script>
+  <script src="gettingup-animation.js"></script><script src="gettingup-clocks.js"></script>
+  <script src="gettingup-actor.js"></script><script src="gettingup-script.js"></script><script src="gettingup-script-actor.js"></script>
+  <script src="gettingup-gear.js"></script><script src="gettingup-primary-diagnostics.js"></script>
+  <script src="gettingup-transition-parameter.js"></script><script src="gettingup-derived-policy.js"></script>
+  <script src="gettingup-constructed-episode.js"></script><script src="gettingup-layer-episode.js"></script>
+  <script src="gettingup-fresh-layer-episode.js"></script><script src="gettingup-superrun-episode.js"></script>
+  <script src="gettingup-object-lifecycle.js"></script><script src="gettingup-frame-coordinator.js"></script>
+  <script src="gettingup-managed-episode.js"></script><script src="gettingup-character-motion.js"></script>
+  <script src="gettingup-walk-driver.js"></script><script src="gettingup-world-collision.js"></script>
+  <script src="gettingup-compiled-mixed.js"></script><script src="gettingup-jump-rules.js"></script>
+  <script src="gettingup-traversal-driver.js"></script><script src="gettingup-play-simulation.js"></script>
+  <script src="gettingup-scene-placement.js"></script><script src="gettingup-climb-driver.js"></script><script src="gettingup-ledge-query.js"></script>
+  <script src="gettingup-climb-simulation.js"></script><script src="gettingup-paint-driver.js"></script><script src="gettingup-paint-surface.js"></script>
+  <script src="gettingup-paint-simulation.js"></script><script src="gettingup-graffiti.js"></script><script src="gettingup-tag.js"></script><script src="gettingup-tag-simulation.js"></script><script src="gettingup-tag-renderer.js"></script><script src="gettingup-spray-controller.js"></script><script src="gettingup-spray-simulation.js"></script><script src="gettingup-spray-renderer.js"></script><script src="pool-yard-lab.js"></script>
+</body>
+</html>

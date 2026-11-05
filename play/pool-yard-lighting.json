@@ -1,0 +1,160 @@
+{
+  "kind": "pool-yard-night-presentation",
+  "night_reference": {
+    "mesh": "USA/engine/Meshes/Props/Skyboxes/Night/Night_Overcast2.msh",
+    "mesh_sha256": "dd66bc7ed7e1938e4326829d68c08124670b10f3f0bc4a7dee1f3de09fae1aba",
+    "source_object_id": 2216723,
+    "texture": "USA/engine/Meshes/Props/Skyboxes/Night/night_overcastdark02.st",
+    "texture_sha256": "28e94ca9581853e94cf15c59159a0f6a10cbff6945e8f74d99189e9ffa61b826"
+  },
+  "original_assets_changed": false,
+  "original_game_runtime_verified": false,
+  "original_lighting_shader_verified": false,
+  "original_lightmap_composition_verified": false,
+  "parser": {
+    "committed_source_used": true,
+    "sha256": "0122bf96e4ec1ec15fe22b64bd6f2da11e417e54f694a0b4a304a0c7acef99de",
+    "uncommitted_working_copy_bypassed": true,
+    "working_file_not_modified": true
+  },
+  "preview": {
+    "clear_color_srgb": [
+      222,
+      131,
+      16
+    ],
+    "exposure": 1,
+    "fog": null,
+    "hemisphere_intensity": 0,
+    "key_direction_display": [
+      -130,
+      210,
+      -180
+    ],
+    "period": "night",
+    "renderer_parameters_are_preview_policy": true,
+    "sky_ambient_modulation": false,
+    "sky_tone_mapping": false
+  },
+  "schema": 1,
+  "sky": [
+    {
+      "ambient": [
+        0.5249999761581421,
+        0.5249999761581421,
+        0.5249999761581421
+      ],
+      "id": 2216719,
+      "name": "IStatic_2216719"
+    },
+    {
+      "ambient": [
+        0.5249999761581421,
+        0.5249999761581421,
+        0.5249999761581421
+      ],
+      "id": 2216720,
+      "name": "IStatic_2216720"
+    },
+    {
+      "ambient": [
+        0.5249999761581421,
+        0.5249999761581421,
+        0.5249999761581421
+      ],
+      "id": 2216721,
+      "name": "IStatic_2216721"
+    },
+    {
+      "ambient": [
+        0.5249999761581421,
+        0.5249999761581421,
+        0.5249999761581421
+      ],
+      "id": 2216722,
+      "name": "IStatic_2216722"
+    },
+    {
+      "ambient": [
+        0.5249999761581421,
+        0.5249999761581421,
+        0.5249999761581421
+      ],
+      "id": 2216723,
+      "name": "IStatic_2216723"
+    },
+    {
+      "ambient": [
+        0.5249999761581421,
+        0.5249999761581421,
+        0.5249999761581421
+      ],
+      "id": 2216724,
+      "name": "IStatic_2216724"
+    }
+  ],
+  "source_level": "m01_hoo_tranes_hood_2",
+  "source_level_sha256": "e56165d5dad6e1a897c7813328dd2388d79ad1de07772a7c546d25116ea13d5e",
+  "source_parallel_light": {
+    "attenuation": "None",
+    "color": [
+      0.9369999766349792,
+      0.8510000109672546,
+      0.3449999988079071
+    ],
+    "id": 2216787,
+    "intensity": 0.5,
+    "plane_radius": 32268,
+    "range": 40000,
+    "transform": {
+      "axisX": [
+        0.27059808373451233,
+        0.70710688829422,
+        -0.6532814502716064
+      ],
+      "axisY": [
+        -0.2705981433391571,
+        0.7071067690849304,
+        0.653281569480896
+      ],
+      "axisZ": [
+        0.9238795042037964,
+        1.4901159417490817e-08,
+        0.38268351554870605
+      ],
+      "position": [
+        -7168.0,
+        7424.0,
+        14336.0
+      ]
+    }
+  },
+  "source_properties": {
+    "character_ambient": [
+      0.27799999713897705,
+      0.27799999713897705,
+      0.27799999713897705
+    ],
+    "far_clip": 12000.0,
+    "id": 85,
+    "player_additional_ambient": [
+      0.22699999809265137,
+      0.22699999809265137,
+      0.22699999809265137
+    ],
+    "scene_ambient": [
+      0.30000001192092896,
+      0.30000001192092896,
+      1.0
+    ],
+    "static_ambient": [
+      0.17599999904632568,
+      0.17299999296665192,
+      0.10999999940395355
+    ]
+  },
+  "source_render_inputs": {
+    "sha256": "0f6a627736377abe26ec09256bd4fd04e9d2a3a9b90ef7dfe74df2f55a0a122e",
+    "url": "../artifacts/pool-yard/render/inputs.json"
+  }
+}

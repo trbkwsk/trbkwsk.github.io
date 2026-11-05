@@ -1,0 +1,1232 @@
+{
+  "bindings": [
+    {
+      "animation": "TR_SNS_Left",
+      "attribute_flags_low32": 66,
+      "body_sha256": "4e154e34c4ff1a73d22395e8092d42710086efbec2ee01888905075517df4871",
+      "category": "",
+      "descriptor_sha256": "17ff533c0bbbf8907800d996a5b407f6e53fee2f9adb96cecedea602e78851d3",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 120,
+          "range": "0..39"
+        },
+        {
+          "event": 121,
+          "range": "40"
+        },
+        {
+          "event": 143,
+          "range": "41..last"
+        }
+      ],
+      "entry": "0x10025a30",
+      "frames": 55,
+      "key": "evade_left",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "original_text_unchanged": true,
+      "owner_id_offset": "32d2",
+      "pre_frame_record_count": 0,
+      "pre_frame_record_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rate": 0.8999999761581421,
+      "rate_word": "3f666666",
+      "sequence": "SnsL",
+      "sequence_ticks": 55,
+      "temporary_fixture_allocations": []
+    },
+    {
+      "animation": "TR_SNS_Right",
+      "attribute_flags_low32": 66,
+      "body_sha256": "e06b38381063fa195e60a764760736b84e9b5595a186adb2393872c1204d7142",
+      "category": "",
+      "descriptor_sha256": "17ff533c0bbbf8907800d996a5b407f6e53fee2f9adb96cecedea602e78851d3",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 272,
+          "range": "0..39"
+        },
+        {
+          "event": 273,
+          "range": "40"
+        },
+        {
+          "event": 295,
+          "range": "41..last"
+        }
+      ],
+      "entry": "0x10026c40",
+      "frames": 55,
+      "key": "evade_right",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "original_text_unchanged": true,
+      "owner_id_offset": "32d4",
+      "pre_frame_record_count": 0,
+      "pre_frame_record_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rate": 0.8999999761581421,
+      "rate_word": "3f666666",
+      "sequence": "SnsR",
+      "sequence_ticks": 55,
+      "temporary_fixture_allocations": []
+    },
+    {
+      "animation": "TR_CrossR",
+      "attribute_flags_low32": 66,
+      "body_sha256": "7e55f44e5f970a462126d893ee7a212aaa9688af8153a3b105111ce26eb9472e",
+      "category": "",
+      "descriptor_sha256": "7e7189361b817f444524a27e67befa18c450758b59281abce448e950b08847c6",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 596,
+          "range": "-10..-1"
+        },
+        {
+          "event": 598,
+          "range": "0..14"
+        },
+        {
+          "event": 599,
+          "range": "15"
+        },
+        {
+          "event": 602,
+          "range": "16..18"
+        },
+        {
+          "event": 603,
+          "range": "19"
+        },
+        {
+          "event": 605,
+          "range": "20..22"
+        },
+        {
+          "event": 606,
+          "range": "23"
+        },
+        {
+          "event": 622,
+          "range": "24..28"
+        },
+        {
+          "event": 639,
+          "range": "29..40"
+        },
+        {
+          "event": 640,
+          "range": "41"
+        },
+        {
+          "event": 644,
+          "range": "42..last"
+        }
+      ],
+      "entry": "0x10020ea0",
+      "frames": 67,
+      "key": "punch",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "original_text_unchanged": true,
+      "owner_id_offset": "3298",
+      "pre_frame_record_count": 1,
+      "pre_frame_record_sha256": "8672d1492bca9297b5df8d2ca77a29e0e7c2eb841d090ddf0c31b3a060538ace",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "CrossR",
+      "sequence_ticks": 67,
+      "temporary_fixture_allocations": [
+        32,
+        56,
+        88,
+        24
+      ]
+    },
+    {
+      "animation": "TR_newSnapKickL_2",
+      "attribute_flags_low32": 66,
+      "body_sha256": "3074e852cf5c1960644ec25f987b0df9ec856a10e0024025740203e20d83f8b7",
+      "category": "",
+      "descriptor_sha256": "d577d743a1b31573664626e171acf8d603e29acae8506c5417e8feb2cbba6eef",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 160,
+          "range": "-10..-1"
+        },
+        {
+          "event": 162,
+          "range": "0..17"
+        },
+        {
+          "event": 163,
+          "range": "18"
+        },
+        {
+          "event": 166,
+          "range": "19..20"
+        },
+        {
+          "event": 167,
+          "range": "21"
+        },
+        {
+          "event": 169,
+          "range": "22..23"
+        },
+        {
+          "event": 170,
+          "range": "24"
+        },
+        {
+          "event": 172,
+          "range": "25..26"
+        },
+        {
+          "event": 174,
+          "range": "27"
+        },
+        {
+          "event": 183,
+          "range": "28..35"
+        },
+        {
+          "event": 192,
+          "range": "36..last"
+        }
+      ],
+      "entry": "0x10023a40",
+      "frames": 45,
+      "key": "kick",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "original_text_unchanged": true,
+      "owner_id_offset": "32b2",
+      "pre_frame_record_count": 1,
+      "pre_frame_record_sha256": "8672d1492bca9297b5df8d2ca77a29e0e7c2eb841d090ddf0c31b3a060538ace",
+      "rate": 1.0,
+      "rate_word": "3f800000",
+      "sequence": "SnapKickL",
+      "sequence_ticks": 45,
+      "temporary_fixture_allocations": [
+        32,
+        56,
+        88,
+        24
+      ]
+    },
+    {
+      "animation": "TR_JabR",
+      "attribute_flags_low32": 66,
+      "body_sha256": "d105c431806ca30da3cc3248bf753f8e6c68dfe25cde717512eca10052efcdce",
+      "category": "",
+      "descriptor_sha256": "0609a444f7ab9bc2ebae95eb665d038730fc63156bd8c259c4ee5b23d120bffa",
+      "emitted_events": [
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 506,
+          "range": "-10..-1"
+        },
+        {
+          "event": 508,
+          "range": "0..8"
+        },
+        {
+          "event": 509,
+          "range": "9"
+        },
+        {
+          "event": 513,
+          "range": "10..11"
+        },
+        {
+          "event": 514,
+          "range": "12"
+        },
+        {
+          "event": 536,
+          "range": "13..22"
+        },
+        {
+          "event": 556,
+          "range": "23..last"
+        }
+      ],
+      "entry": "0x100200a0",
+      "frames": 47,
+      "key": "jab",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "original_text_unchanged": true,
+      "owner_id_offset": "3296",
+      "pre_frame_record_count": 1,
+      "pre_frame_record_sha256": "8672d1492bca9297b5df8d2ca77a29e0e7c2eb841d090ddf0c31b3a060538ace",
+      "rate": 0.800000011920929,
+      "rate_word": "3f4ccccd",
+      "sequence": "JabR",
+      "sequence_ticks": 47,
+      "temporary_fixture_allocations": [
+        32,
+        56,
+        88,
+        24
+      ]
+    },
+    {
+      "animation": "TR_DodgeL",
+      "attribute_flags_low32": 98,
+      "body_sha256": "20ae23dd9370b5d0efe2fc88772f89ba964755fa0e3ed2050c74019657f8fbfe",
+      "category": "stalking",
+      "descriptor_sha256": "22fb582e2afc6a25aa0176d2cbebc543d66ab84d6a1e54aa2e0e773b1acb5c9e",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 312,
+          "range": "0..29"
+        },
+        {
+          "event": 313,
+          "range": "30"
+        },
+        {
+          "event": 341,
+          "range": "31..last"
+        }
+      ],
+      "entry": "0x1001b830",
+      "frames": 49,
+      "key": "dodge_left",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "original_text_unchanged": true,
+      "owner_id_offset": "3282",
+      "pre_frame_record_count": 0,
+      "pre_frame_record_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rate": 1.100000023841858,
+      "rate_word": "3f8ccccd",
+      "sequence": "Trane_DodgeL",
+      "sequence_ticks": 49,
+      "temporary_fixture_allocations": []
+    },
+    {
+      "animation": "TR_DodgeR",
+      "attribute_flags_low32": 98,
+      "body_sha256": "2704f701ee05617aad4aa4c80c7832936799345c0b1e58dd5ea75ff74f65d9f2",
+      "category": "stalking",
+      "descriptor_sha256": "22fb582e2afc6a25aa0176d2cbebc543d66ab84d6a1e54aa2e0e773b1acb5c9e",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 412,
+          "range": "0..29"
+        },
+        {
+          "event": 413,
+          "range": "30"
+        },
+        {
+          "event": 441,
+          "range": "31..last"
+        }
+      ],
+      "entry": "0x1001cda0",
+      "frames": 49,
+      "key": "dodge_right",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "original_text_unchanged": true,
+      "owner_id_offset": "3284",
+      "pre_frame_record_count": 0,
+      "pre_frame_record_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rate": 1.100000023841858,
+      "rate_word": "3f8ccccd",
+      "sequence": "Trane_DodgeR",
+      "sequence_ticks": 49,
+      "temporary_fixture_allocations": []
+    },
+    {
+      "animation": "Dip_LungeF",
+      "attribute_flags_low32": 98,
+      "body_sha256": "3910ea91c992eefae6ee1b44c0c9478b26d0705350be472d5db0a74cf76185e0",
+      "category": "stalking",
+      "descriptor_sha256": "d5fb93479b1cefa23a85eb2417f20e7a495ed3525672a1709437a15d7e2604b6",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 107,
+          "range": "7..24"
+        },
+        {
+          "event": 108,
+          "range": "25"
+        },
+        {
+          "event": 135,
+          "range": "26..last"
+        }
+      ],
+      "entry": "0x10018dd0",
+      "frames": 47,
+      "key": "dodge_front",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "original_text_unchanged": true,
+      "owner_id_offset": "327e",
+      "pre_frame_record_count": 0,
+      "pre_frame_record_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rate": 1.100000023841858,
+      "rate_word": "3f8ccccd",
+      "sequence": "Trane_DodgeF",
+      "sequence_ticks": 40,
+      "temporary_fixture_allocations": []
+    },
+    {
+      "animation": "Dip_DodgeB",
+      "attribute_flags_low32": 98,
+      "body_sha256": "a5391c9e5b9f10eb8c53d68568aeba0119632dd57b2bf8da0a5cc2e0cca550fd",
+      "category": "stalking",
+      "descriptor_sha256": "ecf5053d3ab4a1b0799b38ede9e0d6e066b6793c77676d56b20cf072e5874623",
+      "emitted_events": [
+        {
+          "event": -1,
+          "range": null
+        },
+        {
+          "event": -2,
+          "range": null
+        },
+        {
+          "event": -3,
+          "range": null
+        },
+        {
+          "event": -4,
+          "range": null
+        },
+        {
+          "event": 213,
+          "range": "10..54"
+        },
+        {
+          "event": 214,
+          "range": "55"
+        },
+        {
+          "event": 241,
+          "range": "56..70"
+        }
+      ],
+      "entry": "0x1001a2c0",
+      "frames": 95,
+      "key": "dodge_back",
+      "mode": 1,
+      "original_loading_handler_text_unchanged": true,
+      "original_text_unchanged": true,
+      "owner_id_offset": "3280",
+      "pre_frame_record_count": 0,
+      "pre_frame_record_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rate": 1.100000023841858,
+      "rate_word": "3f8ccccd",
+      "sequence": "Trane_DodgeB",
+      "sequence_ticks": 61,
+      "temporary_fixture_allocations": []
+    }
+  ],
+  "browser_verified": false,
+  "bytes": 764960,
+  "fixture_allocation_service": true,
+  "full_loading_calls": 18,
+  "kind": "pool-yard-original-combat-inputs",
+  "model_sha256": "dfa91462fa47a85e343e78b5ed7d3aea977cfeab6e3c46730fd9edea4342f692",
+  "native_range_factory_calls": 9,
+  "original_assets_tracked": false,
+  "original_crt_sha256": "8094af5ee310714caebccaeee7769ffb08048503ba478b879edfef5f1a24fefe",
+  "original_game_heap_executed": false,
+  "original_live_game_verified": false,
+  "original_script_sha256": "07ca7bb8ce55d6e73d319ddcc22c5e5bea02146ef55804bc8aeabebfe994e5ed",
+  "our_source_sha256": "8ba1c9b0b7efd12ea930cd39728beb49db2178696d637e9c0c3518de047205b8",
+  "phases": {
+    "dodge_back": {
+      "codes": [
+        213,
+        214,
+        241
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 54,
+          "kind": 0,
+          "next_frame": 55,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 10,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 55,
+          "kind": 0,
+          "next_frame": 56,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 55,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 70,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 56,
+          "token": 2
+        }
+      ],
+      "frames": 95,
+      "pre_frame_events": [],
+      "rate": 1.100000023841858,
+      "sequence": "Trane_DodgeB",
+      "source": "Animation/Dip/Dip_DodgeB.bnm",
+      "source_sha256": "1582f968d52612bce89fc0fb218f47e5e5d095444d9c9ee2cd12ae15cff33be3"
+    },
+    "dodge_front": {
+      "codes": [
+        107,
+        108,
+        135
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 24,
+          "kind": 0,
+          "next_frame": 25,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 7,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 25,
+          "kind": 0,
+          "next_frame": 26,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 25,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 46,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 26,
+          "token": 2
+        }
+      ],
+      "frames": 47,
+      "pre_frame_events": [],
+      "rate": 1.100000023841858,
+      "sequence": "Trane_DodgeF",
+      "source": "Animation/Dip/Dip_LungeF.bnm",
+      "source_sha256": "5a93cd6f554e4d789f19430722c4958a01f3e9bf39eaa00ca09fb45e479b188f"
+    },
+    "dodge_left": {
+      "codes": [
+        312,
+        313,
+        341
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 29,
+          "kind": 0,
+          "next_frame": 30,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 30,
+          "kind": 0,
+          "next_frame": 31,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 30,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 48,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 31,
+          "token": 2
+        }
+      ],
+      "frames": 49,
+      "pre_frame_events": [],
+      "rate": 1.100000023841858,
+      "sequence": "Trane_DodgeL",
+      "source": "Animation/Trane/TR_DodgeL.bnm",
+      "source_sha256": "f37b4e07a524af9741c7a63551be71fae78dd791567e7bbf7de50c01b6c3077b"
+    },
+    "dodge_right": {
+      "codes": [
+        412,
+        413,
+        441
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 29,
+          "kind": 0,
+          "next_frame": 30,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 30,
+          "kind": 0,
+          "next_frame": 31,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 30,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 48,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 31,
+          "token": 2
+        }
+      ],
+      "frames": 49,
+      "pre_frame_events": [],
+      "rate": 1.100000023841858,
+      "sequence": "Trane_DodgeR",
+      "source": "Animation/Trane/TR_DodgeR.bnm",
+      "source_sha256": "e0ae3cc83b5339dc95672da94172dcd09e4b6ec5292c4840429b5f5096bd7132"
+    },
+    "evade_left": {
+      "codes": [
+        120,
+        121,
+        143
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 39,
+          "kind": 0,
+          "next_frame": 40,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 40,
+          "kind": 0,
+          "next_frame": 41,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 40,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 54,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 41,
+          "token": 2
+        }
+      ],
+      "frames": 55,
+      "pre_frame_events": [],
+      "rate": 0.8999999761581421,
+      "sequence": "SnsL",
+      "source": "Animation/Trane/TR_SNS_Left.bnm",
+      "source_sha256": "215381428144df49b1d6c6fe086e8501d5ca79062f3b990de547a6d95b35ea09"
+    },
+    "evade_right": {
+      "codes": [
+        272,
+        273,
+        295
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 39,
+          "kind": 0,
+          "next_frame": 40,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 0
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 40,
+          "kind": 0,
+          "next_frame": 41,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 40,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 54,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 41,
+          "token": 2
+        }
+      ],
+      "frames": 55,
+      "pre_frame_events": [],
+      "rate": 0.8999999761581421,
+      "sequence": "SnsR",
+      "source": "Animation/Trane/TR_SNS_Right.bnm",
+      "source_sha256": "9fad110c1678abd7017d4bdc19efa80910503d2f35324973cd7e45568a871651"
+    },
+    "jab": {
+      "codes": [
+        506,
+        508,
+        509,
+        513,
+        514,
+        536,
+        556
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 8,
+          "kind": 0,
+          "next_frame": 9,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 9,
+          "kind": 0,
+          "next_frame": 10,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 9,
+          "token": 2
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 11,
+          "kind": 0,
+          "next_frame": 12,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 10,
+          "token": 3
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 12,
+          "kind": 0,
+          "next_frame": 13,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 12,
+          "token": 4
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 22,
+          "kind": 0,
+          "next_frame": 23,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 13,
+          "token": 5
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 46,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 23,
+          "token": 6
+        }
+      ],
+      "frames": 47,
+      "pre_frame_events": [
+        {
+          "event": 506,
+          "range": "-10..-1"
+        }
+      ],
+      "rate": 0.800000011920929,
+      "sequence": "JabR",
+      "source": "Animation/Trane/TR_JabR.bnm",
+      "source_sha256": "988f6870ac3ad2c417c671cf08977835c8dee39e4fe2add93e080b756660b3da"
+    },
+    "kick": {
+      "codes": [
+        160,
+        162,
+        163,
+        166,
+        167,
+        169,
+        170,
+        172,
+        174,
+        183,
+        192
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 17,
+          "kind": 0,
+          "next_frame": 18,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 18,
+          "kind": 0,
+          "next_frame": 19,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 18,
+          "token": 2
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 20,
+          "kind": 0,
+          "next_frame": 21,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 19,
+          "token": 3
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 21,
+          "kind": 0,
+          "next_frame": 22,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 21,
+          "token": 4
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 23,
+          "kind": 0,
+          "next_frame": 24,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 22,
+          "token": 5
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 24,
+          "kind": 0,
+          "next_frame": 25,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 24,
+          "token": 6
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 26,
+          "kind": 0,
+          "next_frame": 27,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 25,
+          "token": 7
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 27,
+          "kind": 0,
+          "next_frame": 28,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 27,
+          "token": 8
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 35,
+          "kind": 0,
+          "next_frame": 36,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 28,
+          "token": 9
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 44,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 36,
+          "token": 10
+        }
+      ],
+      "frames": 45,
+      "pre_frame_events": [
+        {
+          "event": 160,
+          "range": "-10..-1"
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "SnapKickL",
+      "source": "Animation/Trane/TR_newSnapKickL_2.bnm",
+      "source_sha256": "7eec86f59ca0480816cba3b1a936f9ebfc70aa9361d5f6ce8f1f8187bbd3f53c"
+    },
+    "punch": {
+      "codes": [
+        596,
+        598,
+        599,
+        602,
+        603,
+        605,
+        606,
+        622,
+        639,
+        640,
+        644
+      ],
+      "descriptors": [
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 14,
+          "kind": 0,
+          "next_frame": 15,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 0,
+          "token": 1
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 15,
+          "kind": 0,
+          "next_frame": 16,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 15,
+          "token": 2
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 18,
+          "kind": 0,
+          "next_frame": 19,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 16,
+          "token": 3
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 19,
+          "kind": 0,
+          "next_frame": 20,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 19,
+          "token": 4
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 22,
+          "kind": 0,
+          "next_frame": 23,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 20,
+          "token": 5
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 23,
+          "kind": 0,
+          "next_frame": 24,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 23,
+          "token": 6
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 28,
+          "kind": 0,
+          "next_frame": 29,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 24,
+          "token": 7
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 40,
+          "kind": 0,
+          "next_frame": 41,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 29,
+          "token": 8
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 41,
+          "kind": 0,
+          "next_frame": 42,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 41,
+          "token": 9
+        },
+        {
+          "direction": 1,
+          "duration": 0,
+          "end": 66,
+          "kind": 0,
+          "next_frame": -1,
+          "parameter10": null,
+          "parameter8": 0,
+          "start": 42,
+          "token": 10
+        }
+      ],
+      "frames": 67,
+      "pre_frame_events": [
+        {
+          "event": 596,
+          "range": "-10..-1"
+        }
+      ],
+      "rate": 1.0,
+      "sequence": "CrossR",
+      "source": "Animation/Trane/TR_CrossR.bnm",
+      "source_sha256": "caae1d8433a2daa28920a541029b4f198d93e33cc3aba466b4c3deb231a2078e"
+    }
+  },
+  "schema": 1,
+  "sha256": "8ccc88fa3086122643f970834580c6e145fee51313fc7c5734c349e2d5c7cf5f",
+  "signed_prefix_is_separate_table": true,
+  "signed_prefix_runtime_events_executed": false,
+  "source_sha256": {
+    "ban": "6c41b3d7b122413c9d629a23b30a3756f1f52255eac0798a329d2d7d118df73c",
+    "msh": "ecb5c02e9d15377f38c78a78c86f0e74bb3a2e8de42ebaf555b2d635c99896c0"
+  },
+  "url": "../artifacts/pool-yard-combat-v1/inputs.json"
+}

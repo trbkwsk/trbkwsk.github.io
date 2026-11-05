@@ -1,0 +1,16 @@
+/* Game-facing UI is drawn from original ST/XML/font resources. DOM controls
+   below are the separately opened diagnostic tools, not substitute game menus. */
+:root{color-scheme:dark;background:#000;color:#ddd;font-family:monospace}
+*{box-sizing:border-box}body{margin:0;overflow:hidden}[hidden]{display:none!important}
+#view,#originalUI{position:fixed;inset:0;width:100%;height:100%}#view canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
+#originalUI{z-index:2;pointer-events:none}body[data-running=false] #originalUI{pointer-events:auto}
+#originalMenuButtons{position:fixed;left:0;top:0;z-index:3;width:640px;height:480px;transform-origin:0 0;pointer-events:none}
+.original-menu-hit{position:absolute;margin:0;padding:0;background:none;border:none;color:transparent;cursor:pointer;pointer-events:auto;font-size:0}
+.original-menu-hit:disabled{cursor:default;pointer-events:none}.original-menu-hit:focus{outline:none}
+#status{position:fixed;z-index:4;left:16px;bottom:14px;font:12px monospace;color:#ddd}body[data-ready=true] #status{display:none}
+#fatal{position:fixed;z-index:9;inset:20px 20px auto;background:#351b19;color:#ffe2d8;padding:18px;white-space:pre-wrap;max-height:65vh;overflow:auto}#fatal:empty{display:none}
+.modal-shade{position:fixed;inset:0;z-index:7;background:#000b;display:grid;place-items:center;padding:20px}.modal{position:relative;background:#151515;border:1px solid #666;padding:28px;max-height:90vh;overflow:auto;max-width:760px;width:100%}
+button,select,textarea{font:12px monospace}button,select{border:1px solid #666;background:#222;color:#ddd;padding:8px;cursor:pointer}button:disabled{opacity:.4;cursor:default}button:focus-visible{outline:1px solid #eee}.close-modal{position:absolute;top:8px;right:8px}
+.control-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.control-grid p,.muted{font:12px/1.5 monospace}kbd{border:1px solid #555;padding:2px 4px}.utility-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.scene-options{margin-top:20px}.scene-options select{display:block;margin-top:8px;max-width:100%}
+.lab{position:fixed;z-index:8;left:12px;bottom:12px;width:380px;max-width:calc(100vw - 24px);max-height:80vh;overflow:auto;background:#111e;border:1px solid #777;padding:20px}.lab h2{font:15px monospace}.lab p{font:11px/1.5 monospace}.lab .row{display:flex;flex-wrap:wrap;gap:6px}.lab select,.lab textarea{width:100%;background:#111;color:#ddd;border:1px solid #555}.lab textarea{height:120px}.lab a{color:#ccc}#stats{white-space:pre-line;font:11px/1.5 monospace}
+@media(max-width:600px){.control-grid{grid-template-columns:1fr}}
