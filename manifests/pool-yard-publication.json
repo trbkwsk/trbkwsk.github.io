@@ -1,6 +1,6 @@
 {
   "browser_gpu_verified": false,
-  "bytes": 98750753,
+  "bytes": 98751190,
   "files": [
     {
       "bytes": 53944,
@@ -917,7 +917,7 @@
     {
       "bytes": 10456,
       "path": "play/index.html",
-      "sha256": "e1791973006f48567b129823e2b2d7698bc415de890d2aff921d6c428f01c4ed",
+      "sha256": "c9fcd7e4cb13c961dec451b017747aa4b88d1f7c78d353cf8ce179b3e7f56618",
       "source": "viewer/pool-yard.html"
     },
     {
@@ -933,9 +933,9 @@
       "source": "viewer/pool-yard-combat.js"
     },
     {
-      "bytes": 24906,
+      "bytes": 25343,
       "path": "play/pool-yard-controls.js",
-      "sha256": "b4abd29883997f8fda16b47d47204e74c297e67c46e0e936af2c3bbbb9104835",
+      "sha256": "dbe24919ef9e79c8426e0504e7037bd6a85460d02b568cd80e6c5d8958af390a",
       "source": "viewer/pool-yard-controls.js"
     },
     {
@@ -1044,9 +1044,9 @@
   "files_count": 173,
   "kind": "pool-yard-public-runtime",
   "legacy_preserved": true,
-  "previous_site_commit": "4946b1426e8db6f820316b7c9928be8e68c1519d",
+  "previous_site_commit": "2fa2042a38efcbdba1f67c1d4a074a24fa687563",
   "raw_game_corpus_included": false,
   "schema": 1,
-  "source_re_baseline": "a398bc01dd2585eeb09be41eca5a0d81fd9fc09d",
-  "source_re_commit": "5b59ee72c92906ca3491b9a29547d4eb481350bc"
+  "source_re_baseline": "61494a0b7a8ed74a74f5ae2adc6880fa3d352aaf",
+  "source_re_commit": "863b79223c24cd34cf6a51640348a769b0fe755e"
 }

@@ -88,12 +88,13 @@
    if(resources?.kind!=='pool-yard-control-resources'||resources.artworks?.length<2)throw Error('local Pool Yard controls required');
    super(data,world,spawn,yaw,shape);this.driver=new Driver(data,resources.clips,resources.wallPhases,resources.locomotion,resources.combat,resources.lateral);this.resources=resources;this.combatInput=new Combat.Input();
    this.artworks=resources.artworks.map(a=>({...a,controllerOptions:data.tagData.controllerOptions}));this.artworkIndex=0;this.sizeIndex=0;this.sizeMode=1;this.nextPanelId=0;this.wallPosition=13;this.wallCooldown=0;this.waitRelease=false;this.completedPieces=0;
-   this.tagData=this.artworks[0];this.standingShape={...shape};this.crouched=false;this.standBlocked=false;this.wallDistance=0;this.shaftBlocks=0;this.notice='';this.noticeTTL=0;this.jumpBuffer=0;this.pullUpRequested=false;this.lowLedgePullups=0;this.ledgeSideDistance=0;
+   this.tagData=this.artworks[0];this.standingShape={...shape};this.crouched=false;this.standBlocked=false;this.wallDistance=0;this.shaftBlocks=0;this.notice='';this.noticeTTL=0;this.jumpBuffer=0;this.pullUpRequested=false;this.ledgePullUpQueued=false;this.lowLedgePullups=0;this.ledgeSideDistance=0;
    if(this.driver.lateral)this.driver.lateral.accept=request=>this.shiftLedge(request);
   }
   message(text){this.notice=text;this.noticeTTL=180}
-  clearActionInput(){this.combatInput=new Combat.Input();this.jumpBuffer=0;this.pullUpRequested=false}
+  clearActionInput(){this.combatInput=new Combat.Input();this.jumpBuffer=0;this.pullUpRequested=false;this.ledgePullUpQueued=false}
   drop(reason,crossed=false){
+   this.ledgePullUpQueued=false;
    if(this.driver.lateral?.active)this.driver.lateral.cancel();
    // On the 96-unit pool rim the full hang pose puts the feet into the floor.
    // When the player requests up, continue with the already bound LedgeUp
@@ -172,9 +173,12 @@
   }
   step(input){
    const lateral=this.driver.lateral;
-   if(lateral){lateral.setInput(input.x);
+   if(lateral){
+    if(lateral.active&&input.jump&&!input.v&&!input.crouch)this.ledgePullUpQueued=true;
+    if(input.z<0)this.ledgePullUpQueued=false;
+    lateral.setInput(input.z||this.ledgePullUpQueued?0:input.x);
     if(lateral.active&&this.anchor&&input.z<0){lateral.cancel();this.driver.enter('ledge_hang')}
-    if(this.anchor&&!this.anchor.released&&this.driver.phase==='ledge_hang'&&input.x&&!input.v&&!input.crouch)lateral.start(input.x);
+    if(this.anchor&&!this.anchor.released&&this.driver.phase==='ledge_hang'&&input.x&&!input.z&&!input.jump&&!this.ledgePullUpQueued&&!input.v&&!input.crouch)lateral.start(input.x);
    }
    this.pullUpRequested=!input.v&&!input.crouch&&(input.jump||input.z>0);
    if(input.jump&&!input.v&&!input.crouch)this.jumpBuffer=12;
@@ -222,8 +226,9 @@
     this.paintIndex=this.wallPosition%9;this.driver.wallPosition=this.wallPosition;this.paintAnchor.wallPosition=this.wallPosition;this.paintAnchor.previewVisible=true;
    }
    // A/D move Trane, W/S select hand height. Paint is applied after movement.
-   const raw={...input,v:effectiveV&&!!this.paintAnchor,jump:this.jumpBuffer>0&&!this.crouched&&!this.driver.combatName&&!effectiveV,x:effectiveV?0:input.x,z:effectiveV?0:input.z,spray:false,fast:false};
+   const raw={...input,v:effectiveV&&!!this.paintAnchor,jump:(this.jumpBuffer>0||this.ledgePullUpQueued)&&!this.crouched&&!this.driver.combatName&&!effectiveV,x:effectiveV?0:input.x,z:effectiveV?0:input.z,spray:false,fast:false};
    if(this.turnBridge)this.stepTurning(raw);else super.step(raw);
+   if(!this.anchor||this.anchor.released||effectiveV||this.crouched)this.ledgePullUpQueued=false;
    if(this.driver.phase.endsWith('_takeoff')||this.anchor||effectiveV||this.crouched)this.jumpBuffer=0;else this.jumpBuffer=Math.max(0,this.jumpBuffer-1);
    this.spraying=false;
    for(const panel of this.panels){if(!panel.area)continue;panel.renderPhase=panel.area.state;
