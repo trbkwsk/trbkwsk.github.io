@@ -37,7 +37,7 @@
     placement,bones,collider,capsule,spawnPosition,spawnYaw,actorRoot,levelRoot,executedJS,executedModules,sim,audio,audioInputsSHA;
   let position=[0,0,0],heading=0,vertical=0,grounded=false,cameraYaw=0,cameraPitch=.17,cameraDistance=205,accumulator=0;
   let jumpQueued=false,droppedSeconds=0,totalContacts=0,lastCollision=null,lastSnapshot;
-  let tagRenderer,gateOpening;
+  let tagRenderer,gateOpening,boundaryRepair;
   const pressed=new Set(),clock=new THREE.Clock(),cameraTarget=new THREE.Vector3(),cameraDesired=new THREE.Vector3();
   function nativeRows(){
     const x=-Math.sin(heading),z=Math.cos(heading);
@@ -139,7 +139,7 @@
       can_reflection_preserved:JSON.stringify(canRoot.scale.toArray())==='[-1,1,1]',
       native_tag_math_verified:true,native_tag_caller_verified:false,native_d3d_verified:false,original_paint_physics_verified:false,full_remaster_complete:false,basic_actions_connected:true,
       source_level:sandboxPlan.identity.source_level,source_tagging_areas:sandboxPlan.tagging_areas.length,source_ladders:sandboxPlan.ladders.length,
-      mission_scripts_enabled:false,mission_completion_required:false,complete_sandbox_verified:false,sandbox_open_gate:gateOpening,
+      mission_scripts_enabled:false,mission_completion_required:false,complete_sandbox_verified:false,sandbox_open_gate:gateOpening,sandbox_boundary:boundaryRepair,
       pending_actions:['full-animation-selection','authored-graffiti-zones','original-BSP','lighting-parity']};
     Object.assign(lastSnapshot,{presentation:'pool-yard-preview-v1',preview_sky_meshes:skyMeshCount,preview_shadow_map:true,
       camera_clearance:cameraClearance,preview_camera_policy:true,preview_lighting_policy:true,
@@ -274,11 +274,14 @@
     executedModules={};for(const [key,code] of Object.entries({driver:D.moduleSource,simulation:S.moduleSource,climb_driver:GettingUpClimbDriver.moduleSource,climb_simulation:GettingUpClimbSimulation.moduleSource,paint_surface:GettingUpPaintSurface.moduleSource,collision:C.moduleSource,
       base_simulation:GettingUpPlaySimulation.moduleSource,traversal:GettingUpTraversalDriver.moduleSource,walk:GettingUpWalkDriver.moduleSource,
       ledge_query:GettingUpLedgeQuery.moduleSource,
-      mixed:GettingUpCompiledMixed.moduleSource,jump:GettingUpJumpRules.moduleSource,tag:GettingUpTag.moduleSource,spray_controller:GettingUpSprayController.moduleSource,tag_simulation:GettingUpSpraySimulation.moduleSource,tag_renderer:GettingUpSprayRenderer.Renderer.toString(),pool_artwork_renderer:GettingUpPoolArtworkRenderer.moduleSource,pool_original_rules:GettingUpPoolRules.moduleSource,pool_combat:GettingUpPoolCombat.moduleSource,pool_lateral:GettingUpPoolLateral.moduleSource,pool_normal_locomotion:GettingUpPoolNormalLocomotion.moduleSource,pool_audio:GettingUpPoolAudio.moduleSource,pool_normal_actions:GettingUpPoolNormalActions.moduleSource,pool_turn:GettingUpPoolTurn.moduleSource,navigation_turn:GettingUpNavigationTurn.moduleSource,pool_materials:GettingUpPoolMaterials.moduleSource,pool_lighting:Lighting.moduleSource,pool_source_lights:GettingUpPoolSourceLights.moduleSource,area_controller:GettingUpAreaController.moduleSource}))executedModules[key]=await digest(new TextEncoder().encode(code));
+      mixed:GettingUpCompiledMixed.moduleSource,jump:GettingUpJumpRules.moduleSource,tag:GettingUpTag.moduleSource,spray_controller:GettingUpSprayController.moduleSource,tag_simulation:GettingUpSpraySimulation.moduleSource,tag_renderer:GettingUpSprayRenderer.Renderer.toString(),pool_artwork_renderer:GettingUpPoolArtworkRenderer.moduleSource,pool_original_rules:GettingUpPoolRules.moduleSource,pool_combat:GettingUpPoolCombat.moduleSource,pool_lateral:GettingUpPoolLateral.moduleSource,pool_normal_locomotion:GettingUpPoolNormalLocomotion.moduleSource,pool_audio:GettingUpPoolAudio.moduleSource,pool_normal_actions:GettingUpPoolNormalActions.moduleSource,pool_turn:GettingUpPoolTurn.moduleSource,navigation_turn:GettingUpNavigationTurn.moduleSource,pool_materials:GettingUpPoolMaterials.moduleSource,pool_boundary:GettingUpPoolBoundary.moduleSource,pool_lighting:Lighting.moduleSource,pool_source_lights:GettingUpPoolSourceLights.moduleSource,area_controller:GettingUpAreaController.moduleSource}))executedModules[key]=await digest(new TextEncoder().encode(code));
     const audioProof=decoded(await fetchBytes('../manifests/pool-yard-audio-inputs.json')),audioRaw=await fetchBytes(audioProof.url);
     if(await digest(audioRaw)!==audioProof.sha256)throw Error('Original audio input SHA-256 differs');
     audioInputsSHA=audioProof.sha256;audio=await GettingUpPoolAudio.load(decoded(audioRaw),fetchBytes,digest,()=>new (window.AudioContext||window.webkitAudioContext)());
     const poolProof=decoded(await fetchBytes('../manifests/pool-yard-scene.json'));
+    const boundaryProof=decoded(await fetchBytes('../manifests/pool-yard-boundary-inputs.json')),boundaryRaw=await fetchBytes(boundaryProof.url);
+    if(await digest(boundaryRaw)!==boundaryProof.sha256)throw Error('Sandbox boundary SHA-256 mismatch');
+    const boundaryData=GettingUpPoolBoundary.validate(decoded(boundaryRaw));
     const controlProof=decoded(await fetchBytes('../manifests/pool-yard-control-inputs.json'));
     const controlRaw=await fetchBytes(controlProof.url);if(await digest(controlRaw)!==controlProof.sha256)throw Error('SHA-256 ресурсов управления не совпал');
     controlResources=decoded(controlRaw);
@@ -350,6 +353,8 @@
     [level,actor,world,can]=await Promise.all([glb(levelBytes),glb(modelBytes),glb(worldBytes),glb(canBytes)]);
     // Remove the requested gate before rendering, source lighting and collider extraction.
     gateOpening=Preview.removeYardGate(level.scene);
+    boundaryRepair=GettingUpPoolBoundary.install({T:THREE,objects:level.scene,world:world.scene,data:boundaryData});
+    boundaryRepair.sha256=boundaryProof.sha256;
     const l=P.inspect(level.parser.json,'level'),a=P.inspect(actor.parser.json,'actor');
     if(JSON.stringify(l.nativeSpawn)!==JSON.stringify(plan.native_spawn))throw Error('Исходный spawn не совпал');
     [levelRoot,actorRoot]=await Promise.all([level.parser.getDependency('node',l.rootIndex),actor.parser.getDependency('node',a.rootIndex)]);
@@ -395,6 +400,7 @@
     sourceLighting=GettingUpPoolSourceLights.install({T:THREE,scene,world:world.scene,objects:level.scene,
       actor:actor.scene,can:can.scene,camera,data:sourceRenderData,config:lightingConfig,vertexBytes:sourceVertexBytes,textures:glowTextures});
     lightingState.source_render=sourceLighting.report;
+    boundaryRepair.lighting=GettingUpPoolBoundary.lightExposedBacks({T:THREE,world:world.scene,data:sourceRenderData,config:lightingConfig,irradiance:GettingUpPoolSourceLights.irradiance});
     // Camera fade must reference the replacement actor materials.
     actorMaterials.length=0;actor.scene.traverse(n=>{if(n.isMesh)for(const material of [].concat(n.material))
       if(!actorMaterials.some(r=>r.material===material))actorMaterials.push({material,opacity:material.opacity,transparent:material.transparent,depthWrite:material.depthWrite})});

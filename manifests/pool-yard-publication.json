@@ -1,6 +1,6 @@
 {
   "browser_gpu_verified": false,
-  "bytes": 100944933,
+  "bytes": 101039279,
   "files": [
     {
       "bytes": 53944,
@@ -217,6 +217,12 @@
       "path": "artifacts/pool-yard-audio-v1/spray_can_loop.wav",
       "sha256": "d15b6506f894631063f59d5d0391fe9da00248f3f86ca3e0b4d9f6790f5cf2fb",
       "source": "artifacts/pool-yard-audio-v1/spray_can_loop.wav"
+    },
+    {
+      "bytes": 88416,
+      "path": "artifacts/pool-yard-boundary-v1/inputs.json",
+      "sha256": "9c696eadd4552e9fb7a2d4bf33dda8b4452784f2437bbdfeba782bcceefdac57",
+      "source": "artifacts/pool-yard-boundary-v1/inputs.json"
     },
     {
       "bytes": 764960,
@@ -795,6 +801,12 @@
       "source": "manifests/pool-yard-audio-inputs.json"
     },
     {
+      "bytes": 471,
+      "path": "manifests/pool-yard-boundary-inputs.json",
+      "sha256": "12d9993f0ec541e5b3467fc4ead587465a035a0c898753ca834732bb823ce7c2",
+      "source": "manifests/pool-yard-boundary-inputs.json"
+    },
+    {
       "bytes": 29194,
       "path": "manifests/pool-yard-combat-inputs.json",
       "sha256": "e6c916eede5c7220cab031c478202e328681f78ae9adf96256290703e71dd3c1",
@@ -1101,9 +1113,9 @@
       "source": "viewer/gettingup-world-collision.js"
     },
     {
-      "bytes": 10582,
+      "bytes": 10642,
       "path": "play/index.html",
-      "sha256": "cb2296256a46bb5608c310ab6dbfc09d92531a4162a5c932ae57b35de75bbf84",
+      "sha256": "bb7a33b15203cfabfb24d3a5f9a9868f9796ff32d652fb02bbd2806fba88891b",
       "source": "viewer/pool-yard.html"
     },
     {
@@ -1117,6 +1129,12 @@
       "path": "play/pool-yard-audio.js",
       "sha256": "c96ed3d99f3365ec5d8960bba8618eaf3a53fa5131e84c7ddf739a5a4b48a68d",
       "source": "viewer/pool-yard-audio.js"
+    },
+    {
+      "bytes": 4619,
+      "path": "play/pool-yard-boundary.js",
+      "sha256": "f1837ecbd24db8e685354a43dbffc9b162e6f45f8507352574c4b2f24067eb0b",
+      "source": "viewer/pool-yard-boundary.js"
     },
     {
       "bytes": 3391,
@@ -1221,9 +1239,9 @@
       "source": "viewer/pool-yard.css"
     },
     {
-      "bytes": 46161,
+      "bytes": 46941,
       "path": "play/pool-yard.js",
-      "sha256": "1bc3e1fdf1f6943ac7860fd79ff9bf9de4151c6211820af802a6fe9deebd6d5a",
+      "sha256": "16af43697d0bab6f99170efc2782b02a1bc4a65474c05c593602708842dd1525",
       "source": "viewer/pool-yard.js"
     },
     {
@@ -1239,7 +1257,7 @@
       "source": "viewer/vendor/three-r128/three.min.js"
     }
   ],
-  "files_count": 206,
+  "files_count": 209,
   "kind": "pool-yard-public-runtime",
   "legacy_preserved": true,
   "raw_game_corpus_included": false,
