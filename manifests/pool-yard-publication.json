@@ -1,6 +1,6 @@
 {
   "browser_gpu_verified": false,
-  "bytes": 100943864,
+  "bytes": 100944933,
   "files": [
     {
       "bytes": 53944,
@@ -1103,7 +1103,7 @@
     {
       "bytes": 10582,
       "path": "play/index.html",
-      "sha256": "92bfeb945c70b80ad23a0f5187d322c3af86bfc6c5bad230c4e5010da2a62275",
+      "sha256": "cb2296256a46bb5608c310ab6dbfc09d92531a4162a5c932ae57b35de75bbf84",
       "source": "viewer/pool-yard.html"
     },
     {
@@ -1191,9 +1191,9 @@
       "source": "viewer/pool-yard-original-rules.js"
     },
     {
-      "bytes": 1950,
+      "bytes": 2832,
       "path": "play/pool-yard-preview.js",
-      "sha256": "ec1cfa639202f18ef9d8aa2c23811716350d1b47bc3845a3d6385385c1fb8469",
+      "sha256": "1b0dbb82d835b4061b71995ad2fd649b15d7cb6c1e86406df27b7aea6cfa9372",
       "source": "viewer/pool-yard-preview.js"
     },
     {
@@ -1221,9 +1221,9 @@
       "source": "viewer/pool-yard.css"
     },
     {
-      "bytes": 45974,
+      "bytes": 46161,
       "path": "play/pool-yard.js",
-      "sha256": "29b29ee20dd53a90e639206c91fb6c0926769c514c189523badfb0e97dc7b5b5",
+      "sha256": "1bc3e1fdf1f6943ac7860fd79ff9bf9de4151c6211820af802a6fe9deebd6d5a",
       "source": "viewer/pool-yard.js"
     },
     {
@@ -1242,8 +1242,6 @@
   "files_count": 206,
   "kind": "pool-yard-public-runtime",
   "legacy_preserved": true,
-  "previous_site_commit": "d13d877b60f8fb76a7ad46af16cb97dd35a3aa09",
   "raw_game_corpus_included": false,
-  "schema": 1,
-  "source_commit": "b11df07be301b2a032e8ed7db84281b5cf634bcc"
+  "schema": 1
 }

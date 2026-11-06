@@ -2,6 +2,18 @@
 (function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.GettingUpPoolPreview=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(){'use strict';
  const finite=a=>Array.isArray(a)&&a.length===3&&a.every(Number.isFinite);
+ function removeYardGate(objects){
+  // Owner-requested sandbox opening. Original GLB/MSH and the rest of the fence stay intact.
+  const matches=[];objects.traverse(node=>{if(node.name==='IStatic_2117374')matches.push(node)});
+  const gate=matches[0],source=gate?.userData.mesh?.replace(/\\/g,'/').split('/').pop().toLowerCase();
+  if(matches.length!==1||source!=='pyfence06gate_s'||!gate.parent)throw Error('Exact Pool Yard gate required');
+  let triangles=0;gate.traverse(node=>{if(node.isMesh){
+   const count=node.geometry.index?.count;if(!Number.isInteger(count)||count%3)throw Error('Indexed gate triangles required');triangles+=count/3;
+  }});
+  if(triangles!==80)throw Error('Original Pool Yard gate geometry differs');
+  gate.parent.remove(gate);
+  return {node:gate.name,mesh:'pyFence06Gate_S',removed_triangles:triangles,original_asset_modified:false};
+ }
  function camera(world,position,yaw,pitch,distance){
   if(!finite(position)||![yaw,pitch,distance].every(Number.isFinite)||distance<1||distance>500)throw Error('bounded preview camera required');
   const target=[position[0],position[1]+48,position[2]],h=distance*Math.cos(pitch),delta=[-Math.sin(yaw)*h,Math.sin(pitch)*distance+10,-Math.cos(yaw)*h];
@@ -23,5 +35,5 @@
   }
   if(frames.length!==showcase.frames)throw Error('complete preview commands required');return frames;
  }
- return Object.freeze({camera,expand});
+ return Object.freeze({camera,expand,removeYardGate});
 });

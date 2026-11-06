@@ -37,7 +37,7 @@
     placement,bones,collider,capsule,spawnPosition,spawnYaw,actorRoot,levelRoot,executedJS,executedModules,sim,audio,audioInputsSHA;
   let position=[0,0,0],heading=0,vertical=0,grounded=false,cameraYaw=0,cameraPitch=.17,cameraDistance=205,accumulator=0;
   let jumpQueued=false,droppedSeconds=0,totalContacts=0,lastCollision=null,lastSnapshot;
-  let tagRenderer;
+  let tagRenderer,gateOpening;
   const pressed=new Set(),clock=new THREE.Clock(),cameraTarget=new THREE.Vector3(),cameraDesired=new THREE.Vector3();
   function nativeRows(){
     const x=-Math.sin(heading),z=Math.cos(heading);
@@ -139,7 +139,7 @@
       can_reflection_preserved:JSON.stringify(canRoot.scale.toArray())==='[-1,1,1]',
       native_tag_math_verified:true,native_tag_caller_verified:false,native_d3d_verified:false,original_paint_physics_verified:false,full_remaster_complete:false,basic_actions_connected:true,
       source_level:sandboxPlan.identity.source_level,source_tagging_areas:sandboxPlan.tagging_areas.length,source_ladders:sandboxPlan.ladders.length,
-      mission_scripts_enabled:false,mission_completion_required:false,complete_sandbox_verified:false,
+      mission_scripts_enabled:false,mission_completion_required:false,complete_sandbox_verified:false,sandbox_open_gate:gateOpening,
       pending_actions:['full-animation-selection','authored-graffiti-zones','original-BSP','lighting-parity']};
     Object.assign(lastSnapshot,{presentation:'pool-yard-preview-v1',preview_sky_meshes:skyMeshCount,preview_shadow_map:true,
       camera_clearance:cameraClearance,preview_camera_policy:true,preview_lighting_policy:true,
@@ -348,6 +348,8 @@
     originalUI.items=controlResources.wheelSlots;
     tagRenderer=new GettingUpPoolArtworkRenderer.Renderer(scene,controlResources.artworks,artworkTextures);
     [level,actor,world,can]=await Promise.all([glb(levelBytes),glb(modelBytes),glb(worldBytes),glb(canBytes)]);
+    // Remove the requested gate before rendering, source lighting and collider extraction.
+    gateOpening=Preview.removeYardGate(level.scene);
     const l=P.inspect(level.parser.json,'level'),a=P.inspect(actor.parser.json,'actor');
     if(JSON.stringify(l.nativeSpawn)!==JSON.stringify(plan.native_spawn))throw Error('Исходный spawn не совпал');
     [levelRoot,actorRoot]=await Promise.all([level.parser.getDependency('node',l.rootIndex),actor.parser.getDependency('node',a.rootIndex)]);
